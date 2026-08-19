@@ -62,7 +62,7 @@ is a separate skill invocation and is NOT triggered here.
 
 **Fixture:**
 - `tests/unit/ui/hud_update_test.gd` contains:
-  ```gdscript
+  ```csharp
   await get_tree().create_timer(1.0).timeout
   assert_eq(label.text, "Ready")
   ```
@@ -90,7 +90,7 @@ is a separate skill invocation and is NOT triggered here.
 
 **Fixture:**
 - `tests/unit/networking/auth_test.gd` contains:
-  ```gdscript
+  ```csharp
   var result = HTTPRequest.new().request("https://api.example.com/auth")
   ```
 - Direct HTTP call to external API without a mock

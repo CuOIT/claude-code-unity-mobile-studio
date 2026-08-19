@@ -939,33 +939,22 @@ agents:
     last_spec_result: ""
     category: specialist
 
-  # Engine Specialists — Godot
-  - name: godot-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/godot/godot-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: godot-gdscript-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/godot/godot-gdscript-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: godot-csharp-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/godot/godot-csharp-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: godot-shader-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/godot/godot-shader-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: godot-gdextension-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/godot/godot-gdextension-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
@@ -1001,33 +990,22 @@ agents:
     last_spec_result: ""
     category: engine
 
-  # Engine Specialists — Unreal
-  - name: unreal-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/unreal/unreal-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: ue-blueprint-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/unreal/ue-blueprint-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: ue-gas-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/unreal/ue-gas-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: ue-umg-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/unreal/ue-umg-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine
 
-  - name: ue-replication-specialist
-    spec: CCGS Skill Testing Framework/agents/engine/unreal/ue-replication-specialist.md
     last_spec: ""
     last_spec_result: ""
     category: engine

@@ -35,7 +35,7 @@ design-system, story lifecycle, UX pipeline, and brownfield onboarding.
 Dev runs `/design-system movement` after `/map-systems` produced the systems index. The skill loads context from the game concept and dependency GDDs, runs a technical feasibility pre-check, then guides through all 8 GDD sections one at a time — drafting, approving, and writing each section to disk before moving to the next.
 
 **Key Moments:**
-- Technical feasibility pre-check flags Jolt physics default change (Godot 4.6)
+- Technical feasibility pre-check flags a Unity 6 rendering API change (post-cutoff risk)
 - Incremental writing: each section on disk immediately after approval
 - Session crash during section 5 → agent resumes from first empty section
 - Dependency signals (stamina, inventory) surfaced during the Dependencies section

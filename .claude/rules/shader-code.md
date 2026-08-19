@@ -9,16 +9,16 @@ All shader files in `assets/shaders/` must follow these standards to maintain
 visual quality, performance, and cross-platform compatibility.
 
 ## Naming Conventions
-- File naming: `[type]_[category]_[name].[ext]`
-  - `spatial_env_water.gdshader` (Godot)
-  - `SG_Env_Water` (Unity Shader Graph)
-  - `M_Env_Water` (Unreal Material)
+- File naming: `[type]_[category]_[name]` (no extension in name)
+  - `SG_Env_Water` (Unity Shader Graph sub-graph)
+  - `M_Env_Water` (Unity Material asset)
 - Use descriptive names that indicate the material purpose
-- Prefix with shader type: `spatial_`, `canvas_`, `particles_`, `post_`
+- Prefix with shader type: `sg_`, `canvas_`, `particles_`, `post_`
 
 ## Code Quality
 - All uniforms/parameters must have descriptive names and appropriate hints
-- Group related parameters (Godot: `group_uniforms`, Unity: `[Header]`, Unreal: Category)
+- Group related parameters (Shader Graph: node comments and blackboards;
+  hand-written HLSL: `[Header]` attributes)
 - Comment non-obvious calculations (especially math-heavy sections)
 - No magic numbers — use named constants or documented uniform values
 - Include authorship and purpose comment at the top of each shader file

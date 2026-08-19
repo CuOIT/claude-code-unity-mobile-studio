@@ -1,18 +1,23 @@
-# Claude Code Game Studios -- Game Studio Agent Architecture
+# Claude Code Unity Mobile Studio -- Game Studio Agent Architecture
 
-Indie game development managed through 49 coordinated Claude Code subagents.
-Each agent owns a specific domain, enforcing separation of concerns and quality.
+Mobile-first indie game development on Unity, managed through coordinated
+Claude Code subagents. Each agent owns a specific domain, enforcing separation
+of concerns and quality.
 
 ## Technology Stack
 
-- **Engine**: [CHOOSE: Godot 4 / Unity / Unreal Engine 5]
-- **Language**: [CHOOSE: GDScript / C# / C++ / Blueprint]
+- **Engine**: Unity 6 LTS
+- **Language**: C# 9+ (.NET 8+)
+- **Rendering**: Universal Render Pipeline (URP)
+- **Target Platforms**: iOS / Android
+- **Input**: Touch (New Input System)
 - **Version Control**: Git with trunk-based development
-- **Build System**: [SPECIFY after choosing engine]
-- **Asset Pipeline**: [SPECIFY after choosing engine]
+- **Build System**: Unity Cloud Build or GitHub Actions + game-ci/unity-actions
+- **Asset Pipeline**: Addressables for async loading and content updates
 
-> **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
-> dedicated sub-specialists. Use the set matching your engine.
+> **Note**: This edition ships only the Unity agent set (unity-specialist plus
+> four sub-specialists). Godot and Unreal agent sets were removed to reduce
+> context and stay focused on mobile development.
 
 ## Project Structure
 
@@ -20,7 +25,9 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Engine Version Reference
 
-@docs/engine-reference/godot/VERSION.md
+@docs/engine-reference/unity/VERSION.md
+
+@docs/engine-reference/unity/MOBILE-BEST-PRACTICES.md
 
 ## Technical Preferences
 

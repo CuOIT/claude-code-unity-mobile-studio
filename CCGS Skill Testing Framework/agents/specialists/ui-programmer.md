@@ -23,7 +23,7 @@ No gate IDs assigned.
 **Input:** "Implement the inventory screen from the UX spec in `design/ux/inventory-flow.md`."
 **Expected behavior:**
 - Reads the UX spec before producing any code
-- Produces implementation using the project's configured UI framework (UI Toolkit, UGUI, UMG, or Godot Control nodes)
+- Produces implementation using the project's configured UI framework (UI Toolkit or UGUI)
 - Implements all states defined in the spec (default, hover, selected, empty-slot, locked-slot)
 - Binds inventory data to UI elements via the project's data model, not hardcoded values
 - Includes doc comments on public UI API per coding standards
@@ -53,12 +53,12 @@ No gate IDs assigned.
 - May propose two common options (hide panel / show placeholder) to help ux-designer decide quickly
 
 ### Case 5: Context pass — engine UI toolkit
-**Input:** Engine context provided: project uses Godot 4.6 with Control node UI. Request: "Implement a scrollable item list for the inventory."
+**Input:** Engine context provided: project uses Unity 6 with UI Toolkit. Request: "Implement a scrollable item list for the inventory."
 **Expected behavior:**
-- Uses Godot's `ScrollContainer` + `VBoxContainer` + `ItemList` (or equivalent) pattern, not Canvas or UGUI
-- Does NOT produce Unity UGUI or Unreal UMG code for a Godot project
+- Uses UI Toolkit (`ScrollView` + `ListView`) patterns, not legacy UGUI workarounds
+- Does NOT produce wrong-engine UI code
 - Checks the engine version reference (4.6) for any Control node API changes from 4.4/4.5 before using specific APIs
-- Produces GDScript or C# code consistent with the project's configured language
+- Produces C# code consistent with the project's configured UI framework
 
 ---
 

@@ -19,11 +19,11 @@
 
 ## Test Cases
 
-### Case 1: In-domain request — CI setup for a Godot project
-**Input**: "Set up a CI pipeline for our Godot 4 project. It should run tests on every push to main and every pull request, and fail the build if tests fail."
+### Case 1: In-domain request — CI setup for a Unity mobile project
+**Input**: "Set up a CI pipeline for our Unity mobile project. It should run tests on every push to main and every pull request, and fail the build if tests fail."
 **Expected behavior**:
 - Produces a GitHub Actions workflow YAML (`.github/workflows/ci.yml` or equivalent)
-- Uses the Godot headless test runner command from `coding-standards.md`: `godot --headless --script tests/gdunit4_runner.gd`
+- Uses the Unity headless test runner command from `coding-standards.md`: `unity-editor -runTests -testPlatform EditMode`
 - Configures trigger on `push` to main and `pull_request`
 - Sets the job to fail (`exit 1` or non-zero exit) when tests fail — does NOT configure the pipeline to continue on test failure
 - References the project's coding standards CI rules in the output or comments
@@ -39,7 +39,7 @@
 **Input**: "Our CI pipeline is failing on the merge step. The error is: 'Asset import failed: texture compression format unsupported in headless mode.'"
 **Expected behavior**:
 - Diagnoses the root cause: headless CI environment does not support GPU-dependent texture compression
-- Proposes a concrete fix: either pre-import assets locally before CI runs (commit .import files to VCS), configure Godot's import settings to use a CPU-compatible compression format in CI, or use a Docker image with GPU simulation if available
+- Proposes a concrete fix: either pre-import assets locally before CI runs (commit .import files to VCS), configure Unity import settings to use a CPU-compatible compression format in CI, or use a Docker image with GPU simulation if available
 - Does NOT declare the pipeline unfixable — provides at least one actionable path
 - Notes any tradeoffs (committing .import files increases repo size; CPU compression may differ from GPU output)
 
@@ -57,7 +57,7 @@
 **Input**: "Set up our CI build matrix so we get a build artifact for each target platform on every release branch push."
 **Expected behavior**:
 - Produces a build matrix configuration with three platform entries: Windows, Linux, Switch, PS5
-- Applies platform-appropriate build steps: PC uses standard Godot export templates; Switch and PS5 require platform-specific export templates (notes that console templates require licensed SDK access and are not publicly distributed)
+- Applies platform-appropriate build steps: Android uses IL2CPP Gradle builds producing an AAB; iOS requires a macOS runner with Xcode; PC uses the standard Unity editor build
 - Does NOT assume all platforms can use the same build runner — flags that console builds may require self-hosted runners with licensed SDKs
 - Organizes artifacts by platform name in the pipeline output
 
@@ -74,7 +74,7 @@
 ---
 
 ## Coverage Notes
-- Case 1 (Godot CI) references `coding-standards.md` CI rules — verify this file is present and current before running this test
+- Case 1 (Unity CI) references `coding-standards.md` CI rules — verify this file is present and current before running this test
 - Case 4 (branching strategy) is a convention-enforcement test — agent must know the project convention, not just give neutral advice
 - Case 5 requires that project's target platforms are documented (in `technical-preferences.md` or equivalent)
 - No automated runner; review manually or via `/skill-test`

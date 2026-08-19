@@ -18,25 +18,27 @@ paths:
 
 **Correct** (proper naming + Arrange/Act/Assert):
 
-```gdscript
-func test_health_system_take_damage_reduces_health() -> void:
-    # Arrange
-    var health := HealthComponent.new()
-    health.max_health = 100
-    health.current_health = 100
-
-    # Act
-    health.take_damage(25)
-
-    # Assert
-    assert_eq(health.current_health, 75)
+```csharp
+[Test]
+public void HealthSystem_TakeDamage_ReducesHealth()
+{
+    // Arrange
+    var health = new HealthComponent { MaxHealth = 100, CurrentHealth = 100 };
+    // Act
+    health.TakeDamage(25);
+    // Assert
+    Assert.That(health.CurrentHealth, Is.EqualTo(75));
+}
 ```
 
 **Incorrect**:
 
-```gdscript
-func test1() -> void:  # VIOLATION: no descriptive name
-    var h := HealthComponent.new()
-    h.take_damage(25)  # VIOLATION: no arrange step, no clear assert
-    assert_true(h.current_health < 100)  # VIOLATION: imprecise assertion
+```csharp
+[Test]
+public void Test1() // VIOLATION: no descriptive name
+{
+    var h = new HealthComponent();
+    h.TakeDamage(25); // VIOLATION: no arrange step, no clear assert
+    Assert.That(h.CurrentHealth, Is.LessThan(100)); // VIOLATION: imprecise assertion
+}
 ```

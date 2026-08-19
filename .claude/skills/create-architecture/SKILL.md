@@ -177,8 +177,8 @@ Format as a table per layer, then as an ASCII dependency diagram.
 relevant module reference doc. If an API is post-cutoff, flag it:
 
 ```
-⚠️  [ClassName.method()] — Godot 4.6 (post-cutoff, HIGH risk)
-    Verified against: docs/engine-reference/godot/modules/[domain].md
+⚠️  [ClassName.method()] — Unity 6.3 LTS (post-cutoff, HIGH risk)
+    Verified against: docs/engine-reference/unity/modules/[domain].md
     Behaviour confirmed: [yes / NEEDS VERIFICATION]
 ```
 
@@ -218,7 +218,7 @@ Write in pseudocode or the project's actual language (from technical preferences
 These become the contracts programmers implement against.
 
 **Engine awareness check**: If any interface uses engine-specific types (e.g.
-`Node`, `Resource`, `Signal` in Godot), flag the version and verify the type
+`MonoBehaviour`, `ScriptableObject`, `event` in Unity), flag the version and verify the type
 exists and has not changed signature in the target engine version.
 
 ---

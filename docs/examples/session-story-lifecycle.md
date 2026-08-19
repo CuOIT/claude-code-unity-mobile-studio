@@ -116,25 +116,9 @@
 **Agent:**
 > Implementing `movement_component.gd`. Key excerpt for your review before I write the file:
 >
-> ```gdscript
-> class_name MovementComponent
-> extends Node
->
-> signal stamina_event(type: String, amount: float)
->
-> @export var base_walk_speed: float = 120.0
-> @export var run_multiplier: float = 1.7
-> @export var stamina_drain_walk: float = 2.0
-> @export var stamina_drain_run: float = 6.0
-> @export var stamina_cost_roll: float = 15.0
->
-> var _is_carrying_heavy: bool = false
->
-> func _physics_process(delta: float) -> void:
->     var terrain_mod := _get_terrain_modifier()
->     var effective_speed := _calculate_speed(terrain_mod)
->     # ...
-> ```
+> ```csharp
+// Unity C# unit test (NUnit) for the story's gameplay logic
+```
 >
 > All values are `@export` — none hardcoded. Is this the direction you want?
 

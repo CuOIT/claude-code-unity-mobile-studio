@@ -3,13 +3,13 @@
 **Context:** Developer has been building a game for 3 months before discovering this agent system. They have code, some design docs, and rough notes — but nothing in the right format for the skills to use.
 
 **Starting State:**
-- `src/gameplay/` — ~4000 lines of Godot 4.6 GDScript
+- `Assets/Scripts/Gameplay/` — ~4000 lines of Unity C#
 - `design/` — 3 markdown files with rough design notes (not in GDD template format)
 - No `design/gdd/` directory
 - No `docs/architecture/` directory
 - No `production/` directory
 - No `design/gdd/systems-index.md`
-- CLAUDE.md exists (engine configured: Godot 4.6)
+- CLAUDE.md exists (engine configured: Unity 6 LTS)
 
 **Session Duration:** ~30 minutes
 **Turns:** 8
@@ -31,7 +31,7 @@
 >
 > | Artifact Category | Found | Notes |
 > |------------------|-------|-------|
-> | Engine configuration | ✅ | Godot 4.6 in CLAUDE.md |
+> | Engine configuration | ✅ | Unity 6 LTS in CLAUDE.md |
 > | Source code | ✅ | ~4000 lines in `src/gameplay/` |
 > | Design docs | ⚠️ | 3 files in `design/`, not in GDD format |
 > | Architecture docs | ❌ | `docs/architecture/` missing |

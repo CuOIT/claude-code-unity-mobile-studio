@@ -87,35 +87,16 @@ Phase 4.
 
 ### Memory / Stability observation items (if focus = memory or all)
 
-Engine-specific monitoring guidance:
-
-**Godot 4:**
-- Open Debugger → Monitors tab; track `Memory → Static Memory` and
-  `Object Count → Objects` across checkpoints
-- Record: Static Memory (KB), Object Count, Orphan Nodes count
-- Alert threshold: Memory growth > 20% from T+0 after the first 15 minutes
-  (some growth on load is expected; sustained growth indicates a leak)
-- Note: `Performance.get_monitor(Performance.MEMORY_STATIC)` returns bytes
-  in Godot 4.6
-
-**Unity:**
-- Open Memory Profiler (Window → Analysis → Memory Profiler)
-- Record: Total Reserved Memory (MB), GC Allocated (MB), Object Count at each checkpoint
-- Alert threshold: GC Allocated growing monotonically across 3+ checkpoints
-
-**Unreal Engine:**
-- Use `stat memory` console command at each checkpoint
-- Record: Physical Memory Used (MB), Physical Memory Available
-- Alert threshold: Physical Memory Used growth > 50MB over the full soak
+Engine-specific monitoring guidance (Unity):
+- Use the Unity Profiler Memory module (`Window → Analysis → Profiler`)
+- Alternatively log `GC.GetTotalMemory(false)` each checkpoint
+- Alert threshold: managed heap growth > 50MB over the full soak
 
 ### Stability observation items (if focus = stability or all)
 
 At each checkpoint, note:
 - [ ] No crash, hang, or freeze occurred since last checkpoint
 - [ ] Frame rate still within target budget ([target FPS] fps)
-- [ ] Audio still playing correctly (no desync or silence)
-- [ ] All HUD elements still rendering correctly
-- [ ] Input responding as expected (no input loss or lag spike)
 
 ### Balance / fatigue observation items (if focus = balance or all)
 
@@ -148,9 +129,7 @@ Before starting the soak:
 - [ ] Game is running from a **fresh launch** (not resumed from a prior session)
 - [ ] All background applications closed (minimise OS memory interference)
 - [ ] Performance monitoring tool open and recording:
-  - **Godot**: Debugger → Monitors tab → Memory section visible
   - **Unity**: Memory Profiler window open
-  - **Unreal**: `stat memory` ready in console
 - [ ] Soak target confirmed: [session design intent from game concept]
 - [ ] Prior known issues to watch for: [from most recent playtest / qa-plan]
 

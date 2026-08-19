@@ -34,10 +34,10 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 
 ## Test Cases
 
-### Case 1: Happy Path — Player factory helper generated for Godot/GDScript
+### Case 1: Happy Path — Player factory helper generated for Unity/C#
 
 **Fixture:**
-- `technical-preferences.md` has engine Godot 4, language GDScript
+- `technical-preferences.md` has engine Unity 6, language C#
 - `tests/` directory exists (test-setup has been run)
 - `design/gdd/player.md` exists with defined player properties
 - No existing helpers in `tests/helpers/`
@@ -45,8 +45,8 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 **Input:** `/test-helpers player-factory`
 
 **Expected behavior:**
-1. Skill reads engine (Godot 4 / GDScript) and player GDD for property context
-2. Skill generates a deterministic `PlayerFactory` helper in GDScript:
+1. Skill reads engine (Unity 6 / C#) and player GDD for property context
+2. Skill generates a deterministic `PlayerFactory` helper in C#:
    - `create_player(health: int = 100, speed: float = 200.0)` function
    - Returns a player node pre-configured to a known state
    - Uses dependency injection (no singletons)
@@ -54,10 +54,10 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 4. File is written on approval; verdict is COMPLETE
 
 **Assertions:**
-- [ ] Generated helper is in GDScript (not C# or Blueprint)
+- [ ] Generated helper is in C# (Unity namespace conventions)
 - [ ] Factory function parameters use defaults matching GDD values
 - [ ] Helper uses dependency injection (no Autoload/singleton references)
-- [ ] Filename follows snake_case convention for GDScript
+- [ ] Filename follows PascalCase convention for C#
 - [ ] Verdict is COMPLETE
 
 ---
@@ -112,7 +112,7 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 ### Case 4: System Has No GDD — Notes missing design context in helper
 
 **Fixture:**
-- `technical-preferences.md` has Godot 4 / GDScript
+- `technical-preferences.md` has Unity 6 / C#
 - `tests/` exists
 - User requests a helper for the "inventory system" but no `design/gdd/inventory.md` exists
 

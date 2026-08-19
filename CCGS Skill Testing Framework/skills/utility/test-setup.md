@@ -6,8 +6,7 @@
 configured engine. It creates the `tests/` directory structure defined in
 `coding-standards.md` (unit/, integration/, performance/, playtest/) and
 generates the appropriate test runner configuration for the detected engine:
-GdUnit4 config for Godot, Unity Test Runner asmdef for Unity, or Unreal headless
-runner for Unreal Engine.
+Unity Test Runner asmdef structure (EditMode/PlayMode) as the only supported engine.
 
 Each file or directory created is gated behind a "May I write" ask. If the test
 framework already exists, the skill verifies the configuration rather than
@@ -36,22 +35,22 @@ None. `/test-setup` is a scaffolding utility. No director gates apply.
 
 ## Test Cases
 
-### Case 1: Happy Path — Godot project, scaffolds GdUnit4 test structure
+### Case 1: Happy Path — Unity mobile project, scaffolds Unity Test Runner structure
 
 **Fixture:**
-- `technical-preferences.md` has engine set to Godot 4, language GDScript
+- `technical-preferences.md` has engine set to Unity 6, language C#
 - `tests/` directory does not exist yet
 
 **Input:** `/test-setup`
 
 **Expected behavior:**
-1. Skill reads engine from `technical-preferences.md` → Godot 4 + GDScript
+1. Skill reads engine from `technical-preferences.md` → Unity 6 + C#
 2. Skill drafts the test directory structure: tests/unit/, tests/integration/,
    tests/performance/, tests/playtest/, and a GdUnit4 runner config file
 3. Skill asks "May I write the tests/ directory structure?"
 4. Directories and GdUnit4 runner script created on approval
 5. Skill confirms the runner script matches the CI command in coding-standards.md:
-   `godot --headless --script tests/gdunit4_runner.gd`
+   Unity Test Runner in headless EditMode
 6. Verdict is COMPLETE
 
 **Assertions:**
@@ -80,7 +79,7 @@ None. `/test-setup` is a scaffolding utility. No director gates apply.
 6. Verdict is COMPLETE
 
 **Assertions:**
-- [ ] Unity-specific `Tests/` structure is created (not the Godot structure)
+- [ ] Unity-specific `Tests/` structure is created (Unity-only structure)
 - [ ] `.asmdef` files are generated
 - [ ] EditMode and PlayMode runner config is present
 - [ ] Verdict is COMPLETE
@@ -91,7 +90,7 @@ None. `/test-setup` is a scaffolding utility. No director gates apply.
 
 **Fixture:**
 - `tests/unit/`, `tests/integration/` exist
-- GdUnit4 runner script exists (Godot project)
+- Unity Test Runner asmdef structure exists (Unity project)
 
 **Input:** `/test-setup`
 
@@ -164,10 +163,10 @@ None. `/test-setup` is a scaffolding utility. No director gates apply.
 
 ## Coverage Notes
 
-- Unreal Engine test scaffolding (headless runner with `-nullrhi`) follows the
+- Unity Test Runner scaffolding follows the
   same pattern as Cases 1 and 2 and is not separately fixture-tested.
 - CI integration file generation (e.g., `.github/workflows/test.yml`) is
   referenced but not assertion-tested here — it may be a separate skill concern.
 - The case where tests/ exists but is from a different engine (e.g., Unity tests
-  in a now-Godot project) is not tested; the skill would detect the mismatch
+  in a mismatched-engine project) is not tested; the skill would detect the mismatch
   and offer to reconcile.

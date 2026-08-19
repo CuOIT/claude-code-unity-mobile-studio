@@ -32,10 +32,10 @@ No gate IDs assigned.
 ### Case 2: Wrong-engine redirect
 **Input:** "Set up a Node scene tree with signals for this enemy system."
 **Expected behavior:**
-- Does NOT produce Godot Node/signal code
-- Identifies this as a Godot pattern
+- Does NOT produce code mixing Godot Node/signal patterns
+- Identifies wrong-engine patterns (e.g., Godot concepts appearing in C# code)
 - States that in Unity the equivalent is GameObject hierarchy + UnityEvent or C# events
-- Maps the concepts: Godot Node → Unity MonoBehaviour, Godot Signal → C# event / UnityEvent
+- Maps cross-engine concepts correctly: maps Godot-style requests to Unity equivalents (Node → MonoBehaviour, Signal → C# event / UnityEvent)
 - Confirms the project is Unity-based before proceeding
 
 ### Case 3: Unity version API flag
@@ -69,7 +69,7 @@ No gate IDs assigned.
 ## Protocol Compliance
 
 - [ ] Stays within declared domain (Unity architecture decisions, pattern selection, subsystem routing)
-- [ ] Redirects Godot patterns to appropriate Godot specialists or flags them as wrong-engine
+- [ ] Flags wrong-engine patterns (e.g., Godot concepts) instead of implementing them
 - [ ] Redirects DOTS implementation to unity-dots-specialist
 - [ ] Redirects UI implementation to unity-ui-specialist
 - [ ] Flags Unity version-gated APIs and requires version confirmation before suggesting them

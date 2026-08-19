@@ -4,7 +4,7 @@
 
 **Starting State:**
 - Game concept and pillars defined
-- Engine set up (Godot 4.6)
+- Engine set up (Unity 6 LTS)
 - Core combat system designed but not implemented yet
 - Pillar 2: "Emergent Discovery Through Experimentation"
 

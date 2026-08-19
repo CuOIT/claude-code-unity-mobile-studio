@@ -41,7 +41,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 **Fixture:**
 - `tests/` directory exists with a GDUnit4 runner script
-- Engine detected as Godot from `technical-preferences.md`
+- Engine detected as Unity from `technical-preferences.md`
 - `production/qa/qa-plan-sprint-005.md` exists
 - Automated test runner reports 12 tests, 12 passing, 0 failing
 - Developer confirms all Batch 1 and Batch 2 smoke checks as PASS
@@ -51,7 +51,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 **Expected behavior:**
 1. Skill detects test directory and engine, notes QA plan found
-2. Runs `godot --headless --script tests/gdunit4_runner.gd` via Bash
+2. Runs the Unity headless test runner via Bash
 3. Parses output: 12/12 passing
 4. Scans test coverage — all stories COVERED or EXPECTED
 5. Uses `AskUserQuestion` for Batch 1 (core stability) and Batch 2 (sprint mechanics)
@@ -73,7 +73,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 ### Case 2: Failure Path — Automated test fails, FAIL verdict
 
 **Fixture:**
-- `tests/` directory exists, engine is Godot
+- `tests/` directory exists, engine is Unity
 - Automated test runner reports 10 tests run: 8 passing, 2 failing
   - Failing tests: `test_health_clamp_at_zero`, `test_damage_calculation_negative`
 - QA plan exists
@@ -102,7 +102,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 ### Case 3: Manual Confirmation — AskUserQuestion used, PASS WITH WARNINGS
 
 **Fixture:**
-- `tests/` directory exists, engine is Godot
+- `tests/` directory exists, engine is Unity
 - Automated test runner reports all tests passing (8/8)
 - One Logic story has no matching test file (MISSING coverage)
 - Developer confirms all Batch 1 and Batch 2 smoke checks as PASS
@@ -131,7 +131,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 **Fixture:**
 - `tests/` directory does not exist
-- Engine is configured as Godot
+- `tests/` directory exists, engine is Unity
 
 **Input:** `/smoke-check`
 

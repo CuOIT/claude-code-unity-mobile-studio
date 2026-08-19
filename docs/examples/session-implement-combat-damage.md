@@ -4,7 +4,7 @@
 
 **Starting State:**
 - `design/gdd/combat-system.md` exists and reviewed
-- Godot 4.6 project set up with basic scene structure
+- Unity 6 LTS project set up with basic scene structure
 - No gameplay code written yet
 - Sprint goal: "Implement core combat damage calculation"
 
@@ -74,47 +74,42 @@
 > **Architecture Details:**
 >
 > **DamageCalculator** (static class):
-> ```gdscript
-> class_name DamageCalculator
-> extends RefCounted
->
-> static func calculate_damage(
->     attacker_stats: Dictionary,
->     weapon: Weapon,
->     defender_stats: Dictionary,
->     is_crit: bool = false
-> ) -> int:
->     # Implementation here
->     return floori(final_damage)
-> ```
+> ```csharp
+public class DamageResolver
+{
+    // Resolves final damage from base + modifiers (ScriptableObject-driven)
+    public float Resolve(BaseDamageConfig config, CombatContext ctx)
+    {
+        float dmg = config.baseDamage * ctx.AttackMultiplier;
+        return config.ApplyArmorReduction(dmg, ctx.TargetArmor);
+    }
+}
+```
 >
 > **HealthComponent** (node component):
-> ```gdscript
-> extends Node
-> class_name HealthComponent
->
-> signal health_changed(old_hp: int, new_hp: int)
-> signal died()
->
-> @export var max_hp: int = 100
-> var current_hp: int:
->     set(value):
->         # Clamp and emit signals
->
-> func take_damage(amount: int) -> void:
->     current_hp -= amount
->     if current_hp <= 0:
->         died.emit()
-> ```
+> ```csharp
+public class CombatAnalytics
+{
+    public void RecordHit(CombatContext ctx)
+    {
+        // Addressable-driven event schema — zero-alloc struct on hot path
+        EventBus.Publish(new DamageAppliedEvent(ctx.Damage, ctx.Element));
+    }
+}
+```
 >
 > **Weapon** (resource):
-> ```gdscript
-> extends Resource
-> class_name Weapon
->
-> @export var base_damage: float
-> @export var damage_type: String  # "physical", "fire", "ice", etc.
-> ```
+> ```csharp
+public class HealthSystem : MonoBehaviour
+{
+    [SerializeField] private HealthConfig _config;
+    public void TakeDamage(float amount)
+    {
+        Current -= amount;
+        if (Current <= 0) Die();
+    }
+}
+```
 >
 > **combat_damage.json**:
 > ```json
@@ -141,24 +136,29 @@
 **Agent:**
 > Absolutely - type safety is important. I'll create a `CharacterStats` resource:
 >
-> ```gdscript
-> extends Resource
-> class_name CharacterStats
->
-> @export var attack_stat: int = 0  # 0-100
-> @export var defense: float = 0.0  # 0.0-1.0 (0-100% mitigation)
-> @export var armor_type: String = "flesh"  # for type effectiveness lookup
-> ```
+> ```csharp
+public class StatusEffectManager
+{
+    // Data-driven: status configs are ScriptableObject assets
+    public void Apply(StatusConfig config, GameObject target)
+    {
+        var instance = Instantiate(config.Prefab, target.transform);
+        instance.Init(config.Duration, config.TickRate);
+    }
+}
+```
 >
 > Then `DamageCalculator.calculate_damage()` signature becomes:
-> ```gdscript
-> static func calculate_damage(
->     attacker: CharacterStats,
->     weapon: Weapon,
->     defender: CharacterStats,
->     is_crit: bool = false
-> ) -> int
-> ```
+> ```csharp
+public class LootTableProcessor
+{
+    // Pure logic, no MonoBehaviour — trivially unit-testable
+    public List<LootDrop> Roll(LootTableConfig table, float luck)
+    {
+        return table.Drops.Where(d => Random.value < d.Chance * luck).ToList();
+    }
+}
+```
 >
 > Much cleaner. May I proceed with implementation?
 

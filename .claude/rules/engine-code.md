@@ -19,19 +19,22 @@ paths:
 
 **Correct** (zero-alloc hot path):
 
-```gdscript
-# Pre-allocated array reused each frame
-var _nearby_cache: Array[Node3D] = []
-
-func _physics_process(delta: float) -> void:
-    _nearby_cache.clear()  # Reuse, don't reallocate
-    _spatial_grid.query_radius(position, radius, _nearby_cache)
+```csharp
+// Pre-allocated List reused each frame
+private readonly List<Transform> _nearbyCache = new List<Transform>();
+void FixedUpdate()
+{
+    _nearbyCache.Clear(); // Reuse, don't reallocate
+    _spatialGrid.QueryRadius(transform.position, radius, _nearbyCache);
+}
 ```
 
 **Incorrect** (allocating in hot path):
 
-```gdscript
-func _physics_process(delta: float) -> void:
-    var nearby: Array[Node3D] = []  # VIOLATION: allocates every frame
-    nearby = get_tree().get_nodes_in_group("enemies")  # VIOLATION: tree query every frame
+```csharp
+void FixedUpdate()
+{
+    var nearby = new List<Transform>(); // VIOLATION: allocates every frame
+    nearby.AddRange(GameObject.FindGameObjectsWithTag("enemy")); // VIOLATION: query every frame
+}
 ```

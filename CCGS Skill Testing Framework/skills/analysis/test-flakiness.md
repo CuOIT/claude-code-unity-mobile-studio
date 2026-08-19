@@ -84,7 +84,7 @@ are invoked.
 **Fixture:**
 - No test history logs exist
 - `tests/unit/loot/loot_drop_test.gd` contains:
-  ```gdscript
+  ```csharp
   var roll = randf()  # unseeded random — non-deterministic
   assert_gt(roll, 0.5, "Loot should drop above 50%")
   ```
