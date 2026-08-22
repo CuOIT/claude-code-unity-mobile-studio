@@ -95,7 +95,7 @@ if [ -d "prototypes" ]; then
 fi
 
 # --- Check 3: Core systems without architecture docs ---
-if [ -d "src/core" ] || [ -d "src/engine" ]; then
+if [ -d "Assets/Scripts/Core" ] || [ -d "Assets/Scripts/Services" ]; then
   if [ ! -d "docs/architecture" ]; then
     echo "⚠️  GAP: Core engine/systems exist but no docs/architecture/ directory"
     echo "    Suggested action: Create docs/architecture/ and run /architecture-decision"
@@ -105,15 +105,15 @@ if [ -d "src/core" ] || [ -d "src/engine" ]; then
 
     if [ "$ADR_COUNT" -lt 3 ]; then
       echo "⚠️  GAP: Core systems exist but only $ADR_COUNT ADR(s) documented"
-      echo "    Suggested action: /reverse-document architecture src/core/[system]"
+      echo "    Suggested action: /create-architecture  (or /architecture-decision for one system)"
     fi
   fi
 fi
 
 # --- Check 4: Gameplay systems without design docs ---
-if [ -d "src/gameplay" ]; then
+if [ -d "Assets/Scripts/Gameplay" ]; then
   # Find major gameplay subdirectories (those with 5+ files)
-  GAMEPLAY_SYSTEMS=$(find src/gameplay -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+  GAMEPLAY_SYSTEMS=$(find Assets/Scripts/Gameplay -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
 
   if [ -n "$GAMEPLAY_SYSTEMS" ]; then
     while IFS= read -r system_dir; do
@@ -129,9 +129,9 @@ if [ -d "src/gameplay" ]; then
         design_doc_2="design/gdd/${system_name}.md"
 
         if [ ! -f "$design_doc_1" ] && [ ! -f "$design_doc_2" ]; then
-          echo "⚠️  GAP: Gameplay system 'src/gameplay/$system_name/' ($file_count files) has no design doc"
+          echo "⚠️  GAP: Gameplay system 'Assets/Scripts/Gameplay/$system_name/' ($file_count files) has no design doc"
           echo "    Expected: design/gdd/${system_name}-system.md or design/gdd/${system_name}.md"
-          echo "    Suggested action: /reverse-document design src/gameplay/$system_name"
+          echo "    Suggested action: /design-system $system_name"
         fi
       fi
     done <<< "$GAMEPLAY_SYSTEMS"

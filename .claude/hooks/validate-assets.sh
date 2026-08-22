@@ -7,7 +7,7 @@
 #   exit 1 = blocking error (build-breaking issues: invalid JSON, missing required fields)
 #
 # Input schema (PostToolUse for Write/Edit):
-# { "tool_name": "Write", "tool_input": { "file_path": "assets/data/foo.json", "content": "..." } }
+# { "tool_name": "Write", "tool_input": { "file_path": "Assets/Data/foo.json", "content": "..." } }
 
 INPUT=$(cat)
 
@@ -39,7 +39,7 @@ fi
 
 # BLOCKING: Check JSON validity for data files
 # Invalid JSON will break runtime loading -- this is a build-breaking error
-if echo "$FILE_PATH" | grep -qE '(^|/)assets/data/.*\.json$'; then
+if echo "$FILE_PATH" | grep -qE '(^|/)Assets/Data/.*\.json$'; then
     if [ -f "$FILE_PATH" ]; then
         # Find a working Python command
         PYTHON_CMD=""

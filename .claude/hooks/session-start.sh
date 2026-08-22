@@ -50,7 +50,7 @@ if [ -d "src" ]; then
     FIXME_COUNT=$(grep -r "FIXME" src/ 2>/dev/null | wc -l)
     if [ "$TODO_COUNT" -gt 0 ] || [ "$FIXME_COUNT" -gt 0 ]; then
         echo ""
-        echo "Code health: ${TODO_COUNT} TODOs, ${FIXME_COUNT} FIXMEs in src/"
+        echo "Code health: ${TODO_COUNT} TODOs, ${FIXME_COUNT} FIXMEs in Assets/Scripts/"
     fi
 fi
 
