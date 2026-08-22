@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/ui/**"
+  - "Assets/Scripts/UI/**"
 ---
 
 # UI Code Rules

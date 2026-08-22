@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/gameplay/**"
+  - "Assets/Scripts/Gameplay/**"
 ---
 
 # Gameplay Code Rules

@@ -1,11 +1,11 @@
 ---
 paths:
-  - "assets/shaders/**"
+  - "Assets/Shaders/**"
 ---
 
 # Shader Code Standards
 
-All shader files in `assets/shaders/` must follow these standards to maintain
+All shader files in `Assets/Shaders/` must follow these standards to maintain
 visual quality, performance, and cross-platform compatibility.
 
 ## Naming Conventions
