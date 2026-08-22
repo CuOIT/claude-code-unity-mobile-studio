@@ -413,7 +413,7 @@ List top 3 from Phase 6 in priority order. If fewer than 3 remain, list only wha
 > **Required before `/gate-check [stage]`:**
 > - [ ] Accept ADRs: [list Proposed ADR IDs that must be Accepted]
 > - [ ] Write ADRs: [list ADR IDs that must still be written]
-> - [ ] Run `/test-setup` — scaffolds `tests/unit/`, `tests/integration/`, CI workflow, and an example test file
+> - [ ] Run `/test-setup` — scaffolds `Assets/Tests/EditMode/`, `Assets/Tests/PlayMode/`, CI workflow, and an example test file
 > - [ ] Run `/ux-design` — creates `design/ux/interaction-patterns.md` and `design/accessibility-requirements.md`
 >
 > Run `/gate-check [stage]` when all boxes are checked.
@@ -461,8 +461,8 @@ unsure, present 2-4 options with pros/cons before asking them to decide.
 ## Recommended Next Steps
 
 - Run `/architecture-decision [title]` for each required ADR listed in Phase 6 — Foundation layer ADRs first
-- Run `/architecture-review` — bootstraps the Requirements Traceability Matrix and TR registry from the ADRs just written. Required before the Pre-Production gate.
-- Run `/test-setup` to scaffold `tests/unit/`, `tests/integration/`, CI workflow, and an example test (required for gate-check)
+- Run `/architecture-review` — bootstraps the Requirements Traceability Matrix and TR registry from the ADRs just written. Required before the Production gate.
+- Run `/test-setup` to scaffold `Assets/Tests/EditMode/`, `Assets/Tests/PlayMode/`, CI workflow, and an example test (required for gate-check)
 - Run `/ux-design` to initialize `design/ux/interaction-patterns.md` and `design/accessibility-requirements.md` (required for gate-check)
 - Run `/create-control-manifest` once the required ADRs are written to produce the layer rules manifest
-- Run `/gate-check pre-production` when all required ADRs, `/test-setup`, and `/ux-design` are complete
+- Run `/gate-check production` when all required ADRs, `/test-setup`, and `/ux-design` are complete

@@ -361,4 +361,4 @@ If context reaches or exceeds 70% at any point, append this notice:
 - Run `/design-system [first-system-in-order]` to author the first GDD (use design order from the index)
 - Run `/map-systems next` to always pick the highest-priority undesigned system automatically
 - Run `/design-review design/gdd/[system].md` in a fresh session after each GDD is authored
-- Run `/gate-check pre-production` when all MVP GDDs are authored and reviewed
+- Run `/gate-check production` when all MVP GDDs are authored and reviewed

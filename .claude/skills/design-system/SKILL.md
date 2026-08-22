@@ -551,7 +551,7 @@ design question, not a specification.
 - `lean` → skip unless this is a section with HIGH implementation risk (Sections D and H only). For other sections, draft without the agent.
 - `full` → spawn as described below.
 
-**Agent delegation (MANDATORY)**: Spawn `systems-designer` via Task before finalising edge cases. Provide: the completed Sections C and D, and ask them to identify edge cases from the formula and rule space that the main session may have missed. For narrative systems, also spawn `narrative-director`. Present their findings and ask the user which to include.
+**Agent delegation (MANDATORY)**: Spawn `systems-designer` via Task before finalising edge cases. Provide: the completed Sections C and D, and ask them to identify edge cases from the formula and rule space that the main session may have missed. Present their findings and ask the user which to include.
 
 **Cross-reference**: Check edge cases against dependency GDDs. If a dependency
 defines a floor, cap, or resolution rule that this system could violate, flag it.
@@ -646,7 +646,7 @@ Use `AskUserQuestion`:
   requirements, UI requirements, or capture open questions?"
   - Options: "Yes, all three", "Just open questions", "Skip — I'll add these later"
 
-For **Visual/Audio** (non-required systems): Coordinate with `art-director` and `audio-director` if detail is needed. Often a brief note suffices at the GDD stage.
+For **Visual/Audio** (non-required systems): Coordinate with `art-director` and `sound-designer` if detail is needed. Often a brief note suffices at the GDD stage.
 
 > **Asset Spec Flag**: After the Visual/Audio section is written with real content, output this notice:
 > "📌 **Asset Spec** — Visual/Audio requirements are defined. After the art bible is approved, run `/asset-spec system:[system-name]` to produce per-asset visual descriptions, dimensions, and generation prompts from this section."
@@ -657,7 +657,7 @@ After writing this section, check whether it contains real content (not just
 UI requirements, output this flag immediately:
 
 > **📌 UX Flag — [System Name]**: This system has UI requirements. In Phase 4
-> (Pre-Production), run `/ux-design` to create a UX spec for each screen or
+> (MVP phase), run `/ux-design` to create a UX spec for each screen or
 > HUD element this system contributes to **before** writing epics. Stories that
 > reference UI should cite `design/ux/[screen].md`, not the GDD directly.
 >
@@ -790,19 +790,18 @@ orchestrates the overall flow; agents provide expert content.
 
 | System Category | Primary Agent | Supporting Agent(s) |
 |----------------|---------------|---------------------|
-| **Foundation/Infrastructure** (event bus, save/load, scene mgmt, service locator) | `systems-designer` | `gameplay-programmer` (feasibility), `engine-programmer` (engine integration) |
-| Combat, damage, health | `game-designer` | `systems-designer` (formulas), `ai-programmer` (enemy AI), `art-director` (hit feedback visual direction, VFX intent) |
+| **Foundation/Infrastructure** (event bus, save/load, scene mgmt, service locator) | `systems-designer` | `gameplay-programmer` (feasibility), `unity-specialist` (engine integration) |
+| Combat, damage, health | `game-designer` | `systems-designer` (formulas), `gameplay-programmer` (enemy AI), `art-director` (hit feedback visual direction, VFX intent) |
 | Economy, loot, crafting | `economy-designer` | `systems-designer` (curves), `game-designer` (loops) |
 | Progression, XP, skills | `game-designer` | `systems-designer` (curves), `economy-designer` (sinks) |
-| Dialogue, quests, lore | `game-designer` | `narrative-director` (story), `writer` (content), `art-director` (character visual profiles, cinematic tone) |
 | UI systems (HUD, menus) | `game-designer` | `ux-designer` (flows), `ui-programmer` (feasibility), `art-director` (visual style direction), `technical-artist` (render/shader constraints) |
-| Audio systems | `game-designer` | `audio-director` (direction), `sound-designer` (specs) |
-| AI, pathfinding, behavior | `game-designer` | `ai-programmer` (implementation), `systems-designer` (scoring) |
-| Level/world systems | `game-designer` | `level-designer` (spatial), `world-builder` (lore) |
+| Audio systems | `game-designer` | `sound-designer` (direction + specs) |
+| AI, pathfinding, behavior | `game-designer` | `gameplay-programmer` (implementation), `systems-designer` (scoring) |
+| Level/puzzle content | `game-designer` | `puzzle-level-designer` (levels, curve), `systems-designer` (rule coverage) |
 | Camera, input, controls | `game-designer` | `ux-designer` (feel), `gameplay-programmer` (feasibility) |
 | Animation, character movement | `game-designer` | `art-director` (animation style, pose language), `technical-artist` (rig/blend constraints), `gameplay-programmer` (feel) |
 | Visual effects, particles, shaders | `game-designer` | `art-director` (VFX visual direction), `technical-artist` (performance budget, shader complexity), `systems-designer` (trigger/state integration) |
-| Character systems (stats, archetypes) | `game-designer` | `art-director` (character visual archetype), `narrative-director` (character arc alignment), `systems-designer` (stat formulas) |
+| Character systems (stats, archetypes) | `game-designer` | `art-director` (visual archetype), `systems-designer` (stat formulas) |
 
 **When delegating via Task tool**:
 - Provide: system name, game concept summary, dependency GDD excerpts, the specific
@@ -868,4 +867,4 @@ shows context at or above 70%. If so, append this notice to the response:
 - Run `/design-review design/gdd/[system-name].md` in a **fresh session** to validate the completed GDD independently
 - Run `/consistency-check` to verify this GDD's values don't conflict with other GDDs
 - Run `/map-systems next` to move to the next highest-priority undesigned system
-- Run `/gate-check pre-production` when all MVP GDDs are authored and reviewed
+- Run `/gate-check production` when all MVP GDDs are authored and reviewed

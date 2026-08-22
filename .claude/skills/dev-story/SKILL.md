@@ -24,7 +24,7 @@ drives implementation to completion — including writing the test.
 
 **After all sprint stories are done:** run `/team-qa sprint` to execute the full QA cycle and get a sign-off verdict before advancing the project stage.
 
-**Output:** Source code + test file in the project's `src/` and `tests/` directories.
+**Output:** Source code + test file in the project's `Assets/Scripts/` and `Assets/Tests/` directories.
 
 ---
 
@@ -145,12 +145,11 @@ If the story's Type is `Config/Data`, no programmer agent or engine specialist i
 
 | Story context | Primary agent |
 |---|---|
-| Foundation layer — any type | `engine-programmer` |
+| Foundation layer — any type | `unity-specialist` |
 | Any layer — Type: UI | `ui-programmer` |
 | Any layer — Type: Visual/Feel | `gameplay-programmer` (implements) |
 | Core or Feature — gameplay mechanics | `gameplay-programmer` |
-| Core or Feature — AI behaviour, pathfinding | `ai-programmer` |
-| Core or Feature — networking, replication | `network-programmer` |
+| Core or Feature — AI behaviour, pathfinding | `gameplay-programmer` |
 | Config/Data — no code | No agent needed (see Phase 4 Config note) |
 
 ### Engine specialist — always spawn as secondary for code stories
@@ -162,7 +161,7 @@ engine risk.
 
 | Engine | Specialist agents available |
 |--------|----------------------------|
-| Unity (only) | `unity-specialist`, `unity-ui-specialist`, `unity-shader-specialist`, `unity-dots-specialist`, `unity-addressables-specialist` |
+| Unity (only) | `unity-specialist`, `unity-ui-specialist`, `unity-shader-specialist`, `unity-specialist`, `unity-addressables-specialist` |
 
 
 **When engine risk is HIGH** (from the ADR or VERSION.md): always spawn the engine
@@ -187,7 +186,7 @@ Brief the agent with file paths and targeted reading instructions — do not ser
 8. **Explicit instruction**: implement this story following the ADR guidelines, respect the manifest rules, stay within the story's Out of Scope boundaries. Write clean, doc-commented public APIs.
 
 The agent should:
-- Create or modify files in `src/` following the ADR guidelines
+- Create or modify files in `Assets/Scripts/` following the ADR guidelines
 - Respect all Required and Forbidden patterns from the control manifest
 - Stay within the story's Out of Scope boundaries (do not touch unrelated files)
 - Write clean, doc-commented public APIs

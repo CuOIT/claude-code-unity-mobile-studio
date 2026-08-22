@@ -1,6 +1,6 @@
 ---
 name: team-live-ops
-description: "Orchestrate the live-ops team for post-launch content planning: coordinates live-ops-designer, economy-designer, analytics-engineer, community-manager, writer, and narrative-director to design and plan a season, event, or live content update."
+description: "Orchestrate the live-ops team for post-launch content planning: coordinates live-ops-designer, economy-designer, analytics-engineer, and ux-designer to design and plan a season, event, or live content update."
 argument-hint: "[season name or event description] [--review full|lean|solo]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Task, AskUserQuestion, TodoWrite
@@ -34,9 +34,8 @@ Store the resolved mode for use in all subsequent phases.
 - **live-ops-designer** — Season structure, event cadence, retention mechanics, battle pass
 - **economy-designer** — Live economy balance, store rotation, currency pricing, pity timers
 - **analytics-engineer** — Success metrics, A/B test design, event tracking, dashboard specs
-- **community-manager** — Player-facing announcements, event descriptions, seasonal messaging
-- **narrative-director** — Seasonal narrative theme, story arc, world event framing
-- **writer** — Event descriptions, reward item names, seasonal flavor text, announcement copy
+- **live-ops-designer** — Player-facing announcements, event descriptions, seasonal messaging
+- **ux-designer** — Event copy: names, descriptions, objective text, announcement wording
 
 ## How to Delegate
 
@@ -44,9 +43,8 @@ Use the Task tool to spawn each team member as a subagent:
 - `subagent_type: live-ops-designer` — Season/event structure and retention mechanics
 - `subagent_type: economy-designer` — Live economy balance and reward pricing
 - `subagent_type: analytics-engineer` — Success metrics, A/B tests, event instrumentation
-- `subagent_type: community-manager` — Player-facing communication and messaging
-- `subagent_type: narrative-director` — Seasonal theme and narrative framing
-- `subagent_type: writer` — All player-facing text: event descriptions, item names, copy
+- `subagent_type: live-ops-designer` — Player-facing communication and messaging
+- `subagent_type: ux-designer` — All player-facing text: event descriptions, item names, copy
 
 Always provide full context in each agent's prompt (game concept path, existing season docs, ethics policy path, current economy state). Launch independent agents in parallel where the pipeline allows it (Phases 3 and 4 can run simultaneously).
 
@@ -61,7 +59,7 @@ Delegate to **live-ops-designer**:
 - Output: season brief with scope, content list, and retention mechanic overview
 
 ### Phase 2: Narrative Theme
-Delegate to **narrative-director**:
+Delegate to **live-ops-designer** (seasonal framing):
 - Read the season brief from Phase 1
 - Design the seasonal narrative theme: how does this event connect to the game world?
 - Define the central story hook players will discover during the event
@@ -87,12 +85,11 @@ Delegate to **analytics-engineer**:
 
 ### Phase 5: Content Writing (parallel)
 Delegate in parallel:
-- **narrative-director** (if needed): Write any in-game narrative text (cutscene scripts, NPC dialogue, world event descriptions) for the season
-- **writer**: Write all player-facing text — event names, reward item descriptions, challenge objective text, seasonal flavor text
+- **ux-designer**: Write all player-facing text — event names, reward item descriptions, challenge objective text, seasonal flavor text
 - Both should read the narrative framing doc from Phase 2
 
 ### Phase 6: Player Communication Plan
-Delegate to **community-manager**:
+Delegate to **live-ops-designer**:
 - Read the season brief, economy design, and narrative framing
 - Draft the season launch announcement (tone, key highlights, platform-specific versions)
 - Plan the communication cadence: pre-launch teaser, launch day post, mid-season reminder, final week FOMO push

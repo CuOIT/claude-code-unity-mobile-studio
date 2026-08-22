@@ -228,7 +228,7 @@ After handling the producer's verdict, ask: "May I write the sprint plan to `pro
 
 After writing, add:
 
-> **Scope check:** If this sprint includes stories added beyond the original epic scope, run `/scope-check [epic]` to detect scope creep before implementation begins.
+> **Scope check:** If this sprint includes stories added beyond the original epic scope, ask `producer` to check for scope creep before implementation begins.
 
 ---
 
@@ -271,7 +271,7 @@ After the sprint plan is written and QA plan status is resolved:
 - `/story-readiness [story-file]` — validate a story is ready before starting it
 - `/dev-story [story-file]` — begin implementing the first story
 - `/sprint-status` — check progress mid-sprint
-- `/scope-check [epic]` — verify no scope creep before implementation begins
+- `producer` review — verify no scope creep before implementation begins
 
 **Review mode configuration:** All director gates (producer feasibility, QA review, code review) respect the project review mode. The review mode is set in Phase 0 when the file does not exist (for `new` sprints), or can be overridden per-run with `--review full|lean|solo` as an argument. The file `production/review-mode.txt` contains one of:
 - `lean` — skip automated director gates (default if file is absent — fastest for solo dev)

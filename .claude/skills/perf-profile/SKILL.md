@@ -103,7 +103,7 @@ Activate this phase only if any hotspot has Fix Effort rated M or L.
 Present significant-effort items and ask the user to choose for each:
 
 - **A) Implement the optimization** (proceed with fix now or schedule it)
-- **B) Reduce feature scope** (run `/scope-check [feature]` to analyze trade-offs)
+- **B) Reduce feature scope** (consult `producer` to analyze trade-offs)
 - **C) Accept the performance hit and defer to Polish phase** (log as known issue)
 - **D) Escalate to technical-director for an architectural decision** (run `/architecture-decision`)
 
@@ -116,7 +116,7 @@ This skill is read-only — no files are written. Verdict: **COMPLETE** — perf
 ## Phase 6: Next Steps
 
 - If bottlenecks require architectural change: run `/architecture-decision`.
-- If scope reduction is needed: run `/scope-check [feature]`.
+- If scope reduction is needed: escalate to `producer`.
 - To schedule optimizations: run `/sprint-plan update`.
 
 ### Rules

@@ -195,7 +195,7 @@ and the architecture module's stated responsibilities]
 This epic is complete when:
 - All stories are implemented, reviewed, and closed via `/story-done`
 - All acceptance criteria from `design/gdd/[filename].md` are verified
-- All Logic and Integration stories have passing test files in `tests/`
+- All Logic and Integration stories have passing test files in `Assets/Tests/`
 - All Visual/Feel and UI stories have evidence docs with sign-off in `production/qa/evidence/`
 
 ## Next Step
@@ -224,7 +224,7 @@ Engine: [name + version]
 
 After writing all epics for the requested scope:
 
-- **Foundation + Core complete**: These are required for the Pre-Production →
+- **Foundation + Core complete**: These are required for the Technical Setup →
   Production gate. Run `/gate-check production` to check readiness.
 - **Reminder**: Epics define scope. Stories define implementation steps. Run
   `/create-stories [epic-slug]` for each epic before developers can pick up work.

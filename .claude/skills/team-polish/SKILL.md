@@ -33,7 +33,7 @@ Store the resolved mode for use in all subsequent phases.
 
 ## Team Composition
 - **performance-analyst** — Profiling, optimization, memory analysis, frame budget
-- **engine-programmer** — Engine-level bottlenecks: rendering pipeline, memory, resource loading (invoke when performance-analyst identifies low-level root causes)
+- **unity-specialist** — Engine-level bottlenecks: rendering pipeline, memory, resource loading (invoke when performance-analyst identifies low-level root causes)
 - **technical-artist** — VFX polish, shader optimization, visual quality
 - **sound-designer** — Audio polish, mixing, ambient layers, feedback sounds
 - **tools-programmer** — Content pipeline tool verification, editor tool stability, automation fixes (invoke when content authoring tools are involved in the polished area)
@@ -43,7 +43,7 @@ Store the resolved mode for use in all subsequent phases.
 
 Use the Task tool to spawn each team member as a subagent:
 - `subagent_type: performance-analyst` — Profiling, optimization, memory analysis
-- `subagent_type: engine-programmer` — Engine-level fixes for rendering, memory, resource loading
+- `subagent_type: unity-specialist` — Engine-level fixes for rendering, memory, resource loading
 - `subagent_type: technical-artist` — VFX polish, shader optimization, visual quality
 - `subagent_type: sound-designer` — Audio polish, mixing, ambient layers
 - `subagent_type: tools-programmer` — Content pipeline and editor tool verification
@@ -69,7 +69,7 @@ Delegate to **performance-analyst** (with relevant programmers as needed):
 - Verify optimizations don't change gameplay behavior
 - Output: optimized code with before/after metrics
 
-If Phase 1 identified engine-level root causes (rendering pipeline, resource loading, memory allocator), delegate those fixes to **engine-programmer** in parallel:
+If Phase 1 identified engine-level root causes (rendering pipeline, resource loading, memory allocator), delegate those fixes to **unity-specialist** in parallel:
 - Optimize hot paths in engine systems
 - Fix allocation pressure in core loops
 - Output: engine-level fixes with profiler validation

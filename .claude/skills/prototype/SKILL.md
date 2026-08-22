@@ -5,7 +5,7 @@ argument-hint: "[concept-description] [--path html|engine|paper] [--review full|
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Task, AskUserQuestion
 model: sonnet
-agent: prototyper
+agent: gameplay-programmer
 isolation: worktree
 ---
 
@@ -23,7 +23,7 @@ design change, or technical question. Pass `--spike` to activate spike mode: a
 lightweight ~4-hour build with no GDD prerequisites and no phase gate implications.
 
 **Already have GDDs and architecture complete?** To validate the full game loop
-before committing to Production, run `/vertical-slice` instead.
+before committing to Production, run `/puzzle-mvp --mode signal` instead.
 
 ---
 

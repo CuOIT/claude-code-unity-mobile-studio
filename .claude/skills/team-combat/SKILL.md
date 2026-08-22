@@ -1,6 +1,6 @@
 ---
 name: team-combat
-description: "Orchestrate the combat team: coordinates game-designer, gameplay-programmer, ai-programmer, technical-artist, sound-designer, and qa-tester to design, implement, and validate a combat feature end-to-end."
+description: "Orchestrate the combat team: coordinates game-designer, gameplay-programmer, technical-artist, sound-designer, and qa-tester to design, implement, and validate a combat feature end-to-end."
 argument-hint: "[combat feature description] [--review full|lean|solo]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Task, AskUserQuestion, TodoWrite
@@ -33,7 +33,7 @@ Store the resolved mode for use in all subsequent phases.
 ## Team Composition
 - **game-designer** — Design the mechanic, define formulas and edge cases
 - **gameplay-programmer** — Implement the core gameplay code
-- **ai-programmer** — Implement NPC/enemy AI behavior for the feature
+- **gameplay-programmer** — Implement NPC/enemy AI behavior for the feature
 - **technical-artist** — Create VFX, shader effects, and visual feedback
 - **sound-designer** — Define audio events, impact sounds, and ambient combat audio
 - **engine specialist** (primary) — Validate architecture and implementation patterns are idiomatic for the engine (read from `.claude/docs/technical-preferences.md` Engine Specialists section)
@@ -44,7 +44,7 @@ Store the resolved mode for use in all subsequent phases.
 Use the Task tool to spawn each team member as a subagent:
 - `subagent_type: game-designer` — Design the mechanic, define formulas and edge cases
 - `subagent_type: gameplay-programmer` — Implement the core gameplay code
-- `subagent_type: ai-programmer` — Implement NPC/enemy AI behavior
+- `subagent_type: gameplay-programmer` — Implement NPC/enemy AI behavior
 - `subagent_type: technical-artist` — Create VFX, shader effects, visual feedback
 - `subagent_type: sound-designer` — Define audio events, impact sounds, ambient audio
 - `subagent_type: [primary engine specialist]` — Engine idiom validation for architecture and implementation
@@ -60,7 +60,7 @@ Delegate to **game-designer**:
 - Output: completed design document
 
 ### Phase 2: Architecture
-Delegate to **gameplay-programmer** (with **ai-programmer** if AI is involved):
+Delegate to **gameplay-programmer** (with **gameplay-programmer** if AI is involved):
 - Review the design document
 - Design the code architecture: class structure, interfaces, data flow
 - Identify integration points with existing systems
@@ -75,7 +75,7 @@ Then spawn the **primary engine specialist** to validate the proposed architectu
 Use `AskUserQuestion`:
 - Prompt: "Architecture sketch complete. Approve to proceed with parallel implementation."
 - Options:
-  - `[A] Proceed — spawn implementation agents (gameplay-programmer, ai-programmer, technical-artist, sound-designer)`
+  - `[A] Proceed — spawn implementation agents (gameplay-programmer, technical-artist, sound-designer)`
   - `[B] Revise the architecture first — I'll describe what needs to change`
   - `[C] Stop here — I'll continue later`
 
@@ -84,7 +84,7 @@ Only spawn implementation agents if user selects [A].
 ### Phase 3: Implementation (parallel where possible)
 Delegate in parallel:
 - **gameplay-programmer**: Implement core combat mechanic code
-- **ai-programmer**: Implement AI behaviors (if the feature involves NPC reactions)
+- **gameplay-programmer**: Implement AI behaviors (if the feature involves NPC reactions)
 - **technical-artist**: Create VFX and shader effects
 - **sound-designer**: Define audio event list and mixing notes
 

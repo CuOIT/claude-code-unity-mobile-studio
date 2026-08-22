@@ -290,7 +290,7 @@ Use `AskUserQuestion`:
   - `[A] Spec another system — /asset-spec system:[next-system]`
   - `[B] Spec a level — /asset-spec level:[level-name]`
   - `[C] Spec a character — /asset-spec character:[character-name]`
-  - `[D] Run /asset-audit — validate delivered assets against specs`
+  - `[D] Run /mobile-build-check — validate delivered assets against budgets`
   - `[E] Stop here`
 
 ---
@@ -349,4 +349,4 @@ Every phase follows: **Identify → Confirm → Generate → Review → Approve 
 ## Recommended Next Steps
 
 - Run `/asset-spec [next-context]` to continue speccing remaining systems, levels, or characters
-- Run `/asset-audit` to validate delivered assets against the written specs and identify gaps or mismatches
+- Run `/mobile-build-check` to validate delivered assets against mobile budgets and identify gaps

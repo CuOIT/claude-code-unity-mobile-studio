@@ -165,7 +165,7 @@ items pass or are explicitly marked N/A with a stated reason.
 ### Asset References Check
 
 - [ ] **Referenced assets exist**: Scan the story text for asset path patterns
-  (paths containing `assets/`, or file extensions `.png`, `.jpg`, `.svg`,
+  (paths containing `Assets/`, or file extensions `.png`, `.jpg`, `.svg`,
   `.wav`, `.ogg`, `.mp3`, `.glb`, `.gltf`, `.tres`, `.tscn`, `.res`).
   - For each asset path found: use Glob to check whether the file exists.
   - If any referenced asset does not exist: **NEEDS WORK** — note the missing

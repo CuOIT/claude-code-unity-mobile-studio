@@ -308,7 +308,7 @@ If yes, generate the document using the template at `.claude/docs/templates/game
 **Scope consistency rule**: The "Estimated Scope" field in the Core Identity table must match the full-vision timeline from the Scope Tiers section — not just say "Large (9+ months)". Write it as "Large (X–Y months, solo)" or "Large (X–Y months, team of N)" so the summary table is accurate.
 
 6. **Suggest next steps** (in this order — this is the professional studio
-   pre-production pipeline). List ALL steps — do not abbreviate or truncate:
+   pipeline). List ALL steps — do not abbreviate or truncate:
 
 **Path A — Design-First** (recommended if the concept is well-defined):
    1. "Run `/setup-engine` to configure the engine and populate version-aware reference docs"
@@ -319,7 +319,7 @@ If yes, generate the document using the template at `.claude/docs/templates/game
    6. "Author per-system GDDs with `/design-system` — guided, section-by-section GDD writing for each system identified in step 5"
    7. "Plan the technical architecture with `/create-architecture` — produces the master architecture blueprint and Required ADR list"
    8. "Record key architectural decisions with `/architecture-decision (×N)` — write one ADR per decision in the Required ADR list from `/create-architecture`"
-   9. "Run `/architecture-review` — bootstraps the TR registry and Requirements Traceability Matrix from your GDDs and ADRs (required before the Pre-Production gate)"
+   9. "Run `/architecture-review` — bootstraps the TR registry and Requirements Traceability Matrix from your GDDs and ADRs (required before the Production gate)"
    10. "Validate readiness to advance with `/gate-check` — phase gate before committing to production"
 
 **Path B — Prototype-First** (use if the core mechanic is unproven or the concept needs validation):
@@ -327,7 +327,7 @@ If yes, generate the document using the template at `.claude/docs/templates/game
    2. "Run `/prototype [core-mechanic]` — validate the core idea is fun before writing any GDDs (1–3 days throwaway code)"
    3. "If prototype PROCEEDS: run `/art-bible`, then continue with Path A steps 5–10 above, using prototype learnings to inform your GDDs"
    4. "If prototype PIVOTS: return to `/brainstorm` with the learnings and reshape the concept"
-   5. "After full design and architecture, build the `/vertical-slice` to validate production readiness before committing to sprints"
+   5. "After full design and architecture, build the `/puzzle-mvp --mode signal` to validate production readiness before committing to sprints"
 
 7. **Output a summary** with the chosen concept's elevator pitch, pillars,
    primary player type, engine recommendation, biggest risk, and file path.
@@ -349,11 +349,11 @@ append this notice to the current response before continuing:
 
 ## Recommended Next Steps
 
-After the game concept is written, follow the pre-production pipeline in order:
+After the game concept is written, follow the pipeline in order:
 1. `/setup-engine` — configure the engine and populate version-aware reference docs
 2. `/art-bible` — establish visual identity before writing any GDDs
 3. `/map-systems` — decompose the concept into individual systems with dependencies
 4. `/design-system [first-system]` — author per-system GDDs in dependency order
 5. `/create-architecture` — produce the master architecture blueprint
 6. `/architecture-review` — bootstrap TR registry and Requirements Traceability Matrix
-7. `/gate-check pre-production` — validate readiness before committing to production
+7. `/gate-check production` — validate readiness before committing to production

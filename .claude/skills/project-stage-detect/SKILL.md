@@ -33,7 +33,7 @@ Analyze project structure and content:
 - Count narrative docs in `design/narrative/`
 - Count level designs in `design/levels/`
 
-**Source Code** (`src/`):
+**Source Code** (`Assets/Scripts/`):
 - Count source files (language-agnostic)
 - Identify major systems (directories with 5+ files)
 - Check for core/, gameplay/, ai/, networking/, ui/ directories
@@ -53,7 +53,7 @@ Analyze project structure and content:
 - Count ADRs (Architecture Decision Records)
 - Check for overview/index documents
 
-**Tests** (`tests/`):
+**Tests** (`Assets/Tests/`):
 - Count test files
 - Estimate test coverage (rough heuristic)
 
@@ -65,11 +65,11 @@ auto-detect using these heuristics (check from most-advanced backward):
 
 | Stage | Indicators |
 |-------|-----------|
-| **Concept** | No game concept doc, brainstorming phase |
-| **Systems Design** | Game concept exists, systems index missing or incomplete |
-| **Technical Setup** | Systems index exists, engine not configured |
-| **Pre-Production** | Engine configured, `src/` has <10 source files |
-| **Production** | `src/` has 10+ source files, active development |
+| **Concept** | No game concept doc, or conventions not configured |
+| **MVP** | Game concept exists but no `production/mvp-report.md` with a PROCEED verdict |
+| **Systems Design** | MVP report says PROCEED; systems index missing or incomplete |
+| **Technical Setup** | Systems index exists; no `docs/architecture/architecture.md` |
+| **Production** | Epics or sprints exist in `production/`, active development |
 | **Polish** | Explicit only (set by `/gate-check` Production → Polish gate) |
 | **Release** | Explicit only (set by `/gate-check` Polish → Release gate) |
 
@@ -77,7 +77,7 @@ auto-detect using these heuristics (check from most-advanced backward):
 
 **DO NOT** just list missing files. Instead, **ask clarifying questions**:
 
-- "I see combat code (`src/gameplay/combat/`) but no `design/gdd/combat-system.md`. Was this prototyped first, or should we reverse-document?"
+- "I see gameplay code (`Assets/Scripts/Gameplay/Puzzle/`) but no design doc for it. Was this built during the MVP, or should we author the GDD now with `/design-system`?"
 - "You have 15 ADRs but no architecture overview. Should I create one to help new contributors?"
 - "No sprint plans in `production/`. Are you tracking work elsewhere (Jira, Trello, etc.)?"
 - "I found a game concept but no systems index. Have you decomposed the concept into individual systems yet, or should we run `/map-systems`?"
@@ -92,7 +92,7 @@ Use template: `.claude/docs/templates/project-stage-report.md`
 # Project Stage Analysis
 
 **Date**: [date]
-**Stage**: [Concept/Systems Design/Technical Setup/Pre-Production/Production/Polish/Release]
+**Stage**: [Concept/MVP/Systems Design/Technical Setup/Production/Polish/Release]
 **Stage Confidence**: [PASS — clearly detected / CONCERNS — ambiguous signals / FAIL — critical gaps block progress]
 
 ## Completeness Overview
@@ -174,11 +174,11 @@ Wait for user approval before creating the file.
 After generating the report, suggest relevant next steps:
 
 - **Concept exists but no systems index?** → `/map-systems` to decompose into systems
-- **Missing design docs?** → `/reverse-document design src/[system]`
-- **Missing architecture docs?** → `/architecture-decision` or `/reverse-document architecture`
-- **Prototypes need documentation?** → `/reverse-document concept prototypes/[name]`
+- **Missing design docs?** → `/design-system [system]`
+- **Missing architecture docs?** → `/architecture-decision` or `/create-architecture`
+- **Prototypes need documentation?** → `/puzzle-mvp` produces `production/mvp-report.md`
 - **No sprint plan?** → `/sprint-plan`
-- **Approaching milestone?** → `/milestone-review`
+- **Approaching milestone?** → `/sprint-status`
 
 ---
 

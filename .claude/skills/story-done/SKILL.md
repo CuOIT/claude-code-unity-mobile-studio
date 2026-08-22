@@ -82,7 +82,7 @@ three methods:
 - **Test pass check**: if a test file path is mentioned, run it via `Bash`.
 - **No hardcoded values check**: `Grep` for numeric literals in gameplay code
   paths that should be in config files.
-- **No hardcoded strings check**: `Grep` for player-facing strings in `src/`
+- **No hardcoded strings check**: `Grep` for player-facing strings in `Assets/Scripts/`
   that should be in localization files.
 - **Dependency check**: if a criterion says "depends on X", check that X exists.
 
@@ -113,9 +113,9 @@ For each acceptance criterion in the story:
 
 1. Ask: is there a test — unit, integration, or confirmed manual playtest — that
    directly verifies this criterion?
-   - **Unit test**: check `tests/unit/` for a test file or function name that
+   - **Unit test**: check `Assets/Tests/EditMode/` for a test file or function name that
      matches the criterion's subject (use `Glob` and `Grep`)
-   - **Integration test**: check `tests/integration/` similarly
+   - **Integration test**: check `Assets/Tests/PlayMode/` similarly
    - **Manual confirmation**: if the criterion was verified via `AskUserQuestion`
      above with a "Yes — passes" answer, count that as a manual test
 
@@ -124,7 +124,7 @@ For each acceptance criterion in the story:
 ```
 | Criterion | Test | Status |
 |-----------|------|--------|
-| AC-1: [criterion text] | tests/unit/test_foo.gd::test_bar | COVERED |
+| AC-1: [criterion text] | Assets/Tests/EditMode/test_foo.gd::test_bar | COVERED |
 | AC-2: [criterion text] | Manual playtest confirmation | COVERED |
 | AC-3: [criterion text] | — | UNTESTED |
 ```
@@ -148,15 +148,15 @@ Based on the Story Type extracted in Phase 2, check for required evidence:
 
 | Story Type | Required Evidence | Gate Level |
 |---|---|---|
-| **Logic** | Automated unit test in `tests/unit/[system]/` — must exist and pass | BLOCKING |
-| **Integration** | Integration test in `tests/integration/[system]/` OR playtest doc | BLOCKING |
+| **Logic** | Automated unit test in `Assets/Tests/EditMode/[system]/` — must exist and pass | BLOCKING |
+| **Integration** | Integration test in `Assets/Tests/PlayMode/[system]/` OR playtest doc | BLOCKING |
 | **Visual/Feel** | Screenshot + sign-off in `production/qa/evidence/` | ADVISORY |
 | **UI** | Manual walkthrough doc OR interaction test in `production/qa/evidence/` | ADVISORY |
 | **Config/Data** | Smoke check pass report in `production/qa/smoke-*.md` | ADVISORY |
 
 **For Logic stories**: first read the story's **Test Evidence** section to extract the
 exact required file path. Use `Glob` to check that exact path. If the exact path is not
-found, also search `tests/unit/[system]/` broadly (the file may have been placed at a
+found, also search `Assets/Tests/EditMode/[system]/` broadly (the file may have been placed at a
 slightly different location). If no test file is found at either location:
 - Flag as **BLOCKING**: "Logic story has no unit test file. Story requires it at
   `[exact-path-from-Test-Evidence-section]`. Create and run the test before marking
@@ -164,7 +164,7 @@ slightly different location). If no test file is found at either location:
 
 **For Integration stories**: read the story's **Test Evidence** section for the exact
 required path. Use `Glob` to check that exact path first, then search
-`tests/integration/[system]/` broadly, then check `production/session-logs/` for a
+`Assets/Tests/PlayMode/[system]/` broadly, then check `production/session-logs/` for a
 playtest record referencing this story.
 If none found: flag as **BLOCKING** (same rule as Logic).
 
@@ -370,7 +370,7 @@ If "Fix first": stop here and list what the user flagged. Do not write any files
 
 ```
 Suggested commit:
-git add [src/ and tests/ files changed during implementation] [story-file-path]
+git add [Assets/Scripts/ and tests/ files changed during implementation] [story-file-path]
 git commit -m "feat: [story title] ([TR-ID])"
 ```
 

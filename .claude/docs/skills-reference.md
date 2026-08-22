@@ -1,139 +1,139 @@
 # Available Skills (Slash Commands)
 
-74 slash commands organized by phase. Type `/` in Claude Code to access any of them.
+58 slash commands, organised by workflow phase. Type `/` in Claude Code to access any.
+
+Trimmed for **mobile puzzle** development. See the bottom of this file for what was
+archived and where its capability went.
 
 ## Onboarding & Navigation
 
 | Command | Purpose |
 |---------|---------|
-| `/start` | First-time onboarding — asks where you are, then guides you to the right workflow |
-| `/help` | Context-aware "what do I do next?" — reads current stage and surfaces the required next step |
-| `/project-stage-detect` | Full project audit — detect phase, identify existence gaps, recommend next steps |
-| `/setup-engine` | Configure engine + version, detect knowledge gaps, populate version-aware reference docs |
-| `/adopt` | Brownfield format audit — checks internal structure of existing GDDs/ADRs/stories, produces migration plan |
+| `/start` | First-time onboarding — asks where you are, then routes you |
+| `/help` | Context-aware "what do I do next?" — reads current stage and surfaces the next step |
+| `/project-stage-detect` | Full project audit — detect phase, identify gaps, recommend next steps |
+| `/setup-engine` | Configure engine and conventions. **Asks** for the version rather than pinning one |
+
+## MVP — the fast lane
+
+| Command | Purpose |
+|---------|---------|
+| `/puzzle-mvp` | **Build a playable MVP.** `--mode demo` for speed to something demonstrable; `--mode signal` for a soft-launch build that gathers real data. **This code is kept** — Production continues from it |
+| `/level-pipeline` | Decide and scaffold how levels are authored, stored, ordered, and validated. Run once the mechanic is known |
+| `/sdk-integrate` | Write an adapter from an existing contract onto a real vendor SDK. Enforces consent-before-ads |
+| `/feature-flag` | Add, list, or audit feature flags across all three tiers. Catches flags read but never declared |
+| `/prototype` | Throwaway spike for one narrow technical or design question (4-hour cap). Distinct from the MVP — spike code is discarded |
 
 ## Game Design
 
 | Command | Purpose |
 |---------|---------|
-| `/brainstorm` | Guided ideation using professional studio methods (MDA, SDT, Bartle, verb-first) |
-| `/map-systems` | Decompose game concept into systems, map dependencies, prioritize design order |
-| `/design-system` | Guided, section-by-section GDD authoring for a single game system |
-| `/quick-design` | Lightweight design spec for small changes — tuning, tweaks, minor additions |
-| `/review-all-gdds` | Cross-GDD consistency and game design holism review across all design docs |
-| `/propagate-design-change` | When a GDD is revised, find affected ADRs and produce an impact report |
+| `/brainstorm` | Guided ideation using studio methods (MDA, verb-first, player psychology) |
+| `/map-systems` | Decompose the concept into systems, map dependencies, prioritise design order |
+| `/design-system` | Guided section-by-section GDD authoring for one system |
+| `/quick-design` | Lightweight spec for small changes — tuning, tweaks, minor additions |
+| `/design-review` | Review one design document for completeness and implementability |
+| `/review-all-gdds` | Holistic cross-GDD consistency and design-theory review |
+| `/consistency-check` | Scan GDDs against the entity registry for contradictions |
+| `/propagate-design-change` | When a GDD is revised, find the ADRs it may have invalidated |
+| `/balance-check` | Analyse balance data, formulas, and curves — flag outliers |
 
-## Art & Assets
-
-| Command | Purpose |
-|---------|---------|
-| `/art-bible` | Guided, section-by-section Art Bible authoring — creates visual identity spec before asset production begins |
-| `/asset-spec` | Generate per-asset visual specifications and AI generation prompts from GDDs, level docs, or character profiles |
-| `/asset-audit` | Audit assets for naming conventions, file size budgets, and pipeline compliance |
-
-## UX & Interface Design
+## Art, Assets & UX
 
 | Command | Purpose |
 |---------|---------|
-| `/ux-design` | Guided section-by-section UX spec authoring (screen/flow, HUD, or pattern library) |
-| `/ux-review` | Validate UX specs for GDD alignment, accessibility, and pattern compliance |
+| `/art-bible` | Guided art bible authoring — visual identity before asset production |
+| `/asset-spec` | Per-asset specifications and generation prompts |
+| `/ux-design` | Guided UX spec authoring for a screen, flow, or HUD |
+| `/ux-review` | Validate a UX spec for completeness, accessibility, and GDD alignment |
+| `/localize` | Localisation pipeline: string extraction, validation, translation readiness |
 
 ## Architecture
 
 | Command | Purpose |
 |---------|---------|
 | `/create-architecture` | Guided authoring of the master architecture document |
-| `/architecture-decision` | Create an Architecture Decision Record (ADR) |
-| `/architecture-review` | Validate all ADRs for completeness, dependency ordering, and GDD coverage |
-| `/create-control-manifest` | Generate flat programmer rules sheet from accepted ADRs |
+| `/architecture-decision` | Create an Architecture Decision Record |
+| `/architecture-review` | Validate all ADRs for completeness, ordering, and GDD coverage |
+| `/create-control-manifest` | Flat programmer rules sheet generated from accepted ADRs |
 
 ## Stories & Sprints
 
 | Command | Purpose |
 |---------|---------|
-| `/create-epics` | Translate GDDs + ADRs into epics — one per architectural module |
-| `/create-stories` | Break a single epic into implementable story files |
-| `/dev-story` | Read a story and implement it — routes to the correct programmer agent |
-| `/sprint-plan` | Generate or update a sprint plan; initializes sprint-status.yaml |
-| `/sprint-status` | Fast 30-line sprint snapshot (reads sprint-status.yaml) |
-| `/story-readiness` | Validate a story is implementation-ready before pickup (READY/NEEDS WORK/BLOCKED) |
-| `/story-done` | 8-phase completion review after implementation; updates story file, surfaces next story |
-| `/estimate` | Structured effort estimate with complexity, dependencies, and risk breakdown |
+| `/create-epics` | Translate GDDs + architecture into epics, one per module |
+| `/create-stories` | Break an epic into implementable story files |
+| `/story-readiness` | Validate a story is implementation-ready (READY / NEEDS WORK / BLOCKED) |
+| `/dev-story` | Read a story and implement it — routes to the right specialist |
+| `/story-done` | Completion review; verifies acceptance criteria, closes the story |
+| `/sprint-plan` | Generate or update a sprint plan |
+| `/sprint-status` | Fast sprint snapshot |
+| `/retrospective` | Structured sprint or milestone retrospective |
 
 ## Reviews & Analysis
 
 | Command | Purpose |
 |---------|---------|
-| `/design-review` | Review a game design document for completeness and consistency |
-| `/code-review` | Architectural code review for a file or changeset |
-| `/balance-check` | Analyze game balance data, formulas, and config — flag outliers |
-| `/content-audit` | Audit GDD-specified content counts against implemented content |
-| `/scope-check` | Analyze feature or sprint scope against original plan, flag scope creep |
-| `/perf-profile` | Structured performance profiling with bottleneck identification |
-| `/mobile-build-check` | Mobile build-readiness pre-flight scan (IL2CPP, Addressables, textures, safe-area) — no Unity editor required |
-| `/tech-debt` | Scan, track, prioritize, and report on technical debt |
-| `/gate-check` | Validate readiness to advance between development phases (PASS/CONCERNS/FAIL) |
-| `/consistency-check` | Scan all GDDs against the entity registry to detect cross-document inconsistencies (stats, names, rules that contradict each other) |
-| `/security-audit` | Audit the game for security vulnerabilities: save tampering, cheat vectors, network exploits, data exposure, and input validation gaps |
+| `/code-review` | Architectural code review — adapter boundary, assemblies, file-size ceilings |
+| `/mobile-build-check` | **Static pre-flight before CI.** Adapter boundary, consent gate, flag declarations, assemblies, secrets, UPM manifest, asset budgets |
+| `/perf-profile` | Structured performance profiling against mobile budgets |
+| `/tech-debt` | Scan, track, prioritise, and report technical debt |
+| `/gate-check` | Validate readiness to advance phases (PASS / CONCERNS / FAIL) |
 
 ## QA & Testing
 
 | Command | Purpose |
 |---------|---------|
-| `/qa-plan` | Generate a QA test plan for a sprint or feature |
-| `/smoke-check` | Run critical path smoke test gate before QA hand-off |
-| `/soak-test` | Generate a soak test protocol for extended play sessions |
-| `/regression-suite` | Map test coverage to GDD critical paths, identify fixed bugs without regression tests |
-| `/test-setup` | Scaffold the test framework and CI/CD pipeline for the project's engine |
-| `/test-helpers` | Generate engine-specific test helper libraries for the test suite |
-| `/test-evidence-review` | Quality review of test files and manual evidence documents |
-| `/test-flakiness` | Detect non-deterministic (flaky) tests from CI run logs |
-| `/skill-test` | Validate skill files for structural compliance and behavioral correctness |
-| `/skill-improve` | Improve a skill using a test-fix-retest loop — diagnose, propose fix, rewrite, verify |
-
-## Production
-
-| Command | Purpose |
-|---------|---------|
-| `/milestone-review` | Review milestone progress and generate status report |
-| `/retrospective` | Run a structured sprint or milestone retrospective |
-| `/bug-report` | Create a structured bug report |
-| `/bug-triage` | Read all open bugs, re-evaluate priority vs. severity, assign owner and label |
-| `/reverse-document` | Generate design or architecture docs from existing implementation |
-| `/playtest-report` | Generate a structured playtest report or analyze existing playtest notes |
+| `/qa-plan` | QA test plan for a sprint or feature |
+| `/smoke-check` | Critical-path smoke gate before QA hand-off |
+| `/test-setup` | Scaffold the test framework and CI pipeline |
+| `/playtest-report` | Structured playtest report, or analysis of existing notes |
+| `/bug-report` | Structured bug report |
+| `/bug-triage` | Re-evaluate the open bug backlog by priority vs severity |
+| `/skill-test` | Validate skill files for structural compliance |
 
 ## Release
 
 | Command | Purpose |
 |---------|---------|
-| `/release-checklist` | Generate and validate a pre-release checklist for the current build |
-| `/launch-checklist` | Complete launch readiness validation across all departments |
-| `/changelog` | Auto-generate changelog from git commits and sprint data |
-| `/patch-notes` | Generate player-facing patch notes from git history and internal data |
-| `/hotfix` | Emergency fix workflow with audit trail, bypassing normal sprint process |
-| `/day-one-patch` | Prepare a focused day-one patch for known issues discovered after gold master but before or at public launch |
-
-## Creative & Content
-
-| Command | Purpose |
-|---------|---------|
-| `/prototype` | Concept prototype — throwaway build right after brainstorm to validate core idea (Phase 1) |
-| `/vertical-slice` | Pre-Production validation — production-quality end-to-end build before committing to Production (Phase 4) |
-| `/onboard` | Generate contextual onboarding document for a new contributor or agent |
-| `/localize` | Localization workflow: string extraction, validation, translation readiness |
+| `/release-checklist` | Pre-release validation across code, content, store, and legal |
+| `/changelog` | Internal changelog from commits and sprint data |
+| `/patch-notes` | Player-facing patch notes |
+| `/hotfix` | Emergency fix workflow with an audit trail |
 
 ## Team Orchestration
 
-Coordinate multiple agents on a single feature area:
+Coordinate multiple agents on one feature area.
 
 | Command | Coordinates |
 |---------|-------------|
-| `/team-combat` | game-designer + gameplay-programmer + ai-programmer + technical-artist + sound-designer + qa-tester |
-| `/team-narrative` | narrative-director + writer + world-builder + level-designer |
-| `/team-ui` | ux-designer + ui-programmer + art-director + accessibility-specialist |
-| `/team-release` | release-manager + qa-lead + devops-engineer + producer |
-| `/team-polish` | performance-analyst + technical-artist + sound-designer + qa-tester |
-| `/team-audio` | audio-director + sound-designer + technical-artist + gameplay-programmer |
-| `/team-level` | level-designer + narrative-director + world-builder + art-director + systems-designer + qa-tester |
-| `/team-live-ops` | live-ops-designer + economy-designer + community-manager + analytics-engineer |
+| `/team-puzzle-level` | puzzle-level-designer + systems-designer + art-director + qa-tester — a **batch** of levels |
+| `/team-combat` | game-designer + gameplay-programmer + technical-artist + sound-designer + qa-tester |
+| `/team-ui` | ux-designer + ui-programmer + art-director |
 | `/team-qa` | qa-lead + qa-tester + gameplay-programmer + producer |
+| `/team-polish` | performance-analyst + technical-artist + sound-designer + qa-tester |
+| `/team-live-ops` | live-ops-designer + economy-designer + analytics-engineer + ux-designer |
+| `/team-release` | release-manager + qa-lead + devops-engineer + producer |
+
+---
+
+## Archived
+
+Moved to `.claude/skills/_archived/`. Not loaded. Restore if the need returns.
+
+| Skill | Why | Capability now |
+|---|---|---|
+| `/vertical-slice` | Superseded — the MVP lane covers both a quick demo and a production-quality signal build | `/puzzle-mvp --mode signal` |
+| `/adopt` | Overlapped the existence audit | `/project-stage-detect` |
+| `/reverse-document` | Generating docs from code is not this project's shape | `/design-system`, `/create-architecture` |
+| `/onboard` | The profile docs serve this | `.claude/docs/puzzle-profile.md` |
+| `/estimate`, `/scope-check`, `/milestone-review` | Scope and timeline judgement belongs to a person, not a report | `producer` agent |
+| `/content-audit`, `/asset-audit` | Asset and content checks folded into the build check | `/mobile-build-check` |
+| `/security-audit` | Mobile security here is SDK, save, and privacy work | `mobile-sdk-engineer` + `/mobile-build-check` |
+| `/soak-test` | Long-session testing folded into profiling | `/perf-profile` |
+| `/regression-suite`, `/test-flakiness`, `/test-evidence-review` | Test planning consolidated | `/qa-plan` |
+| `/launch-checklist` | Duplicated the release checklist | `/release-checklist` |
+| `/day-one-patch` | Duplicated the hotfix flow | `/hotfix` |
+| `/team-narrative`, `/team-audio` | No narrative deliverables; audio scope does not need orchestration | `sound-designer` directly |
+| `/test-helpers` | Premature for a project with no test suite yet | `/test-setup` |
+| `/skill-improve` | Framework self-maintenance, not game work | `/skill-test` |

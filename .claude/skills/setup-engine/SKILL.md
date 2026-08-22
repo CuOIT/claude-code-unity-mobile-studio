@@ -1,11 +1,16 @@
 ---
 name: setup-engine
-description: "Configure the Unity engine version for a mobile project. Pins Unity 6 LTS in CLAUDE.md, configures the scripting backend (IL2CPP vs Mono) and build targets (iOS/Android), detects knowledge gaps, and populates engine reference docs via WebSearch when the version is beyond the LLM's training data."
+description: "Configure the Unity engine and conventions for a mobile puzzle project. ASKS for the engine version rather than pinning one, records SDK capabilities, configures scripting backend and build targets (iOS/Android), and detects knowledge gaps against the version actually in use."
 argument-hint: "[unity version] | refresh | upgrade [old-version] [new-version] | no args for guided setup"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, WebSearch, WebFetch, Task, AskUserQuestion
 model: sonnet
 ---
+> **Version policy for this project: do NOT pin a version in documentation.**
+> Ask the user which Unity release they are on, or read it from
+> `ProjectSettings/ProjectVersion.txt`. Record *capabilities* — which vendor serves
+> which need — not version numbers. See `docs/engine-reference/unity/VERSION.md`.
+
 
 When this skill is invoked:
 
@@ -15,7 +20,7 @@ Four modes:
 
 This edition ships Unity only — the engine cannot be changed. Modes:
 
-- **Full spec**: `/setup-engine unity 6.3` — version provided
+- **Full spec**: `/setup-engine unity 6000.0.66f2` — version provided explicitly
 - **No args**: `/setup-engine` — guided setup (platform, scripting backend, build targets)
 - **Refresh**: `/setup-engine refresh` — update reference docs (see Section 10)
 - **Upgrade**: `/setup-engine upgrade [old-version] [new-version]` — migrate to a new Unity version (see Section 11)
@@ -68,7 +73,7 @@ Never force a verdict — always let the user confirm the final values.
 
 - If version was provided, use it
 - If no version provided, use WebSearch to find the latest Unity 6 LTS release:
-  - Search: `"Unity 6 LTS latest release [current year]"`
+  - Search: `"Unity 6 LTS latest release [current year]"` — then ASK, do not project-stage-detect silently
   - Confirm with the user: "The latest Unity 6 LTS is [version]. Use this?"
 
 ---
@@ -189,7 +194,7 @@ Also populate the `## Engine Specialists` section in `technical-preferences.md` 
 - **Language/Code Specialist**: unity-specialist (C# review — primary covers it)
 - **Shader Specialist**: unity-shader-specialist (Shader Graph, HLSL, URP/HDRP materials)
 - **UI Specialist**: unity-ui-specialist (UI Toolkit UXML/USS, UGUI Canvas, runtime UI)
-- **Additional Specialists**: unity-dots-specialist (ECS, Jobs system, Burst compiler), unity-addressables-specialist (asset loading, memory management, content catalogs)
+- **Additional Specialists**: unity-specialist (ECS, Jobs system, Burst compiler), unity-addressables-specialist (asset loading, memory management, content catalogs)
 - **Routing Notes**: Invoke primary for architecture and general C# code review. Invoke DOTS specialist for any ECS/Jobs/Burst code. Invoke shader specialist for rendering and visual effects. Invoke UI specialist for all interface implementation. Invoke Addressables specialist for asset management systems.
 
 ### File Extension Routing
@@ -226,11 +231,11 @@ Compare the user's chosen version against these baselines:
 - **Near the edge** → `MEDIUM RISK` — reference docs recommended
 - **Beyond training data** → `HIGH RISK` — reference docs required
 
-For Unity 6.3 LTS, this is `HIGH RISK` — the shipped reference docs under
+For any Unity 6 release, this is `HIGH RISK` — the shipped reference docs under
 `docs/engine-reference/unity/` and `MOBILE-BEST-PRACTICES.md` already cover the
 gap; use `refresh` to keep them current.
 
-For Unity 6.3 LTS, this is `HIGH RISK` — the shipped reference docs under
+For any Unity 6 release, this is `HIGH RISK` — the shipped reference docs under
 `docs/engine-reference/unity/` and `MOBILE-BEST-PRACTICES.md` already cover the
 gap; use `refresh` to keep them current.
 
@@ -287,7 +292,7 @@ Wait for confirmation before writing any files.
 3. **Create the full reference directory**:
    ```
    docs/engine-reference/<engine>/
-   ├── VERSION.md              # Version pin + knowledge gap analysis
+   ├── VERSION.md              # Capability reference + knowledge gap analysis
    ├── breaking-changes.md     # Version-by-version breaking changes
    ├── deprecated-apis.md      # "Don't use X → Use Y" tables
    ├── current-best-practices.md  # New practices since training cutoff
@@ -359,9 +364,9 @@ If invoked as `/setup-engine upgrade [old-version] [new-version]`:
 
 ### Step 1 — Read Current Version State
 
-Read `docs/engine-reference/<engine>/VERSION.md` to confirm the current pinned
+Read `docs/engine-reference/<engine>/VERSION.md` to confirm the recorded
 version, risk level, and any migration note URLs already recorded. If
-`old-version` was not provided as an argument, use the pinned version from this
+`old-version` was not provided as an argument, read the version from the project on disk, not from this
 file.
 
 ### Step 2 — Fetch Migration Guide
@@ -379,7 +384,7 @@ any "must migrate" items.
 
 ### Step 3 — Pre-Upgrade Audit
 
-Scan `src/` for code that uses APIs known to be deprecated or changed in the
+Scan `Assets/Scripts/` for code that uses APIs known to be deprecated or changed in the
 target version:
 
 - Use Grep to search for deprecated API names extracted from the migration
@@ -395,8 +400,8 @@ Pre-Upgrade Audit: [engine] [old-version] → [new-version]
 Files requiring changes:
   File                              | Deprecated API Found       | Effort
   --------------------------------- | -------------------------- | ------
-  src/gameplay/player_movement.gd   | old_api_name               | Low
-  src/ui/hud.gd                     | removed_node_type          | Medium
+  Assets/Scripts/Gameplay/player_movement.gd   | old_api_name               | Low
+  Assets/Scripts/UI/hud.gd                     | removed_node_type          | Medium
 
 Breaking changes to watch for:
   - [change description from migration guide]
@@ -408,8 +413,8 @@ Recommended migration order (dependency-sorted):
   ...
 ```
 
-If no deprecated APIs are found in `src/`, report: "No deprecated API usage
-found in src/ — upgrade may be low-risk."
+If no deprecated APIs are found in `Assets/Scripts/`, report: "No deprecated API usage
+found in Assets/Scripts/ — upgrade may be low-risk."
 
 ### Step 4 — Confirm Before Updating
 

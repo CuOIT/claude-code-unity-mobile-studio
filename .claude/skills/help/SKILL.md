@@ -57,20 +57,35 @@ Check in this order:
 1. **Read `production/stage.txt`** — if it exists and has content, this is the
    authoritative phase name. Map it to a catalog phase key:
    - "Concept" → `concept`
+   - "MVP" → `mvp`
    - "Systems Design" → `systems-design`
    - "Technical Setup" → `technical-setup`
-   - "Pre-Production" → `pre-production`
    - "Production" → `production`
    - "Polish" → `polish`
    - "Release" → `release`
 
-2. **If stage.txt is missing**, infer phase from artifacts (most-advanced match wins):
-   - `src/` has 10+ source files → `production`
-   - `production/stories/*.md` exists → `pre-production`
-   - `docs/architecture/adr-*.md` exists → `technical-setup`
-   - `design/gdd/systems-index.md` exists → `systems-design`
-   - `design/gdd/game-concept.md` exists → `concept`
+   If `stage.txt` names a phase that is **not** in the catalog (e.g. "Pre-Production"
+   from an older template version), say so rather than guessing — then fall through to
+   artifact inference below.
+
+2. **If stage.txt is missing**, infer phase from artifacts (most-advanced match wins,
+   so check in this order and take the first hit):
+   - `production/sprints/sprint-*.md` exists → `production`
+   - `production/epics/*/EPIC.md` exists → `production`
+   - `docs/architecture/architecture.md` exists → `technical-setup`
+   - `design/gdd/systems-index.md` or 2+ files in `design/gdd/` → `systems-design`
+   - `production/mvp-report.md` exists → `mvp` *(read its verdict — see below)*
+   - `design/gdd/game-concept.md` exists → `mvp` *(concept is done; MVP is next)*
+   - `.claude/docs/technical-preferences.md` has no `TO BE CONFIGURED` → `concept`
    - Nothing → `concept` (fresh project)
+
+   **When `production/mvp-report.md` exists, read its verdict — it changes the answer:**
+   - `PROCEED` → the MVP phase's remaining steps apply (level pipeline, adapters, flags,
+     then optionally the signal-mode run). Do not jump to `systems-design` just because
+     a report exists.
+   - `PIVOT` → still in `mvp`. The next action is another `/puzzle-mvp` run, not progress.
+   - `KILL` → back to `concept`. Recommend `/brainstorm` on a new direction.
+   - No verdict recorded → the run is unfinished. Say so and recommend resuming it.
 
 ---
 

@@ -12,7 +12,7 @@ model: haiku
 This is a fast situational awareness check, not a sprint review. It reads the
 current sprint plan and story files, scans for status markers, and produces a
 concise snapshot in under 30 lines. For detailed sprint management, use
-`/sprint-plan update` or `/milestone-review`.
+`/sprint-plan update` or `/retrospective`.
 
 **This skill is read-only.** It never proposes changes, never asks to write
 files, and makes at most one concrete recommendation.
@@ -74,7 +74,7 @@ fall back to markdown scanning:
 When using the fallback, add a note at the bottom of the output:
 "⚠ No `sprint-status.yaml` found — status inferred from markdown. Run `/sprint-plan update` to generate one."
 
-Optionally (fast check only — do not do a deep scan): grep `src/` for a
+Optionally (fast check only — do not do a deep scan): grep `Assets/Scripts/` for a
 directory or file name that matches the story's system slug to check for
 implementation evidence. This is a hint only, not a definitive status.
 

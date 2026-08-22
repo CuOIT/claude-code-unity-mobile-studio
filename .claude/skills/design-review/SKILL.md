@@ -82,14 +82,12 @@ Read the GDD and identify every domain present. A GDD can touch multiple domains
 |------------------------|-------------------|
 | Costs, prices, drops, rewards, economy | `economy-designer` |
 | Combat stats, damage, health, DPS | `game-designer`, `systems-designer` |
-| AI behaviour, pathfinding, targeting | `ai-programmer` |
-| Level layout, spawning, wave structure | `level-designer` |
+| AI behaviour, pathfinding, targeting | `gameplay-programmer` |
+| Level layout, spawning, wave structure | `puzzle-level-designer` |
 | Player progression, XP, unlocks | `economy-designer`, `game-designer` |
 | UI, HUD, menus, player-facing displays | `ux-designer`, `ui-programmer` |
-| Dialogue, quests, story, lore | `narrative-director` |
 | Animation, feel, timing, juice | `gameplay-programmer` |
-| Multiplayer, sync, replication | `network-programmer` |
-| Audio cues, music triggers | `audio-director` |
+| Audio cues, music triggers | `sound-designer` |
 | Performance, draw calls, memory | `performance-analyst` |
 | Engine-specific patterns or APIs | Primary engine specialist (from `.claude/docs/technical-preferences.md`) |
 | Acceptance criteria, test coverage | `qa-lead` |

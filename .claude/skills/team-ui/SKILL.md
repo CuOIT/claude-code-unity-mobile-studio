@@ -33,7 +33,7 @@ Store the resolved mode for use in all subsequent phases.
 - **ui-programmer** — UI framework, screens, widgets, data binding, implementation
 - **art-director** — Visual style, layout polish, consistency with art bible
 - **engine UI specialist** — Validates UI implementation patterns against engine-specific best practices (read from `.claude/docs/technical-preferences.md` Engine Specialists → UI Specialist)
-- **accessibility-specialist** — Audits accessibility compliance at Phase 4
+- **ux-designer** — Audits accessibility compliance at Phase 4
 
 **Templates used by this pipeline:**
 - `ux-spec.md` — Standard screen/flow UX specification
@@ -48,7 +48,7 @@ Use the Task tool to spawn each team member as a subagent:
 - `subagent_type: ui-programmer` — UI framework, screens, widgets, data binding
 - `subagent_type: art-director` — Visual style, layout polish, art bible consistency
 - `subagent_type: unity-ui-specialist` — Unity UI pattern validation (UI Toolkit UXML/USS, UGUI Canvas)
-- `subagent_type: accessibility-specialist` — Accessibility compliance audit
+- `subagent_type: ux-designer` — Accessibility compliance audit
 
 Always provide full context in each agent's prompt (feature requirements, existing UI patterns, platform targets). Launch independent agents in parallel where the pipeline allows it (e.g., Phase 4 review agents can run simultaneously).
 
@@ -128,7 +128,7 @@ Delegate to **ui-programmer**:
 Delegate in parallel:
 - **ux-designer**: Verify implementation matches wireframes and interaction spec. Test keyboard-only and gamepad-only navigation. Check accessibility features function correctly.
 - **art-director**: Verify visual consistency with art bible. Check at minimum and maximum supported resolutions.
-- **accessibility-specialist**: Verify compliance against the committed accessibility tier documented in `design/accessibility-requirements.md`. Flag any violations as blockers.
+- **ux-designer**: Verify compliance against the committed accessibility tier documented in `design/accessibility-requirements.md`. Flag any violations as blockers.
 
 All three review streams must report before proceeding to Phase 5.
 

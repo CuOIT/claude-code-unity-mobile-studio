@@ -5,7 +5,7 @@ argument-hint: "[--review full|lean|solo]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, Task, AskUserQuestion
 model: sonnet
-agent: prototyper
+agent: gameplay-programmer
 isolation: worktree
 ---
 

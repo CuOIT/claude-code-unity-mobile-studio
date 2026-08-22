@@ -18,7 +18,7 @@ Run this once during the Technical Setup phase, before any implementation
 begins. A test framework installed at sprint start costs 30 minutes.
 A test framework installed at sprint four costs 3 sprints.
 
-**Output:** `tests/` directory structure + `.github/workflows/tests.yml`
+**Output:** `Assets/Tests/` directory structure + `.github/workflows/tests.yml`
 
 ---
 
@@ -30,8 +30,8 @@ A test framework installed at sprint four costs 3 sprints.
      "Engine not configured. Run `/setup-engine` first, then re-run `/test-setup`."
 
 2. **Check for existing test infrastructure**:
-   - Glob `tests/` — does the directory exist?
-   - Glob `tests/unit/` and `tests/integration/` — do subdirectories exist?
+   - Glob `Assets/Tests/` — does the directory exist?
+   - Glob `Assets/Tests/EditMode/` and `Assets/Tests/PlayMode/` — do subdirectories exist?
    - Glob `.github/workflows/` — does a CI workflow file exist?
    - Glob `tests/EditMode/` (Unity) for engine-specific artifacts.
 
@@ -115,8 +115,8 @@ tests/
 
 | Story Type | Required Evidence | Location |
 |---|---|---|
-| Logic | Automated unit test — must pass | `tests/unit/[system]/` |
-| Integration | Integration test OR playtest doc | `tests/integration/[system]/` |
+| Logic | Automated unit test — must pass | `Assets/Tests/EditMode/[system]/` |
+| Integration | Integration test OR playtest doc | `Assets/Tests/PlayMode/[system]/` |
 | Visual/Feel | Screenshot + lead sign-off | `tests/evidence/` |
 | UI | Manual walkthrough OR interaction test | `tests/evidence/` |
 | Config/Data | Smoke check pass | `production/qa/smoke-*.md` |

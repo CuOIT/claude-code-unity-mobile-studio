@@ -46,8 +46,8 @@ Phase 5 outputs a per-platform verdict table in addition to the overall verdict.
 
 Before running anything, understand the environment:
 
-1. **Test framework check**: verify `tests/` directory exists.
-   If it does not: "No test directory found at `tests/`. Run `/test-setup`
+1. **Test framework check**: verify `Assets/Tests/` directory exists.
+   If it does not: "No test directory found at `Assets/Tests/`. Run `/test-setup`
    to scaffold the testing infrastructure, or create the directory manually
    if tests live elsewhere." Then stop.
 
@@ -95,7 +95,7 @@ will determine whether the automated test row contributes to a FAIL verdict."
 
 | Story | Type | Test File | Coverage Status |
 |-------|------|-----------|----------------|
-| [title] | Logic | `tests/unit/[system]/[slug]_test.[ext]` | COVERED |
+| [title] | Logic | `Assets/Tests/EditMode/[system]/[slug]_test.[ext]` | COVERED |
 | [title] | Visual/Feel | `tests/evidence/[slug]-screenshots.md` | MANUAL |
 | [title] | Logic | — | MISSING ⚠ |
 | [title] | Config/Data | — | EXPECTED |
@@ -121,7 +121,7 @@ Stories that must have test evidence before they can be marked COMPLETE via
 `/story-done`:
 
 - **[story title]** (`[path]`) — Logic story has no test file.
-  Expected location: `tests/unit/[system]/[story-slug]_test.[ext]`
+  Expected location: `Assets/Tests/EditMode/[system]/[story-slug]_test.[ext]`
 
 [If none:] "All Logic and Integration stories have test coverage."
 

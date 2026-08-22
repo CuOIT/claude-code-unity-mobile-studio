@@ -101,7 +101,7 @@ Using the strategy from Phase 2, produce a structured test plan document.
 The test plan should cover:
 - **Scope**: sprint/feature name, story count, dates
 - **Story Classification Table**: from Phase 2 strategy
-- **Automated Test Requirements**: which stories need test files, expected paths in `tests/`
+- **Automated Test Requirements**: which stories need test files, expected paths in `Assets/Tests/`
 - **Manual QA Scope**: which stories need manual walkthrough and what to validate
 - **Out of Scope**: what is explicitly not being tested this cycle and why
 - **Entry Criteria**: what must be true before QA can begin. Always include: (1) Smoke check PASS or PASS WITH WARNINGS report exists at `production/qa/smoke-*.md`, (2) build is stable (no crashes on launch), (3) all Must Have stories have Status: in-progress or done in `production/sprint-status.yaml`. Add any sprint-specific criteria beyond these.

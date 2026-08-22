@@ -13,7 +13,7 @@ model: opus
 The architecture review validates that the complete body of architectural decisions
 covers all game design requirements, is internally consistent, and correctly targets
 the project's pinned engine version. It is the quality gate between Technical Setup
-and Pre-Production.
+and the MVP phase.
 
 **Argument modes:**
 - **No argument / `full`**: Full review — all phases
@@ -182,7 +182,7 @@ story file:
 
 ### Step 3b-2 — Load test files
 
-Glob `tests/unit/**/*_test.*` and `tests/integration/**/*_test.*`.
+Glob `Assets/Tests/EditMode/**/*_test.*` and `Assets/Tests/PlayMode/**/*_test.*`.
 Build an index: system → [test file paths].
 
 For each test file path from Step 3b-1, confirm via Glob whether the file
@@ -195,7 +195,7 @@ For each TR-ID in the Phase 3 matrix, add:
 - **Test File**: the test file path stated in the story's Test Evidence section
 - **Test Status**: COVERED (test file exists) / MISSING (path stated but not
   found) / NONE (no test path stated, story type may be Visual/Feel/UI) /
-  NO STORY (requirement has no story yet — pre-production gap)
+  NO STORY (requirement has no story yet — no story yet)
 
 Extended matrix format:
 
@@ -204,7 +204,7 @@ Extended matrix format:
 
 | TR-ID | GDD | Requirement | ADR | Story | Test File | Test Status |
 |-------|-----|-------------|-----|-------|-----------|-------------|
-| TR-combat-001 | combat.md | Hitbox < 1 frame | ADR-0003 | story-001-hitbox.md | tests/unit/combat/hitbox_test.gd | COVERED |
+| TR-combat-001 | combat.md | Hitbox < 1 frame | ADR-0003 | story-001-hitbox.md | Assets/Tests/EditMode/combat/hitbox_test.gd | COVERED |
 | TR-combat-002 | combat.md | Combo window | — | story-002-combo.md | — | NONE (Visual/Feel) |
 | TR-inventory-001 | inventory.md | Persistent storage | ADR-0005 | — | — | NO STORY |
 ```
@@ -608,7 +608,7 @@ After completing the review and writing approved files, present:
 1. **Immediate actions**: List the top 3 ADRs to create (highest-impact gaps first,
    Foundation layer before Feature layer)
 2. **Pre-gate checklist**: Check whether these exist via Glob and mark each ✅ or ❌:
-   - `tests/unit/` and `tests/integration/` directories — if ❌: run `/test-setup`
+   - `Assets/Tests/EditMode/` and `Assets/Tests/PlayMode/` directories — if ❌: run `/test-setup`
    - `.github/workflows/tests.yml` — if ❌: run `/test-setup`
    - `design/accessibility-requirements.md` — if ❌: run `/ux-design`
    - `design/ux/interaction-patterns.md` — if ❌: run `/ux-design`
@@ -626,7 +626,7 @@ Then close with `AskUserQuestion` tailored to the pre-gate checklist state:
     - [D] Stop here for this session
 - If all pre-gate checklist items are ✅ and no blocking ADR gaps remain:
   - "Architecture review complete. All pre-gate items confirmed. What would you like to do next?"
-    - [A] Run `/gate-check pre-production`
+    - [A] Run `/gate-check production`
     - [B] Write a missing ADR — open a fresh session and run `/architecture-decision [system]`
     - [C] Stop here for this session
 

@@ -3,7 +3,7 @@ name: localize
 description: "Full localization pipeline: scan for hardcoded strings, extract and manage string tables, validate translations, generate translator briefings, run cultural/sensitivity review, manage VO localization, test RTL/platform requirements, enforce string freeze, and report coverage."
 argument-hint: "[scan|extract|validate|status|brief|cultural-review|vo-pipeline|rtl-check|freeze|qa]"
 user-invocable: true
-agent: localization-lead
+agent: ux-designer
 allowed-tools: Read, Glob, Grep, Write, Bash, Task, AskUserQuestion
 model: sonnet
 ---
@@ -34,7 +34,7 @@ If no subcommand is provided, output usage and stop. Verdict: **FAIL** — missi
 
 ## Phase 2A: Scan Mode
 
-Search `src/` for hardcoded user-facing strings:
+Search `Assets/Scripts/` for hardcoded user-facing strings:
 
 - String literals in UI code not wrapped in a localization function (`tr()`, `Tr()`, `NSLocalizedString`, `GetText`, etc.)
 - Concatenated strings that should be parameterized
@@ -45,7 +45,7 @@ Search for localization anti-patterns:
 
 - Date/time formatting not using locale-aware functions
 - Number formatting without locale awareness (`1,000` vs `1.000`)
-- Text embedded in images or textures (flag asset files in `assets/`)
+- Text embedded in images or textures (flag asset files in `Assets/`)
 - Strings that assume left-to-right text direction (positional layout, string assembly order)
 - Gender/plurality assumptions baked into string logic (must use plural forms or gender tokens)
 - Hardcoded punctuation (e.g. `"You won!"` — exclamation styles vary by locale)
@@ -57,7 +57,7 @@ Report all findings with file paths and line numbers. This mode is read-only —
 ## Phase 2B: Extract Mode
 
 - Scan all source files for localized string references
-- Compare against the existing string table in `assets/data/strings/`
+- Compare against the existing string table in `Assets/Data/strings/`
 - Generate new entries for strings not yet keyed
 - Suggest key names following the convention: `[category].[subcategory].[description]`
   - Example: `ui.hud.health_label`, `dialogue.npc.merchant.greeting`, `menu.main.play_button`
@@ -69,7 +69,7 @@ Report all findings with file paths and line numbers. This mode is read-only —
 
 Output a diff of new strings to add to the string table.
 
-Present the diff to the user. Ask: "May I write these new entries to `assets/data/strings/strings-en.json`?"
+Present the diff to the user. Ask: "May I write these new entries to `Assets/Data/strings/strings-en.json`?"
 
 If yes, write only the diff (new entries), not a full replacement. Verdict: **COMPLETE** — strings extracted and written.
 
@@ -77,13 +77,13 @@ If yes, write only the diff (new entries), not a full replacement. Verdict: **CO
 
 ## Phase 2C: Validate Mode
 
-Read all string table files in `assets/data/strings/`. For each locale, check:
+Read all string table files in `Assets/Data/strings/`. For each locale, check:
 
 - **Completeness** — key exists in source (en) but no translation for this locale
 - **Placeholder mismatches** — source has `{name}` but translation omits it or adds extras
 - **String length violations** — translation exceeds the character limit recorded in the source `context` field
 - **Plural form count** — locale requires N plural forms; translation provides fewer
-- **Orphaned keys** — translation exists but nothing in `src/` references the key
+- **Orphaned keys** — translation exists but nothing in `Assets/Scripts/` references the key
 - **Stale translations** — source string changed after translation was written (flag for re-translation)
 - **Encoding** — non-ASCII characters present and font atlas supports them (flag if uncertain)
 
@@ -126,7 +126,7 @@ external translation team or localisation vendor alongside the string table expo
 
 Read:
 - `design/gdd/` — extract game genre, tone, setting, character names
-- `assets/data/strings/strings-en.json` — the source string table
+- `Assets/Data/strings/strings-en.json` — the source string table
 - Any existing lore or narrative documents in `design/narrative/`
 
 Generate `production/localization/translator-brief-[locale]-[date].md`:
@@ -180,7 +180,7 @@ Ask: "May I write this translator brief to `production/localization/translator-b
 
 ## Phase 2F: Cultural Review Mode
 
-Spawn `localization-lead` via Task. Ask them to audit the following for cultural sensitivity across the target locales (read from `assets/data/strings/` and `assets/`):
+Spawn `ux-designer` via Task. Ask them to audit the following for cultural sensitivity across the target locales (read from `Assets/Data/strings/` and `Assets/`):
 
 ### Content Areas to Review
 
@@ -232,9 +232,9 @@ Manage the voice-over localization process. Determine the sub-task from the argu
 
 ### VO Pipeline: Scan
 
-Read `assets/data/strings/` and `design/narrative/`. Identify:
+Read `Assets/Data/strings/` and `design/narrative/`. Identify:
 - All dialogue lines (keys matching `dialogue.*`) with source text
-- Lines already recorded (audio file exists in `assets/audio/vo/`)
+- Lines already recorded (audio file exists in `Assets/Audio/VO/`)
 - Lines not yet recorded
 
 Output a recording manifest:
@@ -261,14 +261,14 @@ Ask: "May I write the VO recording scripts to `production/localization/vo-script
 
 ### VO Pipeline: Validate
 
-Glob `assets/audio/vo/[locale]/` for all `.wav`/`.ogg` files. Cross-reference against the VO manifest. Report:
+Glob `Assets/Audio/VO/[locale]/` for all `.wav`/`.ogg` files. Cross-reference against the VO manifest. Report:
 - Missing files (line in script, no audio file)
 - Extra files (audio file exists, no matching string key)
 - Naming convention violations
 
 ### VO Pipeline: Integrate
 
-Grep `src/` for VO audio references. Verify each referenced path exists in `assets/audio/vo/[locale]/`. Report broken references.
+Grep `Assets/Scripts/` for VO audio references. Verify each referenced path exists in `Assets/Audio/VO/[locale]/`. Report broken references.
 
 ---
 
@@ -367,13 +367,13 @@ Localization QA is a dedicated pass that runs after translations are delivered b
 before any locale ships. This is not the same as `/validate` (which checks completeness)
 — this is a structured playthrough-based quality check.
 
-Spawn `localization-lead` via Task with:
+Spawn `ux-designer` via Task with:
 - The target locale(s) to QA
-- The list of all screens/flows in the game (from `design/gdd/` or `/content-audit` output)
+- The list of all screens/flows in the game (from `design/gdd/` or `design/ux/`)
 - The current `/localize validate` report
 - The cultural review report (if it exists)
 
-Ask the localization-lead to produce a QA plan covering:
+Ask the ux-designer to produce a QA plan covering:
 
 1. **Functional string check** — every string displays in-game without truncation, placeholder errors, or encoding corruption
 2. **UI overflow check** — translated strings that exceed UI bounds (even if within character limits, some languages expand)
@@ -388,7 +388,7 @@ Output a QA verdict per locale:
 ## Localization QA Verdict — [Locale]
 
 **Status**: PASS / PASS WITH CONDITIONS / FAIL
-**Reviewed by**: localization-lead
+**Reviewed by**: ux-designer
 **Date**: [date]
 
 ### Findings

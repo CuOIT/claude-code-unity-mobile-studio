@@ -73,7 +73,7 @@ Before drafting anything, read the relevant context:
   dependency tier check." and continue.
 - Check `design/quick-specs/` for any prior quick specs that touched this
   system — avoid contradicting them.
-- If this is a Tuning change, also check `assets/data/` for the data file that
+- If this is a Tuning change, also check `Assets/Data/` for the data file that
   holds the relevant values.
 
 Report what was found: "Found GDD at [path]. Relevant section: [section name].
@@ -111,7 +111,7 @@ New value is [within / at the edge of / outside] the documented range.
 
 ## Acceptance Criteria
 
-- [ ] [Parameter] reads [new value] from `assets/data/[file]`
+- [ ] [Parameter] reads [new value] from `Assets/Data/[file]`
 - [ ] Behavior difference is observable in [specific context]
 - [ ] No regression in [related behavior]
 ```
@@ -201,7 +201,7 @@ implement without asking questions.]
 |------|---------|-------|----------|-----------|
 | [name] | [value] | [min–max] | [feel/curve/gate] | [why this default] |
 
-All values must live in `assets/data/[appropriate-file].json`, not hardcoded.
+All values must live in `Assets/Data/[appropriate-file].json`, not hardcoded.
 
 ## Acceptance Criteria
 

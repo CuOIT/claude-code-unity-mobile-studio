@@ -893,7 +893,7 @@ Update `production/session-state/active.md` with:
 Before presenting options, state clearly:
 
 > "This spec should be validated with `/ux-review` before it enters the
-> implementation pipeline. The Pre-Production gate requires all key screen specs
+> implementation pipeline. The Production gate requires all key screen specs
 > to have a review verdict."
 
 Then use `AskUserQuestion`:
@@ -905,7 +905,7 @@ Then use `AskUserQuestion`:
     - "Stop here for this session"
 
 If the user picks "Design another screen first", add a note: "Reminder: run
-`/ux-review` on all completed specs before running `/gate-check pre-production`."
+`/ux-review` on all completed specs before running `/gate-check production`."
 
 ### 6c: Cross-Link Related Specs
 
@@ -939,7 +939,6 @@ specific sub-topics, additional context or coordination may be needed:
 | Visual aesthetics, color, layout feel | `art-director` — UX spec defines zones; art defines how they look |
 | Implementation feasibility (engine constraints) | `ui-programmer` — before finalizing component inventory |
 | Gameplay data requirements | `game-designer` — when data ownership is unclear |
-| Narrative/lore visible in the UI | `narrative-director` — for flavor text, item names, lore panels |
 | Accessibility tier decisions | Handled by this session — owned by ux-designer |
 
 When delegating to another agent via the Task tool:
@@ -986,4 +985,4 @@ Verdict: **COMPLETE** — UX spec written and approved section by section.
 
 - Run `/ux-review [filename]` to validate this spec before it enters the implementation pipeline
 - Run `/ux-design [next-screen]` to continue designing remaining screens or flows
-- Run `/gate-check pre-production` once all key screens have approved UX specs
+- Run `/gate-check production` once all key screens have approved UX specs

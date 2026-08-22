@@ -22,7 +22,7 @@ Before asking anything, silently gather context so you can tailor your guidance.
 Check:
 - **Engine configured?** Read `.claude/docs/technical-preferences.md`. If the Engine field contains `[TO BE CONFIGURED]`, the engine is not set.
 - **Game concept exists?** Check for `design/gdd/game-concept.md`.
-- **Source code exists?** Glob for source files in `src/` (`*.gd`, `*.cs`, `*.cpp`, `*.h`, `*.rs`, `*.py`, `*.js`, `*.ts`).
+- **Source code exists?** Glob for source files in `Assets/Scripts/` (`*.gd`, `*.cs`, `*.cpp`, `*.h`, `*.rs`, `*.py`, `*.js`, `*.ts`).
 - **Prototypes exist?** Check for subdirectories in `prototypes/`.
 - **Design docs exist?** Count markdown files in `design/gdd/`.
 - **Production artifacts?** Check for files in `production/sprints/` or `production/milestones/`.
@@ -56,28 +56,37 @@ The user needs creative exploration before anything else.
 2. Briefly explain what `/brainstorm` does (guided ideation using professional frameworks — MDA, player psychology, verb-first design). Mention that it has two modes: `/brainstorm open` for fully open exploration, or `/brainstorm [hint]` if they have even a vague theme (e.g., "space", "cozy", "horror").
 3. Recommend running `/brainstorm open` as the next step, but invite them to use a hint if something comes to mind
 4. Show the recommended path:
-   **Concept phase:**
-   - `/brainstorm open` — discover your game concept
-   - `/setup-engine` — configure the engine (brainstorm will recommend one)
-   - `/prototype` — throwaway concept build: validate the core idea is fun before designing (1–3 days)
-   - `/art-bible` — define visual identity (uses the Visual Identity Anchor brainstorm produces)
-   - `/map-systems` — decompose the concept into systems
-   - `/design-system` — author a GDD for each MVP system
+   **Concept phase** — two artifacts, then you build:
+   - `/setup-engine` — record conventions, platform, and budgets
+   - `/brainstorm open` — discover the concept and write `design/gdd/game-concept.md`
+
+   **MVP phase** — this is where a playable build appears:
+   - `/puzzle-mvp --mode demo` — one scene, no SDKs, 3–5 hand-built levels.
+     Answers "is this mechanic worth building?" Ends in PROCEED / PIVOT / KILL.
+   - `/gate-check mvp` — the verdict gate. KILL and PIVOT are successful outcomes here.
+   - `/level-pipeline` — now that the mechanic is known, decide how levels are authored
+   - `/sdk-integrate consent` then `ads tracking` — adapters, consent first
+   - `/feature-flag add [id]` — one per switchable feature
+   - `/puzzle-mvp --mode signal` — promote to a soft-launch build (optional but recommended)
+
+   **Systems Design phase** — document what the MVP proved:
+   - `/design-system` — a GDD per MVP-tier system
    - `/review-all-gdds` — cross-system consistency check
-   - `/gate-check` — validate readiness before architecture work
-   **Architecture phase:**
-   - `/create-architecture` — produce the master architecture blueprint and Required ADR list
-   - `/architecture-decision (×N)` — record key technical decisions, following the Required ADR list
-   - `/create-control-manifest` — compile decisions into an actionable rules sheet
-   - `/architecture-review` — validate architecture coverage
-   **Pre-Production phase:**
-   - `/ux-design` — author UX specs for key screens (main menu, HUD, core interactions)
-   - `/vertical-slice` — production-quality end-to-end build to validate the full game loop
-   - `/playtest-report (×1+)` — document each vertical slice playtest session
-   - `/create-epics` — map systems to epics
-   - `/create-stories` — break epics into implementable stories
+
+   **Technical Setup phase:**
+   - `/create-architecture` — document the architecture as built
+   - `/architecture-decision (×4+)` — adapter boundary, flag mechanism, level pipeline, event channels
+   - `/test-setup` — formalise the test structure the MVP started
+
+   **Production phase:**
+   - `/create-epics` then `/create-stories` — the MVP report's deferred-scope list is the backlog
    - `/sprint-plan` — plan the first sprint
-   **Production phase:** → pick up stories with `/dev-story`
+   - `/dev-story` — pick up stories
+   - `/ux-design` — document and refine the screens the MVP already built
+
+   > Art bible, UX specs, and accessibility requirements are all real work — they are
+   > sequenced after the MVP verdict because a mechanic that does not work makes them
+   > wasted. Run `/art-bible` whenever asset production is about to start.
 
 #### If B: Vague idea
 
@@ -88,25 +97,33 @@ The user needs creative exploration before anything else.
    **Concept phase:**
    - `/brainstorm [hint]` — develop the idea into a full concept
    - `/setup-engine` — configure the engine
-   - `/prototype` — throwaway concept build: validate the core idea is fun before designing (1–3 days)
-   - `/art-bible` — define visual identity (uses the Visual Identity Anchor brainstorm produces)
-   - `/map-systems` — decompose the concept into systems
-   - `/design-system` — author a GDD for each MVP system
+   **MVP phase** — this is where a playable build appears:
+   - `/puzzle-mvp --mode demo` — one scene, no SDKs, 3–5 hand-built levels.
+     Answers "is this mechanic worth building?" Ends in PROCEED / PIVOT / KILL.
+   - `/gate-check mvp` — the verdict gate. KILL and PIVOT are successful outcomes here.
+   - `/level-pipeline` — now that the mechanic is known, decide how levels are authored
+   - `/sdk-integrate consent` then `ads tracking` — adapters, consent first
+   - `/feature-flag add [id]` — one per switchable feature
+   - `/puzzle-mvp --mode signal` — promote to a soft-launch build (optional but recommended)
+
+   **Systems Design phase** — document what the MVP proved:
+   - `/design-system` — a GDD per MVP-tier system
    - `/review-all-gdds` — cross-system consistency check
-   - `/gate-check` — validate readiness before architecture work
-   **Architecture phase:**
-   - `/create-architecture` — produce the master architecture blueprint and Required ADR list
-   - `/architecture-decision (×N)` — record key technical decisions, following the Required ADR list
-   - `/create-control-manifest` — compile decisions into an actionable rules sheet
-   - `/architecture-review` — validate architecture coverage
-   **Pre-Production phase:**
-   - `/ux-design` — author UX specs for key screens (main menu, HUD, core interactions)
-   - `/vertical-slice` — production-quality end-to-end build to validate the full game loop
-   - `/playtest-report (×1+)` — document each vertical slice playtest session
-   - `/create-epics` — map systems to epics
-   - `/create-stories` — break epics into implementable stories
+
+   **Technical Setup phase:**
+   - `/create-architecture` — document the architecture as built
+   - `/architecture-decision (×4+)` — adapter boundary, flag mechanism, level pipeline, event channels
+   - `/test-setup` — formalise the test structure the MVP started
+
+   **Production phase:**
+   - `/create-epics` then `/create-stories` — the MVP report's deferred-scope list is the backlog
    - `/sprint-plan` — plan the first sprint
-   **Production phase:** → pick up stories with `/dev-story`
+   - `/dev-story` — pick up stories
+   - `/ux-design` — document and refine the screens the MVP already built
+
+   > Art bible, UX specs, and accessibility requirements are all real work — they are
+   > sequenced after the MVP verdict because a mechanic that does not work makes them
+   > wasted. Run `/art-bible` whenever asset production is about to start.
 
 #### If C: Clear concept
 
@@ -119,26 +136,33 @@ The user needs creative exploration before anything else.
 3. Show the recommended path:
    **Concept phase:**
    - `/brainstorm` or `/setup-engine` — (their pick from step 2)
-   - `/prototype` — throwaway concept build: validate the core idea is fun before designing (1–3 days)
-   - `/art-bible` — define visual identity (after brainstorm if run, or after concept doc exists)
-   - `/design-review` — validate the concept doc
-   - `/map-systems` — decompose the concept into individual systems
-   - `/design-system` — author a GDD for each MVP system
+   **MVP phase** — this is where a playable build appears:
+   - `/puzzle-mvp --mode demo` — one scene, no SDKs, 3–5 hand-built levels.
+     Answers "is this mechanic worth building?" Ends in PROCEED / PIVOT / KILL.
+   - `/gate-check mvp` — the verdict gate. KILL and PIVOT are successful outcomes here.
+   - `/level-pipeline` — now that the mechanic is known, decide how levels are authored
+   - `/sdk-integrate consent` then `ads tracking` — adapters, consent first
+   - `/feature-flag add [id]` — one per switchable feature
+   - `/puzzle-mvp --mode signal` — promote to a soft-launch build (optional but recommended)
+
+   **Systems Design phase** — document what the MVP proved:
+   - `/design-system` — a GDD per MVP-tier system
    - `/review-all-gdds` — cross-system consistency check
-   - `/gate-check` — validate readiness before architecture work
-   **Architecture phase:**
-   - `/create-architecture` — produce the master architecture blueprint and Required ADR list
-   - `/architecture-decision (×N)` — record key technical decisions, following the Required ADR list
-   - `/create-control-manifest` — compile decisions into an actionable rules sheet
-   - `/architecture-review` — validate architecture coverage
-   **Pre-Production phase:**
-   - `/ux-design` — author UX specs for key screens (main menu, HUD, core interactions)
-   - `/vertical-slice` — production-quality end-to-end build to validate the full game loop
-   - `/playtest-report (×1+)` — document each vertical slice playtest session
-   - `/create-epics` — map systems to epics
-   - `/create-stories` — break epics into implementable stories
+
+   **Technical Setup phase:**
+   - `/create-architecture` — document the architecture as built
+   - `/architecture-decision (×4+)` — adapter boundary, flag mechanism, level pipeline, event channels
+   - `/test-setup` — formalise the test structure the MVP started
+
+   **Production phase:**
+   - `/create-epics` then `/create-stories` — the MVP report's deferred-scope list is the backlog
    - `/sprint-plan` — plan the first sprint
-   **Production phase:** → pick up stories with `/dev-story`
+   - `/dev-story` — pick up stories
+   - `/ux-design` — document and refine the screens the MVP already built
+
+   > Art bible, UX specs, and accessibility requirements are all real work — they are
+   > sequenced after the MVP verdict because a mechanic that does not work makes them
+   > wasted. Run `/art-bible` whenever asset production is about to start.
 
 #### If D: Existing work
 
@@ -151,14 +175,14 @@ The user needs creative exploration before anything else.
    - Then `/project-stage-detect` for a gap inventory
 
    **Sub-case D2 — GDDs, ADRs, or stories already exist:**
-   - Explain: "Having files isn't the same as the template's skills being able to use them. GDDs might be missing required sections. `/adopt` checks this specifically."
+   - Explain: "Having files isn't the same as the template's skills being able to use them. GDDs might be missing required sections. `/project-stage-detect` checks this specifically."
    - Recommend:
      1. `/project-stage-detect` — understand what phase and what's missing entirely
-     2. `/adopt` — audit whether existing artifacts are in the right internal format
+     2. `/project-stage-detect` — audit what exists and what is missing
 
 3. Show the recommended path for D2:
    - `/project-stage-detect` — phase detection + existence gaps
-   - `/adopt` — format compliance audit + migration plan
+   - `/project-stage-detect` — full project audit + recommended next steps
    - `/setup-engine` — if engine not configured
    - `/design-system retrofit [path]` — fill missing GDD sections
    - `/architecture-decision retrofit [path]` — add missing ADR sections
@@ -230,7 +254,7 @@ Verdict: **COMPLETE** — user oriented and handed off to next step.
 ## Edge Cases
 
 - **User picks D but project is empty**: Gently redirect — "It looks like the project is a fresh template with no artifacts yet. Would Path A or B be a better fit?"
-- **User picks A but project has code**: Mention what you found — "I noticed there's already code in `src/`. Did you mean to pick D (existing work)?"
+- **User picks A but project has code**: Mention what you found — "I noticed there's already code in `Assets/Scripts/`. Did you mean to pick D (existing work)?"
 - **User is returning (engine configured, concept exists)**: Skip onboarding entirely — "It looks like you're already set up! Your engine is [X] and you have a game concept at `design/gdd/game-concept.md`. Review mode: `[read from production/review-mode.txt, or 'lean (default)' if missing]`. Want to pick up where you left off? Try `/sprint-plan` or just tell me what you'd like to work on."
 - **User doesn't fit any option**: Let them describe their situation in their own words and adapt.
 
