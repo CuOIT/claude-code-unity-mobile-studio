@@ -1,11 +1,11 @@
-# Unity 6.3 LTS — Mobile Best Practices (iOS / Android)
+# Unity 6 — Mobile Best Practices (iOS / Android)
 
 **Last verified:** 2026-08-19
 
 Mobile-specific guidance for this edition. These are the budgets, APIs, and
 patterns that differentiate a mobile build from a PC/console build. Always
 cross-reference this document before writing gameplay, rendering, or asset code
-for `assets/` or `src/` that will run on device.
+for `Assets/` or `Assets/Scripts/` that will run on device.
 
 ---
 
@@ -68,9 +68,24 @@ common cause of mobile stutter.
 
 ## Memory Management (Mobile-Critical)
 
-### Addressables Discipline
+### Asset Loading Discipline
 
-- Everything that is not in the first scene MUST load through Addressables
+**Load by asset category, not by dogma.** Neither "always Resources" nor "always
+Addressables" is correct here. The binding matrix lives in `.claude/rules/mobile-code.md`
+and varies by category and MVP mode; the short version:
+
+- SO config, core prefabs, UI panels, and level geometry → **Resources or direct reference**
+- Skins, themes, seasonal content → Resources now, Addressables when it must update remotely
+- Remote / live-ops content → **Addressables**
+
+**Do not install Addressables until there is genuine remote content to update.** All five
+reference codebases on this machine ship on Resources; three carry Addressables installed
+with zero or near-zero call sites, paying build and catalog cost for nothing.
+
+Access every asset through an abstraction (`IUILoader` for UI, the equivalent elsewhere)
+so a category can move between Resources and Addressables without touching call sites.
+
+**When Addressables IS in use for a category:**
 - Use `Addressables.LoadAssetAsync<T>` with `await handle.Task`; never `LoadAsset`
   synchronously on the main thread
 - Release EVERY handle: `Addressables.ReleaseInstance(obj)` or release the handle
@@ -152,7 +167,7 @@ handing a branch to CI.
 
 1. Zero allocations in hot paths — GC hitches are the #1 mobile performance
    complaint.
-2. Addressables for everything loaded after launch; release every handle.
+2. Load by category — Resources by default, Addressables only for content that must update remotely. Release every Addressables handle.
 3. ASTC textures, mipmap discipline, 2048² cap.
 4. One realtime light max; bake the rest.
 5. IL2CPP for all release builds; Mono for editor/dev only.
