@@ -7,7 +7,7 @@ framework. It is self-contained and separate from any game project.
 
 | File | Purpose |
 |------|---------|
-| `catalog.yaml` | Master registry for all 73 skills and 49 agents. Contains category, spec path, and last-test tracking fields. Always read this first when running any test command. |
+| `catalog.yaml` | Master registry for all 58 skills and 27 agents. Contains category, spec path, and last-test tracking fields. Always read this first when running any test command. |
 | `quality-rubric.md` | Category-specific pass/fail metrics. Read the matching `###` section for the skill's category when running `/skill-test category`. |
 | `skills/[category]/[name].md` | Behavioral spec for a skill — 5 test cases + protocol compliance assertions. |
 | `agents/[tier]/[name].md` | Behavioral spec for an agent — 5 test cases + protocol compliance assertions. |
@@ -28,38 +28,35 @@ Always read it rather than guessing the path.
 ## Skill categories
 
 ```
-gate        → gate-check
-review      → design-review, architecture-review, review-all-gdds
-authoring   → design-system, quick-design, architecture-decision, art-bible,
-              create-architecture, ux-design, ux-review
-readiness   → story-readiness, story-done
-pipeline    → create-epics, create-stories, dev-story, create-control-manifest,
-              propagate-design-change, map-systems
-analysis    → consistency-check, balance-check, content-audit, code-review,
-              tech-debt, scope-check, estimate, perf-profile, asset-audit,
-              security-audit, test-evidence-review, test-flakiness
-team        → team-combat, team-narrative, team-audio, team-level, team-ui,
-              team-qa, team-release, team-polish, team-live-ops
-sprint      → sprint-plan, sprint-status, milestone-review, retrospective,
-              changelog, patch-notes
-utility     → all remaining skills
+gate → gate-check
+review → design-review, architecture-review, review-all-gdds
+authoring → design-system, quick-design, architecture-decision, art-bible,
+ create-architecture, ux-design, ux-review
+readiness → story-readiness, story-done
+pipeline → create-epics, create-stories, dev-story, create-control-manifest,
+ propagate-design-change, map-systems
+analysis → consistency-check, balance-check, code-review,
+ tech-debt, perf-profile
+team → team-combat, team-level, team-ui,
+ team-qa, team-release, team-polish, team-live-ops
+sprint → sprint-plan, sprint-status, retrospective,
+ changelog, patch-notes
+utility → all remaining skills
 ```
 
 ## Agent tiers
 
 ```
-directors   → creative-director, technical-director, producer, art-director
-leads       → lead-programmer, narrative-director, audio-director, ux-designer,
-              qa-lead, release-manager, localization-lead
-specialists → gameplay-programmer, engine-programmer, ui-programmer,
-              tools-programmer, network-programmer, ai-programmer,
-              level-designer, sound-designer, technical-artist
-unity       → unity-specialist, unity-ui-specialist, unity-shader-specialist,
-              unity-dots-specialist, unity-addressables-specialist
-operations  → devops-engineer, security-engineer, performance-analyst,
-              analytics-engineer, community-manager
-creative    → writer, world-builder, game-designer, economy-designer,
-              systems-designer, prototyper
+directors → creative-director, technical-director, producer, art-director
+leads → lead-programmer, ux-designer,
+ qa-lead, release-manager
+specialists → gameplay-programmer, ui-programmer,
+ tools-programmer, sound-designer, technical-artist
+unity → unity-specialist, unity-ui-specialist, unity-shader-specialist, unity-addressables-specialist
+operations → devops-engineer, performance-analyst,
+ analytics-engineer
+creative → game-designer, economy-designer,
+ systems-designer
 ```
 
 ## Workflow for testing a skill
@@ -72,7 +69,7 @@ creative    → writer, world-builder, game-designer, economy-designer,
 
 ## Workflow for improving a skill
 
-Use `/skill-improve [name]`. It handles the full loop:
+Use `/ [name]`. It handles the full loop:
 test → diagnose → propose fix → rewrite → retest → keep or revert.
 
 ## Spec validity note
@@ -85,5 +82,5 @@ Treat spec failures as "this needs investigation," not "the skill is definitivel
 ## This folder is deletable
 
 Nothing in `.claude/` imports from here. Deleting this folder has no effect on the
-CCGS skills or agents themselves. `/skill-test` and `/skill-improve` will report that
+CCGS skills or agents themselves. `/skill-test` and `/` will report that
 `catalog.yaml` is missing and guide the user to initialize it.

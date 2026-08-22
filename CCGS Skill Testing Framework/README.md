@@ -13,35 +13,35 @@ Tests the skills and agents themselves — not any game built with them.
 
 ```
 CCGS Skill Testing Framework/
-├── README.md              ← you are here
-├── CLAUDE.md              ← tells Claude how to use this framework
-├── catalog.yaml           ← master registry: all 73 skills + 49 agents, coverage tracking
-├── quality-rubric.md      ← category-specific pass/fail metrics for /skill-test category
+├── README.md ← you are here
+├── CLAUDE.md ← tells Claude how to use this framework
+├── catalog.yaml ← master registry: all 58 skills + 27 agents, coverage tracking
+├── quality-rubric.md ← category-specific pass/fail metrics for /skill-test category
 │
-├── skills/                ← behavioral spec files for skills (one per skill)
-│   ├── gate/              ← gate category specs
-│   ├── review/            ← review category specs
-│   ├── authoring/         ← authoring category specs
-│   ├── readiness/         ← readiness category specs
-│   ├── pipeline/          ← pipeline category specs
-│   ├── analysis/          ← analysis category specs
-│   ├── team/              ← team category specs
-│   ├── sprint/            ← sprint category specs
-│   └── utility/           ← utility category specs
+├── skills/ ← behavioral spec files for skills (one per skill)
+│ ├── gate/ ← gate category specs
+│ ├── review/ ← review category specs
+│ ├── authoring/ ← authoring category specs
+│ ├── readiness/ ← readiness category specs
+│ ├── pipeline/ ← pipeline category specs
+│ ├── analysis/ ← analysis category specs
+│ ├── team/ ← team category specs
+│ ├── sprint/ ← sprint category specs
+│ └── utility/ ← utility category specs
 │
-├── agents/                ← behavioral spec files for agents (one per agent)
-│   ├── directors/         ← creative-director, technical-director, producer, art-director
-│   ├── leads/             ← lead-programmer, narrative-director, audio-director, etc.
-│   ├── specialists/       ← engine/code/shader/UI specialists
-│   ├── unity/             ← Unity-specific specialists
-│   ├── operations/        ← QA, live-ops, release, localization, etc.
-│   └── creative/          ← writer, world-builder, game-designer, etc.
+├── agents/ ← behavioral spec files for agents (one per agent)
+│ ├── directors/ ← creative-director, technical-director, producer, art-director
+│ ├── leads/ ← lead-programmer, etc.
+│ ├── specialists/ ← engine/code/shader/UI specialists
+│ ├── unity/ ← Unity-specific specialists
+│ ├── operations/ ← QA, live-ops, release, localization, etc.
+│ └── creative/ ← game-designer, etc.
 │
-├── templates/             ← spec file templates for writing new specs
-│   ├── skill-test-spec.md ← template for skill behavioral specs
-│   └── agent-test-spec.md ← template for agent behavioral specs
+├── templates/ ← spec file templates for writing new specs
+│ ├── skill-test-spec.md ← template for skill behavioral specs
+│ └── agent-test-spec.md ← template for agent behavioral specs
 │
-└── results/               ← test run outputs (written by /skill-test spec, gitignored)
+└── results/ ← test run outputs (written by /skill-test spec, gitignored)
 ```
 
 ---
@@ -53,34 +53,34 @@ All testing is driven by two skills already in the framework:
 ### Check structural compliance
 
 ```
-/skill-test static [skill-name]     # Check one skill (7 checks)
-/skill-test static all              # Check all 73 skills
+/skill-test static [skill-name] # Check one skill (7 checks)
+/skill-test static all # Check all 58 skills
 ```
 
 ### Run a behavioral spec test
 
 ```
-/skill-test spec gate-check         # Evaluate a skill against its written spec
+/skill-test spec gate-check # Evaluate a skill against its written spec
 /skill-test spec design-review
 ```
 
 ### Check against category rubric
 
 ```
-/skill-test category gate-check     # Evaluate one skill against its category metrics
-/skill-test category all            # Run rubric checks across all categorized skills
+/skill-test category gate-check # Evaluate one skill against its category metrics
+/skill-test category all # Run rubric checks across all categorized skills
 ```
 
 ### See full coverage picture
 
 ```
-/skill-test audit                   # Skills + agents: has-spec, last tested, result
+/skill-test audit # Skills + agents: has-spec, last tested, result
 ```
 
 ### Improve a failing skill
 
 ```
-/skill-improve gate-check           # Test → diagnose → propose fix → retest loop
+/ gate-check # Test → diagnose → propose fix → retest loop
 ```
 
 ---
@@ -95,9 +95,9 @@ All testing is driven by two skills already in the framework:
 | `readiness` | story-readiness, story-done | Blockers surfaced, director gate in full mode |
 | `pipeline` | create-epics, create-stories, dev-story, map-systems, … | Upstream dependency check, handoff path clear |
 | `analysis` | consistency-check, balance-check, code-review, tech-debt, … | Read-only report, verdict keyword, no writes |
-| `team` | team-combat, team-narrative, team-audio, … | All required agents spawned, blocked surfaced |
-| `sprint` | sprint-plan, sprint-status, milestone-review, … | Reads sprint data, status keywords present |
-| `utility` | start, adopt, hotfix, localize, setup-engine, … | Passes static checks |
+| `team` | team-combat, … | All required agents spawned, blocked surfaced |
+| `sprint` | sprint-plan, sprint-status, … | Reads sprint data, status keywords present |
+| `utility` | start, hotfix, localize, setup-engine, … | Passes static checks |
 
 ---
 
@@ -106,11 +106,11 @@ All testing is driven by two skills already in the framework:
 | Tier | Agents |
 |------|--------|
 | `directors` | creative-director, technical-director, producer, art-director |
-| `leads` | lead-programmer, narrative-director, audio-director, ux-designer, qa-lead, release-manager, localization-lead |
-| `specialists` | gameplay-programmer, engine-programmer, ui-programmer, tools-programmer, network-programmer, ai-programmer, level-designer, sound-designer, technical-artist |
-| `unity` | unity-specialist, unity-ui-specialist, unity-shader-specialist, unity-dots-specialist, unity-addressables-specialist |
-| `operations` | devops-engineer, security-engineer, performance-analyst, analytics-engineer, community-manager |
-| `creative` | writer, world-builder, game-designer, economy-designer, systems-designer, prototyper |
+| `leads` | lead-programmer, ux-designer, qa-lead, release-manager |
+| `specialists` | gameplay-programmer, ui-programmer, tools-programmer, sound-designer, technical-artist |
+| `unity` | unity-specialist, unity-ui-specialist, unity-shader-specialist, unity-addressables-specialist |
+| `operations` | devops-engineer, performance-analyst, analytics-engineer |
+| `creative` | game-designer, economy-designer, systems-designer |
 
 ---
 
@@ -120,7 +120,7 @@ All testing is driven by two skills already in the framework:
 
 - `/skill-test spec [name]` will offer to update `last_spec` and `last_spec_result`
 - `/skill-test category [name]` will offer to update `last_category` and `last_category_result`
-- `last_static` and `last_static_result` are updated manually or via `/skill-improve`
+- `last_static` and `last_static_result` are updated manually or via `/`
 
 ---
 
@@ -141,6 +141,6 @@ This folder has no hooks into the main project. To remove:
 rm -rf "CCGS Skill Testing Framework"
 ```
 
-The skills `/skill-test` and `/skill-improve` will still function — they'll simply
+The skills `/skill-test` and `/` will still function — they'll simply
 report that `catalog.yaml` is missing and suggest running `/skill-test audit` to
 initialize it.

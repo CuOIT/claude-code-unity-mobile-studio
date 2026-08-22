@@ -1,4 +1,4 @@
-# Workflow Catalog
+# Workflow Catalog — Unity Mobile Puzzle profile
 # Used by /help to determine where a user is and what comes next.
 #
 # Artifact checks:
@@ -13,28 +13,46 @@
 #
 # Phase gates (/gate-check): verdicts are ADVISORY — they guide the decision
 # but never hard-block advancement. The user always decides whether to proceed.
+#
+# ─── PROFILE NOTE ────────────────────────────────────────────────────────────
+# This profile deliberately front-loads a playable build. Exactly TWO artifacts
+# gate the first line of gameplay code:
+#
+#   1. .claude/docs/technical-preferences.md   (conventions + budgets)
+#   2. design/gdd/game-concept.md              (what the game is)
+#
+# The MVP phase then PRODUCES the third — production/mvp-report.md — which is the
+# artifact that gates everything after it.
+#
+# Art bible, UX specs, accessibility requirements, control manifest, per-system
+# GDDs, cross-GDD review, and architecture review are all real work — they are
+# simply sequenced AFTER the MVP verdict, because a mechanic that does not work
+# makes all of them wasted. Nothing was deleted; the order changed.
+#
+# The MVP phase is where this profile differs most from a general game workflow.
+# Its output code is KEPT. Production continues from it rather than replacing it.
 
 phases:
 
   concept:
     label: "Concept"
-    description: "Develop your game idea into a documented concept"
-    next_phase: systems-design
+    description: "Establish conventions and decide what the game is"
+    next_phase: mvp
     steps:
-      - id: brainstorm
-        name: "Brainstorm"
-        command: /brainstorm
-        required: false
-        description: "Explore the game concept using MDA, verb-first, and player psychology frameworks"
-
       - id: engine-setup
-        name: "Engine Setup"
+        name: "Engine & Conventions"
         command: /setup-engine
         required: true
         artifact:
           glob: ".claude/docs/technical-preferences.md"
-          pattern: "Engine: [^[]"
-        description: "Configure engine, pin version, set naming conventions and performance budgets"
+          pattern: "Engine.*Unity"
+        description: "Record engine capability, platform, input, naming, budgets, forbidden patterns. Versions are NOT pinned — they are decided at the moment of use."
+
+      - id: brainstorm
+        name: "Brainstorm"
+        command: /brainstorm
+        required: false
+        description: "Explore the concept using MDA, verb-first framing, and player psychology. Skip if the concept is already clear."
 
       - id: game-concept
         name: "Game Concept Document"
@@ -42,33 +60,83 @@ phases:
         required: true
         artifact:
           glob: "design/gdd/game-concept.md"
-        description: "Formalize concept with pillars, MDA analysis, and scope tiers"
-
-      - id: design-review-concept
-        name: "Concept Review"
-        command: /design-review
-        required: false
-        description: "Validate the game concept (recommended before proceeding)"
+        description: "Formalise the concept: core loop, pillars, target player, scope tiers. This is the input to the MVP, so it must name the mechanic precisely."
 
       - id: art-bible
         name: "Art Bible"
         command: /art-bible
-        required: true
-        artifact:
-          glob: "design/art/art-bible.md"
-        description: "Author the visual identity specification (9 sections). Uses the Visual Identity Anchor produced by /brainstorm. Run after game concept is formed, before systems design."
+        required: false
+        description: "Visual identity specification. OPTIONAL before the MVP — a demo needs no final art. Becomes REQUIRED before asset production begins in earnest."
 
-      - id: map-systems
-        name: "Systems Map"
-        command: /map-systems
+  mvp:
+    label: "MVP"
+    description: "Build something playable and judge it. This code is kept."
+    next_phase: systems-design
+    steps:
+      - id: mvp-demo
+        name: "MVP — demo mode"
+        command: /puzzle-mvp --mode demo
         required: true
         artifact:
-          glob: "design/gdd/systems-index.md"
-        description: "Decompose concept into systems with dependency ordering and priority tiers"
+          glob: "production/mvp-report.md"
+          pattern: "Mode.*demo"
+        description: "Single scene, Null adapters, no SDKs, 3-5 hand-built levels. Answers one question: is this mechanic worth building? Ends in PROCEED / PIVOT / KILL."
+
+      - id: mvp-verdict
+        name: "MVP Verdict Gate"
+        command: /gate-check
+        required: true
+        artifact:
+          note: "production/mvp-report.md must carry a PROCEED verdict to continue. PIVOT re-runs the demo; KILL returns to /brainstorm."
+        description: "KILL and PIVOT are successful outcomes of this phase, not failures. Three PIVOTs on one concept forces a KILL decision."
+
+      - id: level-pipeline
+        name: "Level Pipeline Decision"
+        command: /level-pipeline
+        required: true
+        artifact:
+          glob: "docs/architecture/adr-*level*.md"
+        description: "Now that the mechanic is known, decide how levels are authored, stored, ordered, and validated. Produces an ADR and scaffolds the loader plus a validity checker. Running this before the mechanic is settled is a guess."
+
+      - id: sdk-consent
+        name: "Consent Adapter"
+        command: /sdk-integrate consent
+        required: true
+        artifact:
+          glob: "docs/registry/services.yaml"
+          pattern: "interface: IConsentService[\\s\\S]*?adapter_status: exists"
+        description: "GDPR consent + iOS App Tracking Transparency. MUST come before ads — it is a store-submission gate, and the upstream ad contract does not enforce it for you."
+
+      - id: sdk-ads-tracking
+        name: "Ads & Tracking Adapters"
+        command: /sdk-integrate ads tracking
+        required: true
+        artifact:
+          glob: "docs/registry/services.yaml"
+          pattern: "interface: IAdsProvider[\\s\\S]*?adapter_status: exists"
+        description: "Write adapters from the existing CuOCore contracts onto the in-house SDK wrappers. Check the registry first — never write a parallel interface."
+
+      - id: feature-flags
+        name: "Feature Flags"
+        command: /feature-flag
+        required: true
+        artifact:
+          glob: "docs/registry/feature-flags.yaml"
+          pattern: "^  - event_id:"
+        description: "Every switchable feature gets a flag across all three places. Ads and IAP each require a kill-switch. Default anything unproven to off."
+
+      - id: mvp-signal
+        name: "MVP — signal mode"
+        command: /puzzle-mvp --mode signal --from-demo
+        required: false
+        artifact:
+          glob: "production/mvp-report.md"
+          pattern: "Mode.*signal"
+        description: "Promote the demo: three scenes from the upstream sample, real adapters, persistent progress, safe-area HUD. Produces a soft-launch build. OPTIONAL — skip only if you are certain you do not want a market read before committing to Production."
 
   systems-design:
     label: "Systems Design"
-    description: "Author a GDD for each system in the systems index"
+    description: "Document the systems the MVP proved, plus the meta systems it deferred"
     next_phase: technical-setup
     steps:
       - id: design-system
@@ -77,15 +145,8 @@ phases:
         required: true
         repeatable: true
         artifact:
-          note: "Check design/gdd/systems-index.md — each MVP system needs Status: Approved"
-        description: "Author per-system GDDs (guided, section-by-section). Run once per system."
-
-      - id: design-review
-        name: "Per-System Design Review"
-        command: /design-review
-        required: true
-        repeatable: true
-        description: "Validate each GDD (8 required sections, no MAJOR REVISION verdict). Run per system."
+          note: "One GDD per MVP-tier system. The MVP report's deferred-scope table lists what still needs designing."
+        description: "Author per-system GDDs, section by section. Scope to MVP-tier systems only — the MVP already told you which ones matter."
 
       - id: review-all-gdds
         name: "Cross-GDD Review"
@@ -93,19 +154,29 @@ phases:
         required: true
         artifact:
           glob: "design/gdd/gdd-cross-review-*.md"
-        description: "Holistic consistency check + design theory review across all GDDs simultaneously"
+        description: "Holistic consistency and design-theory review across all GDDs at once. Catches dominant strategies, economic imbalance, and pillar drift."
 
-      - id: consistency-check
-        name: "Consistency Check"
-        command: /consistency-check
+      - id: monetization
+        name: "Monetisation Design"
+        command: /design-system
+        required: false
+        artifact:
+          glob: "design/gdd/monetization.md"
+        description: "Offers, currencies, ad placements, pricing. REQUIRED before a monetised release; optional if the MVP signal run has not happened yet."
+
+      - id: ux-design
+        name: "UX Specs"
+        command: /ux-design
         required: false
         repeatable: true
-        description: "Scan all GDDs for contradictions, undefined references, and mechanic conflicts. Run after /review-all-gdds, and again any time a GDD is added or revised mid-project."
+        artifact:
+          glob: "design/ux/*.md"
+        description: "Per-screen specs. The MVP already produced working screens, so this documents and refines rather than inventing. Becomes REQUIRED before a polish pass."
 
   technical-setup:
     label: "Technical Setup"
-    description: "Architecture decisions, visual identity specification, accessibility foundations, engine validation"
-    next_phase: pre-production
+    description: "Record the architecture the MVP established, and fix the boundaries"
+    next_phase: production
     steps:
       - id: create-architecture
         name: "Architecture Document"
@@ -113,7 +184,7 @@ phases:
         required: true
         artifact:
           glob: "docs/architecture/architecture.md"
-        description: "Author the master architecture document covering all systems"
+        description: "Document the architecture as built. The MVP made these decisions in code; this makes them reviewable and explains why."
 
       - id: architecture-decision
         name: "Architecture Decisions (ADRs)"
@@ -122,79 +193,22 @@ phases:
         repeatable: true
         artifact:
           glob: "docs/architecture/adr-*.md"
-          min_count: 3
-        description: "Document key technical decisions as ADRs. Minimum 3 Foundation-layer ADRs required."
+          min_count: 4
+        description: "Minimum four: (1) adapter boundary, (2) feature-flag mechanism including kill-switch latency, (3) level pipeline, (4) SO event channel strategy. The level pipeline ADR is already written in the MVP phase."
 
-      - id: architecture-review
-        name: "Architecture Review"
-        command: /architecture-review
-        required: true
+      - id: test-setup
+        name: "Test Framework & CI"
+        command: /test-setup
+        required: false
         artifact:
-          glob: "docs/architecture/architecture-review-*.md"
-        description: "Validate completeness, dependency ordering, engine compatibility"
+          note: "Check tests/ for the EditMode + PlayMode structure and a CI workflow"
+        description: "Formalise the test structure the MVP started. PlayMode coverage is required by test-standards.md — all four reference titles have zero, and each paid for it."
 
-      - id: control-manifest
-        name: "Control Manifest"
-        command: /create-control-manifest
-        required: true
-        artifact:
-          glob: "docs/architecture/control-manifest.md"
-        description: "Flat programmer rules sheet generated from all Accepted ADRs"
-
-      - id: accessibility-doc
-        name: "Accessibility Requirements"
-        required: true
-        artifact:
-          glob: "design/accessibility-requirements.md"
-        description: "Commit accessibility tier (Basic/Standard/Comprehensive/Exemplary) and feature matrix. UX specs (Phase 4) reference this tier."
-
-  pre-production:
-    label: "Pre-Production"
-    description: "Visual entity inventory, UX specs, asset specs, prototype the core mechanic, define stories, validate fun"
-    next_phase: production
+  production:
+    label: "Production"
+    description: "Sprint-based development on top of the MVP code"
+    next_phase: polish
     steps:
-      - id: entity-inventory
-        name: "Visual Entity & Screen Inventory"
-        command: /asset-spec
-        required: false
-        artifact:
-          glob: "design/assets/entity-inventory.md"
-        description: "Enumerate everything the game needs visually: entities (characters, enemies, buildings, environment pieces), UI screens, HUD elements, panels. Run /asset-spec with no arguments to start a collaborative inventory session — brief or detailed based on your responses. Reads GDDs and art bible to propose a starting list; you add, remove, and adjust. Becomes the source of truth for all art and UX work. Not required if the game has very few distinct visual elements."
-
-      - id: asset-spec
-        name: "Asset Specs"
-        command: /asset-spec
-        required: false
-        repeatable: true
-        artifact:
-          glob: "design/assets/asset-manifest.md"
-        description: "Generate per-asset visual specifications and AI generation prompts. Run once per entity, system, level, or character. If no source doc exists, /asset-spec interviews you inline — no narrative document required."
-
-      - id: ux-design
-        name: "UX Specs (key screens)"
-        command: /ux-design
-        required: true
-        repeatable: true
-        artifact:
-          glob: "design/ux/*.md"
-          min_count: 3
-        description: "Author UX specs for the screens identified in the entity inventory (or GDDs if no inventory). Minimum required: main menu, core gameplay HUD, pause menu. Add more screens as the inventory identifies them. Reads input method and platform from technical-preferences.md."
-
-      - id: ux-review
-        name: "UX Review"
-        command: /ux-review
-        required: true
-        description: "Validate all key screen UX specs for GDD alignment and accessibility tier compliance. Run before creating epics."
-
-      - id: prototype
-        name: "Prototype"
-        command: /prototype
-        required: false
-        artifact:
-          glob: "prototypes/*/README.md"
-          min_count: 1
-        description: "Build a throwaway prototype to validate the core mechanic is fun before committing to full production. Recommended for first-time mechanics or high-risk design decisions. Solo devs with proven concepts may skip."
-
       - id: create-epics
         name: "Create Epics"
         command: /create-epics
@@ -203,7 +217,7 @@ phases:
         artifact:
           glob: "production/epics/*/EPIC.md"
           min_count: 1
-        description: "Translate GDDs + ADRs into epics — one per architectural module. Run per layer: /create-epics layer: foundation, then /create-epics layer: core"
+        description: "One epic per architectural module. The MVP report's deferred-scope table is the starting backlog."
 
       - id: create-stories
         name: "Create Stories"
@@ -213,39 +227,8 @@ phases:
         artifact:
           glob: "production/epics/**/*.md"
           min_count: 2
-        description: "Break each epic into implementable story files. Run per epic: /create-stories [epic-slug]"
+        description: "Break each epic into implementable stories with embedded requirements and acceptance criteria."
 
-      - id: test-setup
-        name: "Test Framework Setup"
-        command: /test-setup
-        required: false
-        artifact:
-          note: "Check tests/ directory for engine-specific test framework scaffold"
-        description: "Scaffold the test framework and CI pipeline once before the first sprint. Leads to /test-helpers for fixture generation, /qa-plan per epic, and /smoke-check per sprint."
-
-      - id: sprint-plan
-        name: "First Sprint Plan"
-        command: /sprint-plan
-        required: true
-        artifact:
-          glob: "production/sprints/sprint-*.md"
-          min_count: 1
-        description: "Plan the first sprint with prioritized stories from epics"
-
-      - id: vertical-slice
-        name: "Vertical Slice"
-        command: /vertical-slice
-        required: false
-        artifact:
-          glob: "prototypes/*/REPORT.md"
-          min_count: 1
-        description: "Build and playtest a vertical slice — a complete end-to-end pass through the core loop. Recommended before committing epics and stories to production. Skipping is a valid solo dev call but increases risk of late-stage design pivots. If built, must be played and documented before advancing."
-
-  production:
-    label: "Production"
-    description: "Sprint-based feature development — pick, implement, close stories"
-    next_phase: polish
-    steps:
       - id: sprint-plan
         name: "Sprint Plan"
         command: /sprint-plan
@@ -253,13 +236,7 @@ phases:
         repeatable: true
         artifact:
           glob: "production/sprints/sprint-*.md"
-        description: "Plan the current sprint with prioritized, ready stories"
-
-      - id: story-readiness
-        name: "Story Readiness Check"
-        command: /story-readiness
-        required: false
-        description: "Validate a story is implementation-ready before a developer picks it up"
+        description: "Plan the sprint with prioritised, ready stories."
 
       - id: implement
         name: "Implement Stories"
@@ -267,129 +244,115 @@ phases:
         required: true
         repeatable: true
         artifact:
-          note: "Check src/ for active code and production/epics/**/*.md for In Progress stories"
-        description: "Pick the next ready story and implement it with /dev-story [story-path]. Routes to the correct programmer agent."
+          note: "Check Assets/Scripts/ for active code and production/epics/**/*.md for In Progress stories"
+        description: "Implement the next ready story. Routes to the correct specialist — service work goes to mobile-sdk-engineer first."
 
       - id: code-review
         name: "Code Review"
         command: /code-review
         required: false
         repeatable: true
-        description: "Architectural code review after each story implementation. Run after /dev-story, before /story-done."
+        description: "Architectural review after each story. Checks the adapter boundary, assembly structure, and file-size ceilings."
 
       - id: story-done
         name: "Story Done Review"
         command: /story-done
         required: true
         repeatable: true
-        description: "Verify all acceptance criteria, check GDD/ADR deviations, close the story"
+        description: "Verify acceptance criteria, check for GDD/ADR deviation, close the story."
+
+      - id: flag-audit
+        name: "Feature Flag Audit"
+        command: /feature-flag audit
+        required: false
+        repeatable: true
+        description: "Find flags read but never declared, catalog entries silently deleted, and ads/IAP flags missing a kill-switch. Run at sprint close and before any release."
+
+      - id: mobile-build-check
+        name: "Mobile Build Check"
+        command: /mobile-build-check
+        required: false
+        repeatable: true
+        description: "Static pre-flight before handing a branch to CI: adapter boundary, consent gate, assembly structure, secrets, flag declarations."
 
       - id: qa-plan
         name: "QA Plan"
         command: /qa-plan
         required: false
         repeatable: true
-        description: "Generate a QA test plan per epic or sprint. Run /qa-plan [epic-slug]. Produces test cases for /smoke-check, /regression-suite, and /test-evidence-review."
-
-      - id: bug-report
-        name: "Bug Report / Triage"
-        command: /bug-report
-        required: false
-        repeatable: true
-        description: "Log and prioritize bugs found during implementation. /bug-report creates a structured report; /bug-triage prioritizes the open backlog."
+        description: "Test plan per epic or sprint. Produces the cases used by smoke checks and regression coverage."
 
       - id: retrospective
         name: "Sprint Retrospective"
         command: /retrospective
         required: false
         repeatable: true
-        description: "Post-sprint review to capture what worked and what to change. Run at the end of each sprint, before planning the next."
-
-      - id: team-feature
-        name: "Team Orchestration (optional)"
-        required: false
-        repeatable: true
-        description: "Coordinate multiple agents on a complex feature. Use: /team-combat, /team-narrative, /team-ui, /team-audio, /team-level, /team-live-ops, /team-qa. Run when a feature spans multiple agent domains."
-
-      - id: scope-check
-        name: "Scope Check"
-        command: /scope-check
-        required: false
-        repeatable: true
-        artifact:
-          glob: "production/sprints/sprint-*.md"
-          note: "Run when stories are added mid-sprint, or before sprint retrospectives"
-        description: "Detect scope creep by comparing current sprint scope to original epic scope. Run (a) when stories are added mid-sprint, or (b) before sprint retrospectives."
-
-      - id: sprint-status
-        name: "Sprint Status"
-        command: /sprint-status
-        required: false
-        description: "Quick 30-line snapshot of sprint progress without a full report"
+        description: "Capture what worked and what to change, at the end of each sprint."
 
   polish:
     label: "Polish"
-    description: "Performance, balance, playtesting, bug fixing"
+    description: "Performance, balance, device testing, bug fixing"
     next_phase: release
     steps:
       - id: perf-profile
         name: "Performance Profile"
         command: /perf-profile
-        required: false
-        description: "Profile and optimize CPU/GPU/memory bottlenecks"
+        required: true
+        description: "Profile against the mobile budgets on real devices across the three device tiers. Editor profiling hides mobile cost — it does not satisfy this step."
 
       - id: balance-check
         name: "Balance Check"
         command: /balance-check
         required: false
-        description: "Analyze game balance formulas and data for outliers and broken progressions"
+        description: "Analyse difficulty curve, economy, and progression for outliers and degenerate strategies."
 
-      - id: asset-audit
-        name: "Asset Audit"
-        command: /asset-audit
+      - id: tech-debt
+        name: "Tech Debt Pass"
+        command: /tech-debt
         required: false
-        description: "Verify naming conventions, file format standards, and size budgets"
+        description: "Pay down the debt the MVP report listed deliberately, plus dead code, orphaned defines, and unused packages."
 
-      - id: playtest-polish
-        name: "Playtest Sessions (×3)"
+      - id: playtest
+        name: "Playtest Sessions"
         command: /playtest-report
         required: true
         artifact:
           glob: "production/playtests/*.md"
-          min_count: 3
-        description: "Cover: new player experience, mid-game systems, difficulty curve"
+          min_count: 2
+        description: "Cover the new-player experience and the mid-game difficulty curve at minimum."
 
       - id: team-polish
         name: "Polish Team Pass"
         command: /team-polish
-        required: true
-        description: "Coordinated polish pass across performance, audio, visual, and UX"
+        required: false
+        description: "Coordinated pass across performance, audio, visual, and UX."
 
   release:
     label: "Release"
-    description: "Launch preparation, certification, and ship"
+    description: "Store readiness and ship"
     next_phase: null
     steps:
       - id: release-checklist
         name: "Release Checklist"
         command: /release-checklist
         required: true
-        description: "Pre-release validation across all departments: code, content, store, legal"
+        description: "Pre-release validation across code, content, store metadata, and legal. Includes the consent and privacy declarations."
 
-      - id: patch-notes
-        name: "Patch Notes"
-        command: /patch-notes
-        required: false
-        description: "Generate player-facing patch notes from git history and sprint data"
+      - id: flag-audit-release
+        name: "Release Flag Audit"
+        command: /feature-flag audit
+        required: true
+        description: "Every ads and IAP flag has a kill-switch, every flag read is declared, and the kill-switch latency is documented. A monetised build without this cannot be turned off after release."
 
       - id: changelog
-        name: "Changelog"
+        name: "Changelog / Patch Notes"
         command: /changelog
         required: false
-        description: "Auto-generate internal changelog from commits, sprints, and design docs"
+        description: "Generate internal and player-facing notes from commits and sprint data."
 
-      - id: launch-checklist
-        name: "Launch Checklist"
-        command: /launch-checklist
-        required: true
-        description: "Final launch readiness — last gate before shipping to players"
+      - id: hotfix
+        name: "Hotfix (as needed)"
+        command: /hotfix
+        required: false
+        repeatable: true
+        description: "Emergency fix workflow with an audit trail, bypassing the normal sprint process."

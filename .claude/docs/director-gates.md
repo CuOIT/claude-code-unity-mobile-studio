@@ -199,28 +199,6 @@ complete system set before GDD authoring begins
 
 ---
 
-### CD-NARRATIVE — Narrative Consistency Check
-
-**Trigger**: After narrative GDDs, lore documents, dialogue specs, or world-building
-documents are authored (team-narrative, design-system for story systems, writer
-deliverables)
-
-**Context to pass**:
-- Document file path(s)
-- Game pillars
-- Narrative direction brief or tone guide (if exists at `design/narrative/`)
-- Any existing lore that the new document references
-
-**Prompt**:
-> "Review this narrative content for consistency with the game's pillars and
-> established world rules. Does the tone match the game's established voice? Are
-> there contradictions with existing lore or world-building? Does the content serve
-> the player experience pillar? Return APPROVE, CONCERNS [specific inconsistencies],
-> or REJECT [contradictions that break world coherence]."
-
-**Verdicts**: APPROVE / CONCERNS / REJECT
-
----
 
 ### CD-PLAYTEST — Player Experience Validation
 
@@ -465,7 +443,7 @@ mid-sprint scope change
 
 ### PR-MILESTONE — Milestone Risk Assessment
 
-**Trigger**: At milestone review (`/milestone-review`), at mid-sprint retrospectives,
+**Trigger**: At milestone review (`/sprint-status`), at mid-sprint retrospectives,
 or when a scope change is proposed that affects the milestone
 
 **Context to pass**:
@@ -700,7 +678,7 @@ done, or at `/gate-check` Production → Polish
 
 **Context to pass**:
 - List of implemented stories with story types (Logic / Integration / Visual / UI / Config)
-- Test file paths in `tests/`
+- Test file paths in `Assets/Tests/`
 - GDD acceptance criteria for the system
 
 **Prompt**:
@@ -712,29 +690,6 @@ done, or at `/gate-check` Production → Polish
 > INADEQUATE [critical logic is untested — do not advance]."
 
 **Verdicts**: ADEQUATE / GAPS / INADEQUATE
-
----
-
-### ND-CONSISTENCY — Narrative Director Consistency Check
-
-**Trigger**: After writer deliverables (dialogue, lore, item descriptions) are
-authored, or when a design decision has narrative implications
-
-**Context to pass**:
-- Document or content file path(s)
-- Narrative bible or tone guide path (if exists)
-- Relevant world-building rules
-- Character or faction profiles affected
-
-**Prompt**:
-> "Review this narrative content for internal consistency and adherence to
-> established world rules. Are character voices consistent with their established
-> profiles? Does the lore contradict any established facts? Is the tone consistent
-> with the game's narrative direction? Return APPROVE, CONCERNS [specific
-> inconsistencies to fix], or REJECT [contradictions that break the narrative
-> foundation]."
-
-**Verdicts**: APPROVE / CONCERNS / REJECT
 
 ---
 
@@ -757,6 +712,116 @@ introduced, or when a tech art decision affects visual style
 > REJECT [style violation or production risk that must be resolved first]."
 
 **Verdicts**: APPROVE / CONCERNS / REJECT
+
+---
+
+## Mobile Puzzle Profile Gates
+
+Four gates specific to this profile. Each exists because the failure it prevents was
+observed in real shipped code — see `.claude/docs/puzzle-profile.md`.
+
+---
+
+### TD-ADAPTER-BOUNDARY — Service Adapter Boundary Review
+
+**Trigger**: Before writing any adapter (`/sdk-integrate` Phase 3), and after any change
+to an assembly-definition reference under `Assets/Scripts/Services/`
+
+Agent: `technical-director`
+
+**Context to pass**:
+- The contract being adapted and the vendor wrapper it maps onto
+- The proposed mapping table (contract member → vendor call)
+- The assembly-definition references for the adapter, abstractions, and gameplay assemblies
+- `docs/registry/services.yaml` entry for this contract
+
+**Prompt**:
+> "Review this adapter boundary. Does any vendor type cross the contract boundary — in a
+> parameter, return value, event payload, or exception? Do the assembly references make
+> the boundary a compile error rather than a convention, with gameplay and abstractions
+> referencing no vendor assembly? Is there a Null counterpart, and would it be genuinely
+> substitutable for the real adapter? Is the mapping complete, or are there vendor states
+> with no contract representation? Return APPROVE, CONCERNS [specific leaks or gaps], or
+> REJECT [the boundary as designed does not hold]."
+
+**Verdicts**: APPROVE / CONCERNS / REJECT
+
+---
+
+### TD-CONSENT-GATE — Consent Before Ads Verification
+
+**Trigger**: Before any ads adapter is marked complete, and at every release gate.
+**Mandatory in MVP `signal` mode.** Never skipped, including in `solo` review mode —
+this is a store-submission gate, not a review preference.
+
+Agent: `technical-director`
+
+**Context to pass**:
+- `docs/registry/services.yaml` — consent and ads entries with their bootstrap order
+- The composition root's actual registration sequence
+- Platform settings: tracking-usage description, iOS scripting-define entry
+
+**Prompt**:
+> "Verify that consent resolves before ads initialise. Check three things independently:
+> (1) the registry orders consent before every ads entry; (2) the composition root's real
+> registration sequence matches that order — not just the registry's claim; (3) the
+> platform declarations exist, specifically the tracking-usage description and an iOS
+> define entry. Note that the upstream ad contract takes no consent parameter, so nothing
+> enforces this except the composition root. Return READY, CONCERNS [gaps that are not
+> yet blocking], or NOT READY [ads can initialise without consent — this cannot ship]."
+
+**Verdicts**: READY / CONCERNS / NOT READY
+
+---
+
+### TD-FLAG-AUDIT — Feature Flag Integrity Review
+
+**Trigger**: Before every release, and at sprint close in `full` review mode
+
+Agent: `technical-director`
+
+**Context to pass**:
+- `/feature-flag audit` output
+- `docs/registry/feature-flags.yaml`
+- The kill-switch latency documented in the flag-mechanism ADR
+
+**Prompt**:
+> "Review feature flag integrity for release. Is every flag read in code declared in the
+> registry, and does every registry entry have a catalog asset that still exists? Do ads
+> and IAP each have a kill-switch? Is the kill-switch latency documented and honest —
+> specifically, that a remote change takes effect on the next successful fetch rather than
+> immediately, and survives offline and rollback until then? Are any flags defaulted on
+> that have not been proven? Return READY, CONCERNS [drift that is safe to ship], or NOT
+> READY [a flag does not work as intended, or a monetised feature cannot be switched off]."
+
+**Verdicts**: READY / CONCERNS / NOT READY
+
+---
+
+### PR-MVP-VERDICT — MVP Verdict Review
+
+**Trigger**: At the end of `/puzzle-mvp`, before the verdict is recorded
+
+Agent: `producer`
+
+**Context to pass**:
+- `production/mvp-report.md` including the Phase 1 question and any stated threshold
+- The verification table — test counts, build check result, whether it ran on device
+- The play debrief
+- Pivot count for this concept
+
+**Prompt**:
+> "Review this MVP report before its verdict is recorded. Does the evidence actually
+> answer the question that was set at the start, or has the question drifted to match the
+> result? For a signal-mode run, was a numeric threshold set up front, and does the
+> measured number meet it? Is the verification section complete, or is PROCEED being
+> claimed without passing tests and a build check? Is the deferred-scope list honest about
+> what was cut? If this is the third PIVOT on this concept, say so plainly and recommend
+> a KILL decision. Return AGREE, CONCERNS [what the evidence does not support], or
+> DISAGREE [the verdict does not follow from the evidence — state the verdict you would
+> record instead]."
+
+**Verdicts**: AGREE / CONCERNS / DISAGREE
 
 ---
 
@@ -785,8 +850,8 @@ Collect all four verdicts, then apply escalation rules:
 When a new gate is needed for a new skill or workflow:
 
 1. Assign a gate ID: `[DIRECTOR-PREFIX]-[DESCRIPTIVE-SLUG]`
-   - Prefixes: `CD-` `TD-` `PR-` `LP-` `QL-` `ND-` `AD-`
-   - Add new prefixes for new agents: `audio-director` → `AU-`, `ux-designer` → `UX-`
+   - Prefixes: `CD-` `TD-` `PR-` `LP-` `QL-` `AD-`
+   - Add new prefixes for new agents: `ux-designer` → `UX-`, `mobile-sdk-engineer` → `SDK-`
 2. Add the gate under the appropriate director section with all five fields:
    Trigger, Context to pass, Prompt, Verdicts, and any special handling notes
 3. Reference it in skills by ID only — never copy the prompt text into the skill
@@ -795,12 +860,24 @@ When a new gate is needed for a new skill or workflow:
 
 ## Gate Coverage by Stage
 
+Stages follow the `puzzle-mobile` profile in `.claude/docs/workflow-catalog.yaml`.
+
 | Stage | Required Gates | Optional Gates |
 |-------|---------------|----------------|
-| **Concept** | CD-PILLARS, AD-CONCEPT-VISUAL | TD-FEASIBILITY, PR-SCOPE |
-| **Systems Design** | TD-SYSTEM-BOUNDARY, CD-SYSTEMS, PR-SCOPE, CD-GDD-ALIGN (per GDD) | ND-CONSISTENCY, AD-VISUAL |
-| **Technical Setup** | TD-ARCHITECTURE, TD-ADR (per ADR), LP-FEASIBILITY, AD-ART-BIBLE | TD-ENGINE-RISK |
-| **Pre-Production** | PR-EPIC, QL-STORY-READY (per story), PR-SPRINT, all four PHASE-GATEs (via gate-check) | CD-PLAYTEST |
-| **Production** | LP-CODE-REVIEW (per story), QL-STORY-READY, PR-SPRINT (per sprint), QL-TEST-COVERAGE (per sprint close-out) | PR-MILESTONE, AD-VISUAL |
-| **Polish** | QL-TEST-COVERAGE, CD-PLAYTEST, PR-MILESTONE | AD-VISUAL |
-| **Release** | All four PHASE-GATEs (via gate-check) | QL-TEST-COVERAGE |
+| **Concept** | CD-PILLARS | AD-CONCEPT-VISUAL, TD-FEASIBILITY, PR-SCOPE |
+| **MVP** | **PR-MVP-VERDICT**, **TD-ADAPTER-BOUNDARY** (per adapter), **TD-CONSENT-GATE** (signal mode) | TD-FEASIBILITY, CD-PLAYTEST |
+| **Systems Design** | CD-SYSTEMS, CD-GDD-ALIGN (per GDD) | TD-SYSTEM-BOUNDARY, PR-SCOPE, AD-VISUAL |
+| **Technical Setup** | TD-ARCHITECTURE, TD-ADR (per ADR), LP-FEASIBILITY | TD-ENGINE-RISK, AD-ART-BIBLE |
+| **Production** | LP-CODE-REVIEW (per story), QL-STORY-READY, PR-SPRINT (per sprint), QL-TEST-COVERAGE (per sprint close) | PR-EPIC, AD-VISUAL, TD-FLAG-AUDIT |
+| **Polish** | QL-TEST-COVERAGE, CD-PLAYTEST | AD-VISUAL, PR-MILESTONE |
+| **Release** | **TD-CONSENT-GATE**, **TD-FLAG-AUDIT**, all four PHASE-GATEs (via gate-check) | QL-TEST-COVERAGE |
+
+### Gates that ignore review mode
+
+Two gates run regardless of whether the mode is `full`, `lean`, or `solo`, because they
+guard store submission and post-release control rather than review quality:
+
+- **TD-CONSENT-GATE** — ads must not initialise before consent resolves
+- **TD-FLAG-AUDIT** at the Release stage — a monetised build must be switchable off
+
+Every other gate follows the normal review-mode resolution described above.

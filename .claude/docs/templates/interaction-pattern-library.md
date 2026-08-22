@@ -59,7 +59,7 @@ update this document before or simultaneously with any implementation change.
 
 > Add a row here every time a new pattern is added to this document.
 > The "Used In" column is the usages audit trail — update it when new screens
-> adopt the pattern.
+> project-stage-detect the pattern.
 
 | Pattern Name | Category | Description | Used In (Screens) | Status |
 |-------------|----------|-------------|------------------|--------|

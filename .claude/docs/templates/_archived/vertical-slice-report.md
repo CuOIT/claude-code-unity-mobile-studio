@@ -137,7 +137,7 @@ before running `/gate-check pre-production`.
 **Next steps:**
 1. `/design-system [mechanic]` — revise affected GDDs
 2. `/architecture-decision [decision]` — address architecture issues
-3. `/vertical-slice` — re-validate after revisions
+3. `/puzzle-mvp --mode signal` — re-validate after revisions
 
 ---
 

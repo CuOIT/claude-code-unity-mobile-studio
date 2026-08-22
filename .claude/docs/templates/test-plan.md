@@ -12,8 +12,8 @@
 
 | Story | Type | Automated Test Required | Manual Verification Required |
 |-------|------|------------------------|------------------------------|
-| [story title] | Logic | Unit test — `tests/unit/[system]/` | None |
-| [story title] | Integration | Integration test — `tests/integration/[system]/` | Smoke check |
+| [story title] | Logic | Unit test — `Assets/Tests/EditMode/[system]/` | None |
+| [story title] | Integration | Integration test — `Assets/Tests/PlayMode/[system]/` | Smoke check |
 | [story title] | Visual/Feel | None (not automatable) | Screenshot + lead sign-off |
 | [story title] | UI | None (not automatable) | Manual step-through |
 | [story title] | Config/Data | Data validation (optional) | Spot-check in-game values |
@@ -26,7 +26,7 @@
 
 ### [Story Title] — Logic
 
-**Test file path**: `tests/unit/[system]/[story-slug]_test.[ext]`
+**Test file path**: `Assets/Tests/EditMode/[system]/[story-slug]_test.[ext]`
 
 **What to test**:
 - [Formula or rule from GDD Formulas section — e.g., "damage = base * multiplier where multiplier ∈ [0.5, 3.0]"]
@@ -45,7 +45,7 @@
 
 ### [Story Title] — Integration
 
-**Test file path**: `tests/integration/[system]/[story-slug]_test.[ext]`
+**Test file path**: `Assets/Tests/PlayMode/[system]/[story-slug]_test.[ext]`
 
 **What to test**:
 - [Cross-system interaction — e.g., "applying buff updates CharacterStats and triggers UI refresh"]

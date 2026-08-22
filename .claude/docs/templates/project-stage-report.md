@@ -1,7 +1,7 @@
 # Project Stage Analysis Report
 
 **Generated**: [DATE]
-**Stage**: [Concept | Systems Design | Technical Setup | Pre-Production | Production | Polish | Release]
+**Stage**: [Concept | MVP | Systems Design | Technical Setup | Production | Polish | Release]
 **Analysis Scope**: [Full project | Specific role: programmer/designer/producer]
 
 ---
@@ -30,7 +30,7 @@
 
 ### Source Code
 - **Status**: [X%] complete
-- **Files Found**: [N] source files in `src/`
+- **Files Found**: [N] source files in `Assets/Scripts/`
 - **Major Systems Identified**:
   - ✅ [System 1] (`src/path/`) — [brief status]
   - ✅ [System 2] (`src/path/`) — [brief status]
@@ -61,7 +61,7 @@
 
 ### Testing
 - **Status**: [X%] coverage (estimated)
-- **Test Files**: [N] in `tests/`
+- **Test Files**: [N] in `Assets/Tests/`
 - **Coverage by System**:
   - [System 1]: [X%] (estimated)
   - [System 2]: [X%] (estimated)
@@ -158,11 +158,11 @@
 
 Based on gaps identified, consider running:
 
-- `/reverse-document [type] [path]` — [For which gap]
+- `/design-system [type] [path]` — [For which gap]
 - `/architecture-decision` — [For which gap]
 - `/sprint-plan` — [If production planning missing]
-- `/milestone-review` — [If approaching deadline]
-- `/onboard [role]` — [If new contributor joining]
+- `/sprint-status` — [If approaching deadline]
+- `/puzzle-profile [role]` — [If new contributor joining]
 
 ---
 

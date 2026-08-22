@@ -97,5 +97,5 @@ Requirements" if so.
 **When running `/architecture-review`**: The skill will update this document
 automatically with the current state.
 
-**Gate check**: The Pre-Production gate requires this document to exist and to
+**Gate check**: The Production gate requires this document to exist and to
 have zero Foundation Layer Gaps.

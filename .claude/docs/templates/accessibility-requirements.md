@@ -326,6 +326,6 @@ remapping, estimated at 8-12% of the target audience based on AbleGamers data."]
 | Question | Owner | Deadline | Resolution |
 |----------|-------|----------|-----------|
 | [Does Unity Accessibility (a11y) support dynamic accessibility node updates for HUD elements, or only static menus?] | [ux-designer] | [Before Technical Setup gate] | [Unresolved — check Unity docs] |
-| [What is the Xbox ID@Xbox minimum XAG compliance requirement for our release window?] | [producer] | [Before Pre-Production gate] | [Unresolved] |
+| [What is the Xbox ID@Xbox minimum XAG compliance requirement for our release window?] | [producer] | [Before Production gate] | [Unresolved] |
 | [Will the dialogue system support timed choice extensions without a full architecture change?] | [lead-programmer] | [During Technical Design] | [Unresolved] |
 | [Add question] | [Owner] | [Deadline] | [Resolution] |
