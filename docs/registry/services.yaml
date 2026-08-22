@@ -1,0 +1,321 @@
+# Service Adapter Registry
+#
+# PURPOSE: Single source of truth for every service contract the game depends on and
+# the status of its adapter. The CuOCore UPM suite supplies the contracts; this project
+# supplies the adapters onto real vendors. This file records which are done.
+#
+# Read this before proposing any service code. If a contract is already listed here,
+# do NOT write a parallel interface — write or finish its adapter.
+#
+# RULES:
+#   - One entry per contract. The contract, not the vendor, is the key.
+#   - Never delete an entry — set status: retired instead.
+#   - adapter_status is the field that matters:
+#       missing   → contract exists upstream, nothing implements it yet
+#       planned   → an ADR exists, implementation not started
+#       partial   → implemented but incomplete or untested
+#       exists    → implemented AND covered by contract tests
+#   - Every entry MUST name its null_impl. If a contract has no Null or fake
+#     implementation, the game cannot run without SDKs — that is a defect.
+#   - define_symbol holds the CANONICAL spelling. Shipped titles in this studio carry a
+#     misspelled define across three projects; this field is how that stops recurring.
+#   - bootstrap_order is an integer. Consent MUST sort before ads. Non-negotiable.
+#   - Do NOT record vendor versions here. This project records capabilities, not pins —
+#     see docs/engine-reference/unity/VERSION.md.
+#
+# WRITTEN BY: /sdk-integrate (after an adapter is scaffolded or completed)
+#             /architecture-decision (when an ADR fixes a boundary)
+# READ BY:    /sdk-integrate (Step 1 — what is missing)
+#             /mobile-build-check (adapter boundary + consent-gate checks)
+#             /gate-check (release readiness)
+#             /puzzle-mvp (which adapters to register per mode)
+#
+# SEARCH PATTERNS (for skills using Grep):
+#   All contracts:        Grep pattern="^  - interface:" path="docs/registry/services.yaml"
+#   Missing adapters:     Grep pattern="adapter_status: missing"
+#   A specific contract:  Grep pattern="interface: IAdsProvider"
+#   Consent gate:         Grep pattern="gates_ads: true"
+#   Retired entries:      Grep pattern="status: retired"
+#
+# FORMAT: YAML. Consistent indentation is critical for grep reliability.
+#   Each entry: interface, status, package, capability, adapter_status, adapter_target,
+#               vendor, define_symbol, null_impl, bootstrap_order, test_assembly,
+#               adr, added, revised
+
+version: 1
+last_updated: ""
+
+# ─── SERVICES ────────────────────────────────────────────────────────────────
+# Every service contract the game consumes. Contracts marked package: "" are ones
+# this project must define itself because CuOCore has none.
+
+services:
+
+  - interface: IConsentService
+    status: active
+    package: ""                       # DOES NOT EXIST UPSTREAM — this project must define it
+    capability: "GDPR consent form + iOS App Tracking Transparency, resolved before ads init"
+    adapter_status: missing
+    adapter_target: "UMPManager (Google UMP + ATT + TCF purpose-consent gate)"
+    vendor: "Google User Messaging Platform"
+    define_symbol: ""
+    null_impl: "grant-all, editor and demo mode only"
+    bootstrap_order: 50
+    gates_ads: true                   # ads MUST NOT initialise before this resolves
+    test_assembly: ""
+    adr: ""
+    notes: >
+      Highest-priority gap in the whole project. Zero consent/ATT/UMP/GDPR code exists
+      anywhere in the CuOCore suite, and IAdsService.InitializeAsync takes no consent
+      parameter. One shipped title has no consent path at all — no ATT prompt, no
+      tracking-usage description, no iOS define set. This blocks store submission.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IAdsProvider
+    status: active
+    package: com.cuongbs.ads
+    capability: "Interstitial, rewarded, app-open, banner, MREC — load, show, readiness, revenue reporting"
+    adapter_status: missing
+    adapter_target: "MediationManager + AppOpenAdManager"
+    vendor: "AppLovin MAX mediation (+ AdMob app-open, Amazon APS bidding)"
+    define_symbol: ""
+    null_impl: NullAdsProvider        # ships upstream
+    bootstrap_order: 60
+    gates_ads: false
+    test_assembly: CuongBS.Ads.Tests
+    adr: ""
+    notes: >
+      Contract is vendor-agnostic and tested upstream. Upstream README references
+      companion packages for MAX and AdMob adapters; those packages do not exist.
+      Placement is a bare string on the request — consider a placement constant set.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IIapStore
+    status: active
+    package: com.cuongbs.iap
+    capability: "Product init, purchase, restore, receipt validation seam, transaction idempotency"
+    adapter_status: missing
+    adapter_target: PurchaseManager
+    vendor: "Unity Purchasing"
+    define_symbol: ""
+    null_impl: ""                     # upstream has fakes in tests only — a Null store must be written
+    bootstrap_order: 70
+    gates_ads: false
+    test_assembly: CuongBS.IAP.Tests
+    adr: ""
+    notes: >
+      Upstream ships TrustStoreReceiptValidator, which trusts the store with no server
+      check. Decide explicitly whether that is acceptable before launch.
+      No Null store exists upstream — one is needed for demo mode and tests.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: ITrackingProvider
+    status: active
+    package: com.cuongbs.tracking
+    capability: "Event tracking, user properties, ad revenue, install attribution"
+    adapter_status: missing
+    adapter_target: "FirebaseManager (analytics) + SDKManager.PushAFEvent (attribution) + GameAnalytics"
+    vendor: "Firebase Analytics, AppsFlyer, GameAnalytics"
+    define_symbol: ""
+    null_impl: "NullTrackingProvider, DebugTrackingProvider"
+    bootstrap_order: 30
+    gates_ads: false
+    test_assembly: CuongBS.Tracking.Tests
+    adr: ""
+    notes: >
+      Register each vendor into the upstream CompositeTrackingProvider rather than
+      replacing the service. Upstream supports catalog validation (warn/reject) and
+      queues events until a provider is ready — use both.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: ILiveOpsRemoteConfig
+    status: active
+    package: com.cuongbs.liveops
+    capability: "Remote bool/int/string lookup backing the feature-flag system"
+    adapter_status: missing
+    adapter_target: "BS_Data (PlayerPrefs-mirrored remote config)"
+    vendor: "Firebase Remote Config, via the in-house data layer"
+    define_symbol: ""
+    null_impl: "NullLiveOpsRemoteConfig, InMemoryLiveOpsRemoteConfig"
+    bootstrap_order: 40
+    gates_ads: false
+    test_assembly: CuongBS.LiveOps.Tests
+    adr: ""
+    notes: >
+      DECIDED: route through the in-house data layer rather than calling remote config
+      directly. Accepted consequence — values are mirrored into PlayerPrefs, so they
+      survive offline and survive a server-side rollback until the next successful
+      fetch. Every kill-switch decision must account for that latency.
+      See .claude/rules/feature-flags.md.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IGameplayLoader
+    status: active
+    package: com.cuongbs.gameplayflow
+    capability: "Load a level by number into a playable session; unload it"
+    adapter_status: missing
+    adapter_target: "the actual game — greenfield"
+    vendor: ""
+    define_symbol: ""
+    null_impl: "sample loader (two buttons: win, lose)"
+    bootstrap_order: 90
+    gates_ads: false
+    test_assembly: ""
+    adr: ""
+    notes: >
+      This and IGameplaySession are the puzzle game itself. Upstream treats a level as
+      a bare int; the sample session is two buttons. Everything real is to be built.
+      Depends on the level pipeline decision — see /level-pipeline.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IGameplaySession
+    status: active
+    package: com.cuongbs.gameplayflow
+    capability: "One playthrough of one level: enter, pause, resume, exit, completion result"
+    adapter_status: missing
+    adapter_target: "the actual game — greenfield"
+    vendor: ""
+    define_symbol: ""
+    null_impl: "sample session"
+    bootstrap_order: 90
+    gates_ads: false
+    test_assembly: ""
+    adr: ""
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IGameplayLevelProvider
+    status: active
+    package: com.cuongbs.gameplayflow
+    capability: "Current level and next-level resolution, persisted across sessions"
+    adapter_status: missing
+    adapter_target: "persistent provider backed by the inventory/save layer"
+    vendor: ""
+    define_symbol: ""
+    null_impl: "sample provider — in-memory, increments without bound"
+    bootstrap_order: 85
+    gates_ads: false
+    test_assembly: ""
+    adr: ""
+    notes: >
+      The sample never persists and never stops. A real provider needs persistence, a
+      content bound, and a defined behaviour past the last authored level. Shipped
+      titles wrap around into an earlier range — decide that behaviour explicitly.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IBoosterResourcePort
+    status: active
+    package: com.cuongbs.boosters
+    capability: "Read booster quantity and consume one, for the booster use pipeline"
+    adapter_status: missing
+    adapter_target: "InventoryService from com.cuongbs.resources"
+    vendor: ""
+    define_symbol: ""
+    null_impl: ""
+    bootstrap_order: 80
+    gates_ads: false
+    test_assembly: CuongBS.Boosters.Tests
+    adr: ""
+    notes: "Both packages exist; nothing upstream bridges them. Small, well-defined adapter."
+    added: 2026-08-21
+    revised: ""
+
+  - interface: IHeartService
+    status: active
+    package: com.cuongbs.mobilepuzzle.template
+    capability: "Life/energy balance gating gameplay entry"
+    adapter_status: partial
+    adapter_target: "ResourceHeartService<THeart> — exists upstream, needs a resource enum wired"
+    vendor: ""
+    define_symbol: ""
+    null_impl: "sample in-memory heart service"
+    bootstrap_order: 80
+    gates_ads: false
+    test_assembly: CuongBS.MobilePuzzleTemplate.Tests
+    adr: ""
+    notes: "Closest thing to a free adapter in the suite. Wire it to a game resource enum."
+    added: 2026-08-21
+    revised: ""
+
+  - interface: ITrustedTimeResponseParser
+    status: active
+    package: com.cuongbs.trustedtime
+    capability: "Parse a server time response, for clock-tamper resistance"
+    adapter_status: missing
+    adapter_target: "parser matching whichever time endpoint is chosen"
+    vendor: ""
+    define_symbol: ""
+    null_impl: ""
+    bootstrap_order: 20
+    gates_ads: false
+    test_assembly: CuongBS.TrustedTime.Tests
+    adr: ""
+    notes: >
+      Upstream deliberately ships no default parser. Only needed once live-ops has
+      time-gated content worth defending against a device clock change.
+    added: 2026-08-21
+    revised: ""
+
+  - interface: HomeFlowStepSO
+    status: active
+    package: com.cuongbs.homeflow
+    capability: "One step in the home-screen popup sequence, with category and quota"
+    adapter_status: missing
+    adapter_target: "one subclass per popup"
+    vendor: ""
+    define_symbol: ""
+    null_impl: "test step subclass"
+    bootstrap_order: 95
+    gates_ads: false
+    test_assembly: Homeflow.Tests
+    adr: ""
+    notes: >
+      Abstract base, not an interface. A shipped title has 61 concrete steps. Note the
+      template's home-flow adapter is currently excluded from the build by its guard,
+      so home-flow is not connected to the template yet.
+    added: 2026-08-21
+    revised: ""
+
+
+# ─── CONTRACTS ALREADY SATISFIED ─────────────────────────────────────────────
+# Contracts CuOCore fully implements. Listed so nobody rebuilds them.
+# These need no adapter — consume them directly.
+
+satisfied_upstream:
+  - interface: IServiceRegistry
+    package: com.cuongbs.utilities
+    capability: "Manual singleton registration, lock-then-bootstrap lifecycle"
+  - interface: IEventChannel
+    package: com.cuongbs.utilities
+    capability: "ScriptableObject event channels — the project's cross-module event mechanism"
+  - interface: IPoolService
+    package: com.cuongbs.pooling
+    capability: "Object pooling with preload, max size, IPoolable hooks"
+  - interface: IInventoryService
+    package: com.cuongbs.resources
+    capability: "Currency and skin-unlock state, enum-keyed, persisted"
+  - interface: ISceneFlowService
+    package: com.cuongbs.sceneflow
+    capability: "Async scene transition plus a boot step/condition pipeline"
+  - interface: IGameplayFlowService
+    package: com.cuongbs.gameplayflow
+    capability: "In-level state machine with lose/exit/post-win policies"
+  - interface: IUIElement
+    package: com.cuobs.ui
+    capability: "Type-keyed screen/popup manager with per-type instance pooling"
+  - interface: IAudioService
+    package: com.cuongbs.audio
+    capability: "Music and SFX with buses, voice pooling, ducking, volume persistence"
+  - interface: IHapticService
+    package: com.cuongbs.haptics
+    capability: "Haptic presets and custom patterns with capability probing"
+  - interface: ICloudStorageProvider
+    package: com.cuongbs.syncdata
+    capability: "Cloud save with conflict resolution and a boot-apply gate"

@@ -1,0 +1,132 @@
+# Feature Flag Registry
+#
+# PURPOSE: Single source of truth for every feature flag in the project. Mirrors the
+# LiveOps catalog assets in the Unity project — this file is the reviewable, greppable
+# copy that skills and hooks can read without opening Unity.
+#
+# A flag read in code that is NOT in this file is a defect. One shipped title in this
+# studio reads a flag key absent from its registry: it silently returns false on
+# Android, disabling the feature with no error and no log. That is what this file exists
+# to prevent.
+#
+# RULES:
+#   - Every flag read via IsEnabled() or GetMode() MUST have an entry here AND a
+#     LiveOpsDefinition asset in the catalog. Use /feature-flag add to create both.
+#   - Never delete an entry — set status: retired. Retiring means removing the code
+#     that reads it in the SAME change.
+#   - event_id is stable forever. Renaming one orphans every player who already has the
+#     old key mirrored into local storage.
+#   - default_enabled: choose FALSE for anything not yet proven. A registered flag with
+#     no remote key present falls back to its local default, so a true default ships on.
+#   - kill_switch: true is MANDATORY for ads and IAP. A monetised build without one
+#     cannot be turned off after release.
+#   - remote_value_type: toggle → resolved as a bool. strategy → resolved as an int mode
+#     where 0 means off. none → local only, never read remotely.
+#
+# KILL-SWITCH LATENCY — read before relying on one:
+#   Remote values are mirrored into local storage, so a flag already fetched as ON stays
+#   ON until the next SUCCESSFUL fetch — across restarts, offline, and after a
+#   server-side rollback. A kill-switch is a rollout control, not an emergency stop.
+#   Record the expected latency in the ADR for any ads or IAP flag.
+#
+# WRITTEN BY: /feature-flag add (creates entry + catalog asset + enum member)
+#             /feature-flag audit (marks drift, proposes retirement)
+# READ BY:    /feature-flag audit (primary input)
+#             /mobile-build-check (undeclared-flag check)
+#             /gate-check (release readiness — every ads/IAP flag has a kill switch)
+#             validate-flag-registry.sh (hook, on write to Assets/Scripts/**)
+#
+# SEARCH PATTERNS (for skills using Grep):
+#   All flags:            Grep pattern="^  - event_id:" path="docs/registry/feature-flags.yaml"
+#   Specific flag:        Grep pattern="event_id: ads_interstitial"
+#   Kill switches:        Grep pattern="kill_switch: true"
+#   Retired flags:        Grep pattern="status: retired"
+#   Flags read by a file: Grep pattern="read_by.*GameplayController"
+#   Local-only flags:     Grep pattern="remote_value_type: none"
+#
+# FORMAT: YAML. Consistent indentation is critical for grep reliability.
+#   Each entry: event_id, status, tier, capability, remote_value_type, remote_key,
+#               default_enabled, default_mode, kill_switch, owner, read_by[],
+#               definition_asset, adr, added, revised
+
+version: 1
+last_updated: ""
+
+# ─── FLAGS ───────────────────────────────────────────────────────────────────
+# tier: define | so | remote
+#   define → compile-time; strips code out of the build entirely
+#   so     → local ScriptableObject default only; changeable in the Inspector
+#   remote → has a remote key; can be changed after release
+#
+# Required fields: event_id, status, tier, capability, default_enabled, kill_switch,
+#                  owner, read_by, added
+
+flags: []
+
+# Example (remove when the first real entry is added):
+#
+# flags:
+#   - event_id: ads_interstitial
+#     status: active                  # active | retired
+#     tier: remote
+#     capability: "Interstitial ads at win, lose, retry, and quit"
+#     remote_value_type: toggle       # toggle | strategy | none
+#     remote_key: ads_interstitial
+#     default_enabled: false          # default OFF until proven
+#     default_mode: 1
+#     kill_switch: true               # MANDATORY for ads and IAP
+#     owner: mobile-sdk-engineer
+#     read_by:
+#       - Assets/Scripts/Services/Adapters.Bravestars/InterstitialAdapter.cs
+#     definition_asset: Assets/Resources/LiveOps/AdsInterstitial.asset
+#     adr: docs/architecture/adr-0002-feature-flag-mechanism.md
+#     notes: >
+#       Kill-switch latency: takes effect on the next successful remote fetch, not
+#       immediately. Do not rely on it to stop revenue loss within one session.
+#     added: 2026-08-21
+#     revised: ""
+#
+#   - event_id: daily_reward
+#     status: active
+#     tier: remote
+#     capability: "Daily login reward popup on the home screen"
+#     remote_value_type: toggle
+#     remote_key: daily_reward
+#     default_enabled: false
+#     default_mode: 1
+#     kill_switch: false
+#     owner: live-ops-designer
+#     read_by:
+#       - Assets/Scripts/UI/home/DailyRewardStep.cs
+#     definition_asset: Assets/Resources/LiveOps/DailyReward.asset
+#     adr: ""
+#     added: 2026-08-21
+#     revised: ""
+
+
+# ─── DEFINE SYMBOLS ──────────────────────────────────────────────────────────
+# Compile-time tier. These strip code out of the build rather than toggling behaviour.
+# Record the CANONICAL spelling — shipped titles in this studio carry a misspelled
+# define replicated across three projects, and this section is how that stops.
+#
+# Required fields: symbol, status, capability, platforms[], when_absent, added
+
+define_symbols: []
+
+# Example:
+#
+# define_symbols:
+#   - symbol: GAME_ENABLE_SDK
+#     status: active
+#     capability: "Master switch for ads, IAP, and tracking adapters"
+#     platforms: [Android, iOS]
+#     when_absent: "Null adapters are registered; the game runs fully with no SDKs"
+#     added: 2026-08-21
+#     revised: ""
+
+
+# ─── RETIRED ─────────────────────────────────────────────────────────────────
+# Flags no longer read by any code. Kept so an id is never reused.
+# Moving a flag here REQUIRES that its readers were deleted in the same change.
+
+retired: []
