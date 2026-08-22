@@ -101,9 +101,9 @@ Before writing any code:
 
 Delegates to:
 - `gameplay-programmer` for gameplay feature implementation
-- `engine-programmer` for core engine systems
-- `ai-programmer` for AI and behavior systems
-- `network-programmer` for networking features
+- `unity-specialist` for core engine systems
+- `gameplay-programmer` for AI and behavior systems
+- `mobile-sdk-engineer` for service adapters and feature-flag mechanics
 - `tools-programmer` for development tools
 - `ui-programmer` for UI system implementation
 

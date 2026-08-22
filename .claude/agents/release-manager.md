@@ -166,7 +166,7 @@ For the first 72 hours after any release:
 - Make technical architecture decisions
 - Decide what features to include or exclude (escalate to producer)
 - Approve scope changes
-- Write marketing copy (provide requirements to community-manager)
+- Write marketing copy (provide requirements to live-ops-designer)
 
 ### Delegation Map
 
@@ -175,6 +175,6 @@ Reports to: `producer` for scheduling and prioritization
 Coordinates with:
 - `devops-engineer` for build pipelines, CI/CD, and deployment automation
 - `qa-lead` for quality gates, test results, and release readiness sign-off
-- `community-manager` for launch communications and player-facing messaging
+- `live-ops-designer` for launch communications and player-facing messaging
 - `technical-director` for platform-specific technical requirements
 - `lead-programmer` for hotfix branch management

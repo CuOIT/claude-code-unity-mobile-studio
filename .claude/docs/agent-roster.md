@@ -1,65 +1,95 @@
 # Agent Roster
 
-The following agents are available. Each has a dedicated definition file in
-`.claude/agents/`. Use the agent best suited to the task at hand. When a task
-spans multiple domains, the coordinating agent (usually `producer` or the
-domain lead) should delegate to specialists.
+27 agents, each with a definition file in `.claude/agents/`. Use the agent best suited to
+the task. When a task spans domains, the coordinating agent (usually `producer`, or the
+domain lead) delegates to specialists.
 
-## Tier 1 -- Leadership Agents (Opus)
+This roster is trimmed for **mobile puzzle** development. Agents for narrative,
+multiplayer, and 3D spatial level design were archived — see the bottom of this file.
+
+## Tier 1 — Leadership (Opus)
+
 | Agent | Domain | When to Use |
 |-------|--------|-------------|
-| `creative-director` | High-level vision | Major creative decisions, pillar conflicts, tone/direction |
-| `technical-director` | Technical vision | Architecture decisions, tech stack choices, performance strategy |
-| `producer` | Production management | Sprint planning, milestone tracking, risk management, coordination |
+| `creative-director` | High-level vision | Major creative decisions, pillar conflicts, tone |
+| `technical-director` | Technical vision | Architecture decisions, adapter boundaries, performance strategy |
+| `producer` | Production management | Sprint planning, milestone tracking, scope negotiation, risk |
 
-## Tier 2 -- Department Lead Agents (Sonnet)
+## Tier 2 — Department Leads (Sonnet)
+
 | Agent | Domain | When to Use |
 |-------|--------|-------------|
 | `game-designer` | Game design | Mechanics, systems, progression, economy, balancing |
 | `lead-programmer` | Code architecture | System design, code review, API design, refactoring |
-| `art-director` | Visual direction | Style guides, art bible, asset standards, UI/UX direction |
-| `audio-director` | Audio direction | Music direction, sound palette, audio implementation strategy |
-| `narrative-director` | Story and writing | Story arcs, world-building, character design, dialogue strategy |
-| `qa-lead` | Quality assurance | Test strategy, bug triage, release readiness, regression planning |
-| `release-manager` | Release pipeline | Build management, versioning, changelogs, deployment, rollbacks |
-| `localization-lead` | Internationalization | String externalization, translation pipeline, locale testing |
+| `art-director` | Visual direction | Style guides, art bible, asset standards, board readability |
+| `ux-designer` | UX & interface | User flows, interaction design, accessibility, localisation-readiness, player-facing copy |
+| `qa-lead` | Quality assurance | Test strategy, bug triage, release readiness |
+| `release-manager` | Release pipeline | Store submission, certification, versioning, changelogs, rollbacks |
 
-## Tier 3 -- Specialist Agents (Sonnet or Haiku)
+## Tier 3 — Specialists (Sonnet / Haiku)
+
 | Agent | Domain | Model | When to Use |
 |-------|--------|-------|-------------|
-| `systems-designer` | Systems design | Sonnet | Specific mechanic implementation, formula design, loops |
-| `level-designer` | Level design | Sonnet | Level layouts, pacing, encounter design, flow |
-| `economy-designer` | Economy/balance | Sonnet | Resource economies, loot tables, progression curves |
-| `gameplay-programmer` | Gameplay code | Sonnet | Feature implementation, gameplay systems code |
-| `engine-programmer` | Engine systems | Sonnet | Core engine, rendering, physics, memory management |
-| `ai-programmer` | AI systems | Sonnet | Behavior trees, pathfinding, NPC logic, state machines |
-| `network-programmer` | Networking | Sonnet | Netcode, replication, lag compensation, matchmaking |
-| `tools-programmer` | Dev tools | Sonnet | Editor extensions, pipeline tools, debug utilities |
-| `ui-programmer` | UI implementation | Sonnet | UI framework, screens, widgets, data binding |
-| `technical-artist` | Tech art | Sonnet | Shaders, VFX, optimization, art pipeline tools |
-| `sound-designer` | Sound design | Sonnet | SFX design docs, audio event lists, mixing notes |
-| `writer` | Dialogue/lore | Sonnet | Dialogue writing, lore entries, item descriptions |
-| `world-builder` | World/lore design | Sonnet | World rules, faction design, history, geography |
-| `qa-tester` | Test execution | Haiku | Writing test cases, bug reports, test checklists |
-| `performance-analyst` | Performance | Sonnet | Profiling, optimization recs, memory analysis |
-| `devops-engineer` | Build/deploy | Haiku | CI/CD, build scripts, version control workflow |
-| `analytics-engineer` | Telemetry | Sonnet | Event tracking, dashboards, A/B test design |
-| `ux-designer` | UX flows | Sonnet | User flows, wireframes, accessibility, input handling |
-| `prototyper` | Rapid prototyping | Sonnet | Throwaway prototypes, mechanic testing, feasibility validation |
-| `security-engineer` | Security | Sonnet | Anti-cheat, exploit prevention, save encryption, network security |
-| `accessibility-specialist` | Accessibility | Haiku | WCAG compliance, colorblind modes, remapping, text scaling |
-| `live-ops-designer` | Live operations | Sonnet | Seasons, events, battle passes, retention, live economy |
-| `community-manager` | Community | Haiku | Patch notes, player feedback, crisis comms, community health |
+| `mobile-sdk-engineer` | **Adapters & monetisation plumbing** | Sonnet | **Anything under `Assets/Scripts/Services/`** — ads, IAP, analytics, attribution, remote config, consent/ATT, feature-flag mechanics, store privacy |
+| `puzzle-level-designer` | Puzzle levels | Sonnet | Level authoring, teaching order, difficulty curve, solvability, tutorial, level-set A/B |
+| `systems-designer` | Systems design | Sonnet | Rule specification, formula design, interaction matrices |
+| `economy-designer` | Economy & balance | Sonnet | Currencies, offers, sinks and faucets, progression curves |
+| `live-ops-designer` | Live operations | Sonnet | Seasons, events, retention mechanics, live economy, event copy |
+| `gameplay-programmer` | Gameplay code | Sonnet | Puzzle rules, feature implementation, gameplay systems |
+| `ui-programmer` | UI implementation | Sonnet | Screens, popups, widgets, data binding |
+| `tools-programmer` | Dev tools | Sonnet | Editor extensions, **level-authoring tooling**, pipeline automation, debug utilities |
+| `technical-artist` | Tech art (2D/UI) | Sonnet | Shaders, VFX, sprite/atlas pipeline, skeletal animation, visual optimisation |
+| `sound-designer` | Audio | Sonnet | Audio direction, SFX specs, event lists, mixing notes |
+| `performance-analyst` | Performance | Sonnet | Device profiling, memory analysis, budget enforcement |
+| `analytics-engineer` | Telemetry | Sonnet | Event taxonomy, dashboards, A/B test design |
+| `devops-engineer` | Build & deploy | Haiku | CI configuration, build scripts, version control workflow |
+| `qa-tester` | Test execution | Haiku | Test cases, bug reports, solvability verification, checklists |
 
-## Engine-Specific Agents (Unity set)
-### Engine Lead
-| Agent | Engine | Model | When to Use |
-| ---- | ---- | ---- | ---- |
-| `unity-specialist` | Unity 6 LTS | Sonnet | MonoBehaviour vs DOTS, Addressables, URP, Unity optimization, mobile profiling guidance |
-### Unity Sub-Specialists
+## Unity Engine Specialists
+
 | Agent | Subsystem | Model | When to Use |
 | ---- | ---- | ---- | ---- |
-| `unity-dots-specialist` | DOTS/ECS | Sonnet | Entity Component System, Jobs, Burst compiler, hybrid renderer |
-| `unity-shader-specialist` | Shaders/VFX | Sonnet | Shader Graph, VFX Graph, URP customization, post-processing |
-| `unity-addressables-specialist` | Asset Management | Sonnet | Addressable groups, async loading, memory, content delivery |
-| `unity-ui-specialist` | UI Toolkit/UGUI | Sonnet | UI Toolkit, UXML/USS, UGUI Canvas, data binding, cross-platform input |
+| `unity-specialist` | Unity 6 (authority) | Sonnet | MonoBehaviour patterns, Unity subsystems, mobile profiling, core/engine-level work |
+| `unity-ui-specialist` | UI Toolkit / UGUI | Sonnet | UGUI canvas work, data binding, runtime UI performance, cross-device UI adaptation |
+| `unity-shader-specialist` | Shaders / VFX | Sonnet | Shader Graph, URP customisation, post-processing, VFX optimisation |
+| `unity-addressables-specialist` | Asset loading | Sonnet | Resources vs Addressables strategy, memory, content delivery, UPM manifest health |
+
+## Routing shortcuts
+
+| If the work is about… | Start with |
+|---|---|
+| An SDK, a flag, consent, or anything in `Assets/Scripts/Services/` | `mobile-sdk-engineer` |
+| Puzzle rules or a formula | `systems-designer` → `gameplay-programmer` |
+| Level content or the difficulty curve | `puzzle-level-designer` |
+| A level-authoring tool or editor window | `tools-programmer` |
+| Whether a Unity API is safe to use | `unity-specialist` |
+| Asset loading strategy | `unity-addressables-specialist` |
+| Player-facing text or copy | `ux-designer` |
+| Scope, timeline, or cutting features | `producer` |
+
+## Archived
+
+Moved to `.claude/agents/_archived/`. Not loaded. Restore if the project's shape changes.
+
+| Agent | Why archived | Capability now owned by |
+|---|---|---|
+| `narrative-director`, `writer`, `world-builder` | No narrative deliverables in a puzzle game; neither reference puzzle title has any | `ux-designer` (copy), `live-ops-designer` (event framing) |
+| `network-programmer` | No multiplayer | — |
+| `ai-programmer` | No behaviour trees or pathfinding | `gameplay-programmer` |
+| `unity-dots-specialist` | Zero of four reference titles use DOTS — no call sites at all | `unity-specialist` |
+| `engine-programmer` | Overlaps the Unity specialist on a project this size | `unity-specialist` |
+| `accessibility-specialist` | Folded into UX rather than separated | `ux-designer` |
+| `security-engineer` | Mobile security here is SDK, save, and privacy work | `mobile-sdk-engineer` + rules |
+| `localization-lead` | Needed as a rule, not a standing agent | `ux-designer` + `localize` skill |
+| `prototyper` | Superseded by the MVP lane, whose code is kept | `/puzzle-mvp` + `gameplay-programmer` |
+| `audio-director` | Audio scope in a puzzle game does not warrant a separate director | `sound-designer` |
+| `community-manager` | Not needed before launch | `live-ops-designer` |
+| `level-designer` | Replaced by a puzzle-specific version | `puzzle-level-designer` |
+
+## Model Tier Assignment
+
+| Tier | When to use |
+|------|-------------|
+| **Haiku** | Read-only status checks, formatting, simple lookups — no creative judgement |
+| **Sonnet** | Implementation, design authoring, single-system analysis — the default |
+| **Opus** | Multi-document synthesis, high-stakes phase gates, cross-system holistic review |

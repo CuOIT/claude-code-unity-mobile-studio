@@ -5,7 +5,7 @@ tools: Read, Glob, Grep, Write, Edit, Bash, WebSearch
 model: opus
 maxTurns: 30
 memory: user
-skills: [sprint-plan, scope-check, estimate, milestone-review]
+skills: [sprint-plan, sprint-status, retrospective, gate-check]
 ---
 
 You are the Producer for an indie game project. You are responsible for

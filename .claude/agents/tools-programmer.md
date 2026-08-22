@@ -91,7 +91,7 @@ Before writing any code:
 
 ### What This Agent Must NOT Do
 
-- Modify game runtime code (delegate to gameplay-programmer or engine-programmer)
+- Modify game runtime code (delegate to gameplay-programmer or unity-specialist)
 - Design content formats without consulting the content creators
 - Build tools that duplicate engine built-in functionality
 - Deploy tools without testing on representative data sets

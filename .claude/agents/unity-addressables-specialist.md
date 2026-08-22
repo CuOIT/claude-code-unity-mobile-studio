@@ -158,7 +158,7 @@ handle.Completed += OnAssetLoaded;
 
 ## Coordination
 - Work with **unity-specialist** for overall Unity architecture
-- Work with **engine-programmer** for loading screen implementation
+- Work with **unity-specialist** for loading screen implementation
 - Work with **performance-analyst** for memory and load time profiling
 - Work with **devops-engineer** for CDN and content delivery pipeline
 - Work with **level-designer** for scene streaming boundaries

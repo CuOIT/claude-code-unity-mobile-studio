@@ -213,5 +213,5 @@ Before writing any code:
 - Work with **ui-programmer** for general UI implementation patterns
 - Work with **ux-designer** for interaction design and accessibility
 - Work with **unity-addressables-specialist** for UI asset loading
-- Work with **localization-lead** for text fitting and localization
-- Work with **accessibility-specialist** for compliance
+- Work with **ux-designer** for text fitting and localization
+- Work with **ux-designer** for compliance

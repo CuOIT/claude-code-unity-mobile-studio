@@ -176,9 +176,9 @@ independently. Present both positions and let the creative-director adjudicate.
 ## Coordination
 - Work with **game-designer** for gameplay content in seasons and events
 - Work with **economy-designer** for live economy balance and pricing
-- Work with **narrative-director** for seasonal narrative themes
+- Work with **art-director** for seasonal visual themes
 - Work with **producer** for content pipeline scheduling and capacity
 - Work with **analytics-engineer** for engagement dashboards and metrics
-- Work with **community-manager** for player communication and feedback
+- Work with **live-ops-designer** for player communication and feedback
 - Work with **release-manager** for content deployment pipeline
-- Work with **writer** for event descriptions and seasonal lore
+- Work with **ux-designer** for event descriptions and player-facing copy

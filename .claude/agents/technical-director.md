@@ -146,8 +146,8 @@ Architecture decisions should follow the ADR format:
 
 Delegates to:
 - `lead-programmer` for code-level architecture within approved patterns
-- `engine-programmer` for core engine implementation
-- `network-programmer` for networking architecture
+- `unity-specialist` for core engine implementation
+- `mobile-sdk-engineer` for adapter boundary and consent ordering
 - `devops-engineer` for build and deployment infrastructure
 - `technical-artist` for rendering pipeline decisions
 - `performance-analyst` for profiling and optimization work
