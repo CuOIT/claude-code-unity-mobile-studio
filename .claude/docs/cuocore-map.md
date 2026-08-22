@@ -6,10 +6,12 @@ Writing a parallel implementation is the single most likely way to waste effort 
 this project.
 
 - Repo: internal GitLab monorepo, **branch per package**, consumed via UPM.
-- Working copies on this machine: `C:/Users/DPC00212/CuOCore` (integration consumer),
-  plus per-branch checkouts `CuOCore-MobilePuzzleTemplate`, `CuOCore-Utilities`,
-  `CuOCore-SceneFlow-Fix`, `CuOCore-Utilities-Inspector`.
-- Resolved package sources: `CuOCore/Library/PackageCache/com.cuongbs.*`.
+- Local checkout paths are **machine-specific** and live in
+  `.claude/docs/local-paths.md` (gitignored — copy `local-paths.template.md`).
+  Expect an integration consumer plus, on some machines, per-branch checkouts.
+- Resolved package sources sit under `<consumer>/Library/PackageCache/com.cuongbs.*`.
+  If `local-paths.md` is absent, the suite is not checked out here: work from this
+  document and say so, rather than guessing a path.
 - **No versions in this document by design.** Read them from `Packages/manifest.json`
   when they matter. See `docs/engine-reference/unity/VERSION.md`.
 

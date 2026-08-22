@@ -167,11 +167,29 @@ else
     fi
 fi
 
+# ── 3b. Machine-local paths ─────────────────────────────────────────────────
+say ""
+say "-- machine-local paths --"
+LP="$TARGET/.claude/docs/local-paths.md"
+LPT="$TARGET/.claude/docs/local-paths.template.md"
+if [ -f "$LP" ]; then
+    say "  exists   .claude/docs/local-paths.md (left untouched)"
+elif [ -f "$LPT" ]; then
+    run "cp \"$LPT\" \"$LP\""
+    say "  created  .claude/docs/local-paths.md from the template"
+    say "  ACTION REQUIRED: fill it in. Reference-project and CuOCore paths differ"
+    say "  per machine, so nothing is prefilled. An entry pointing at a missing"
+    say "  directory is worse than a blank one."
+    NEEDS_LOCAL_PATHS=1
+else
+    say "  template missing -- skipped"
+fi
+
 # ── 4. .gitignore ───────────────────────────────────────────────────────────
 say ""
 say "-- .gitignore --"
 GI="$TARGET/.gitignore"
-NEEDED=("production/session-state/active.md" "production/session-logs/" ".claude/settings.local.json")
+NEEDED=("production/session-state/active.md" "production/session-logs/" ".claude/settings.local.json" ".claude/docs/local-paths.md")
 if [ ! -f "$GI" ]; then
     say "  no .gitignore in target -- skipping (Unity projects should have one)"
 else
@@ -215,6 +233,11 @@ fi
 
 say " NEXT STEPS"
 say "=========================================================="
+if [ "${NEEDS_LOCAL_PATHS:-0}" = "1" ]; then
+    say "  0. Fill in .claude/docs/local-paths.md -- CuOCore checkout and any local"
+    say "     reference projects. Leave rows blank if they are not on this machine."
+    say ""
+fi
 say "  1. cd \"$TARGET\" && claude"
 say "  2. Run /help -- it reads real project state and names one next step."
 say "  3. Run /project-stage-detect for a full audit of what exists."
