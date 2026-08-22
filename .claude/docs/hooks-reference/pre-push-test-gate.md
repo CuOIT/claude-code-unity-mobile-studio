@@ -45,15 +45,15 @@ echo "Build: PASS"
 # Step 2: Unit tests
 echo "Running unit tests..."
 # Adapt to your test framework:
-# python -m pytest tests/unit/ -x || exit 1
-# dotnet test tests/unit/ || exit 1
+# python -m pytest Assets/Tests/EditMode/ -x || exit 1
+# dotnet test Assets/Tests/EditMode/ || exit 1
 # cargo test || exit 1
 echo "Unit tests: PASS"
 
 if [ "$FULL_GATE" = true ]; then
     # Step 3: Integration tests (only for protected branches)
     echo "Running integration tests..."
-    # python -m pytest tests/integration/ -x || exit 1
+    # python -m pytest Assets/Tests/PlayMode/ -x || exit 1
     echo "Integration tests: PASS"
 
     # Step 4: Smoke tests

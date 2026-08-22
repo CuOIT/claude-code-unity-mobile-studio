@@ -1,332 +1,328 @@
+<h1 align="center">Claude Code Unity Mobile Puzzle Studio</h1>
+
 <p align="center">
-  <h1 align="center">Claude Code Unity Mobile Studio</h1>
-  <p align="center">
-    An opinionated Unity 6 LTS + iOS/Android edition of the Claude Code Game Studios
-    agent architecture — one coordinated AI team, tuned for mobile game development.
-  </p>
+  A Claude Code configuration for building mobile puzzle games on Unity 6,
+  on top of the in-house CuOCore UPM suite.
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href=".claude/agents"><img src="https://img.shields.io/badge/agents-39-blueviolet" alt="39 Agents"></a>
-  <a href=".claude/skills"><img src="https://img.shields.io/badge/skills-74-green" alt="74 Skills"></a>
-  <a href=".claude/hooks"><img src="https://img.shields.io/badge/hooks-12-orange" alt="12 Hooks"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-2.0.0-informational" alt="Version 2.0.0"></a>
+  <a href=".claude/agents"><img src="https://img.shields.io/badge/agents-27-blueviolet" alt="27 Agents"></a>
+  <a href=".claude/skills"><img src="https://img.shields.io/badge/skills-58-green" alt="58 Skills"></a>
   <a href=".claude/rules"><img src="https://img.shields.io/badge/rules-12-red" alt="12 Rules"></a>
-  <a href="https://docs.anthropic.com/en/docs/claude-code"><img src="https://img.shields.io/badge/built%20for-Claude%20Code-f5f5f5?logo=anthropic" alt="Built for Claude Code"></a>
-  <a href="https://www.buymeacoffee.com/donchitos3"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20this%20project-FFDD00?logo=buymeacoffee&logoColor=black" alt="Buy Me a Coffee"></a>
-  <a href="https://github.com/sponsors/Donchitos"><img src="https://img.shields.io/badge/GitHub%20Sponsors-Support%20this%20project-ea4aaa?logo=githubsponsors&logoColor=white" alt="GitHub Sponsors"></a>
+  <a href=".claude/hooks"><img src="https://img.shields.io/badge/hooks-15-orange" alt="15 Hooks"></a>
+  <a href="docs/registry"><img src="https://img.shields.io/badge/registries-4-blue" alt="4 Registries"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey.svg" alt="MIT License"></a>
 </p>
 
 ---
 
-## Why This Exists
+## What this is
 
-Building a game solo with AI is powerful — but a single chat session has no structure. No one stops you from hardcoding magic numbers, skipping design docs, or writing spaghetti code. There's no QA pass, no design review, no one asking "does this actually fit the game's vision?"
+A Claude Code configuration for mobile puzzle development: 27 specialised agents, 58 slash
+commands, 12 path-scoped rules, and 15 validation hooks, arranged around one specific shape
+of work — shipping a mobile puzzle game on the studio's own UPM packages.
 
-**Claude Code Unity Mobile Studio** solves this by giving your AI session the structure of a real mobile game studio. Instead of one general-purpose assistant, you get 39 specialized agents organized into a studio hierarchy — directors who guard the vision, department leads who own their domains, and specialists who do the hands-on work. Each agent has defined responsibilities, escalation paths, and quality gates.
+**The one rule that governs setup: `.claude/` must sit at the root of the Unity project.**
+Claude Code loads it from the working directory, so if the agents and the code are in
+different places, you get one or the other, never both.
 
-The result: you still make every decision, but now you have a team that asks the right questions, catches mistakes early, and keeps your project organized from first brainstorm to launch.
+That gives two ways to use this repo:
+
+| | Use when | Setup |
+|---|---|---|
+| **A. This repo becomes the game** | Starting a new game from nothing | Create the Unity project at this root. `/puzzle-mvp` does it for you. |
+| **B. Install into an existing project** | You already have a Unity project with its own git history | `./tools/install-into-unity-project.sh <path>` — see [Installing into an existing project](#installing-into-an-existing-project) |
+
+Model B is the common case. Do not try to keep this repo and the Unity project as two
+separate working directories — that is the one arrangement that does not work.
+
+## Current state
+
+Nothing is built yet. Conventions are configured; the concept is not written.
+
+| | Status |
+|---|---|
+| Conventions, budgets, forbidden patterns | ✅ configured — `.claude/docs/technical-preferences.md` |
+| Game concept | ⬜ not written |
+| Unity project (`Assets/`, `ProjectSettings/`) | ⬜ not created |
+| MVP | ⬜ not built |
+| Adapters | ⬜ 11 `missing`, 1 `partial` of 12 contracts — see `docs/registry/services.yaml` |
+| Feature flags | ⬜ none declared |
+
+The one `partial` is `IHeartService`: upstream already ships a usable implementation, it
+just needs wiring to a game resource. Everything else is unwritten. `IConsentService` has
+no contract upstream at all and must be defined here — it is the highest-priority gap,
+because ads cannot ship without it.
+
+Run `/help` at any time to get the current position and the one next step.
 
 ---
 
-## Table of Contents
+## The one thing to understand first
 
-- [What's Included](#whats-included)
-- [Studio Hierarchy](#studio-hierarchy)
-- [Slash Commands](#slash-commands)
-- [Getting Started](#getting-started)
-- [Upgrading](#upgrading)
-- [Project Structure](#project-structure)
-- [How It Works](#how-it-works)
-- [Design Philosophy](#design-philosophy)
-- [Customization](#customization)
-- [Platform Support](#platform-support)
-- [Community](#community)
-- [Supporting This Project](#supporting-this-project)
-- [License](#license)
+> **CuOCore supplies tested contracts and Null implementations. It contains no vendor SDK
+> code whatsoever. So the work is adapters, not interfaces.**
+
+The CuOCore suite already provides, tested and each with a Null implementation: ads, IAP,
+tracking, feature flags and live-ops, trusted time, pooling, inventory, cloud save, audio,
+haptics, boosters, scene flow, gameplay flow, home flow, and UI — plus a mobile puzzle
+template with boot → home → gameplay, win/lose/retry/revive, and an end-to-end PlayMode
+test already wired.
+
+What it does not have is a single adapter onto a real vendor. That layer is this project's
+work, and it is precisely enumerated in `docs/registry/services.yaml`.
+
+**Writing a parallel interface for something that already has a contract is the most
+likely way to waste effort here.** Start every infrastructure task at
+[`.claude/docs/cuocore-map.md`](.claude/docs/cuocore-map.md) — it maps all 22 packages to
+what they provide and which adapters are still missing.
 
 ---
 
-## What's Included
-
-| Category | Count | Description |
-|----------|-------|-------------|
-| **Agents** | 39 | Unity-only agent set: design, programming, art, audio, narrative, QA, and production |
-| **Skills** | 74 | Slash commands for every workflow phase, including `/mobile-build-check` and `/setup-engine` mobile profile |
-| **Hooks** | 12 | Automated validation on commits, pushes, asset changes, session lifecycle, agent audit trail, and gap detection |
-| **Rules** | 12 | Path-scoped coding standards for Unity/C#, plus `mobile-code.md` mobile budgets and asset discipline |
-| **Templates** | 41 | Document templates for GDDs, UX specs, ADRs, sprint plans, HUD design, accessibility, and more |
-
-## Studio Hierarchy
-
-Agents are organized into three tiers, matching how real studios operate:
-
-```
-Tier 1 — Directors (Opus)
-  creative-director    technical-director    producer
-
-Tier 2 — Department Leads (Sonnet)
-  game-designer        lead-programmer       art-director
-  audio-director       narrative-director    qa-lead
-  release-manager      localization-lead
-
-Tier 3 — Specialists (Sonnet/Haiku)
-  gameplay-programmer  engine-programmer     ai-programmer
-  network-programmer   tools-programmer      ui-programmer
-  systems-designer     level-designer        economy-designer
-  technical-artist     sound-designer        writer
-  world-builder        ux-designer           prototyper
-  performance-analyst  devops-engineer       analytics-engineer
-  security-engineer    qa-tester             accessibility-specialist
-  live-ops-designer    community-manager
-```
-
-### Engine Specialists
-
-The template includes agent sets for all three major engines. Use the set that matches your project:
-
-| Engine | Lead Agent | Sub-Specialists |
-|--------|-----------|-----------------|
-| **Unity** | `unity-specialist` | DOTS/ECS, Shaders/VFX, Addressables, UI Toolkit |
-
-## Slash Commands
-
-Type `/` in Claude Code to access all 74 skills:
-
-**Onboarding & Navigation**
-`/start` `/help` `/project-stage-detect` `/setup-engine` `/adopt`
-
-**Game Design**
-`/brainstorm` `/map-systems` `/design-system` `/quick-design` `/review-all-gdds` `/propagate-design-change`
-
-**Art & Assets**
-`/art-bible` `/asset-spec` `/asset-audit`
-
-**UX & Interface Design**
-`/ux-design` `/ux-review`
-
-**Architecture**
-`/create-architecture` `/architecture-decision` `/architecture-review` `/create-control-manifest`
-
-**Stories & Sprints**
-`/create-epics` `/create-stories` `/dev-story` `/sprint-plan` `/sprint-status` `/story-readiness` `/story-done` `/estimate`
-
-**Reviews & Analysis**
-`/design-review` `/code-review` `/balance-check` `/content-audit` `/scope-check` `/perf-profile` `/mobile-build-check` `/tech-debt` `/gate-check` `/consistency-check` `/security-audit`
-
-**QA & Testing**
-`/qa-plan` `/smoke-check` `/soak-test` `/regression-suite` `/test-setup` `/test-helpers` `/test-evidence-review` `/test-flakiness` `/skill-test` `/skill-improve`
-
-**Production**
-`/milestone-review` `/retrospective` `/bug-report` `/bug-triage` `/reverse-document` `/playtest-report`
-
-**Release**
-`/release-checklist` `/launch-checklist` `/changelog` `/patch-notes` `/hotfix` `/day-one-patch`
-
-**Creative & Content**
-`/prototype` `/onboard` `/localize`
-
-**Team Orchestration** (coordinate multiple agents on a single feature)
-`/team-combat` `/team-narrative` `/team-ui` `/team-release` `/team-polish` `/team-audio` `/team-level` `/team-live-ops` `/team-qa`
-
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-- [Git](https://git-scm.com/)
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`npm install -g @anthropic-ai/claude-code`)
-- **Recommended**: [jq](https://jqlang.github.io/jq/) (for hook validation) and Python 3 (for JSON validation)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- Git, and access to the internal GitLab that hosts the CuOCore packages
+- Recommended: `jq` and Python 3 — hooks degrade gracefully without them, you just lose
+  some validation
+- A Unity 6 install. The exact release is **not** pinned here; see
+  [Version policy](#version-policy)
 
-All hooks fail gracefully if optional tools are missing — nothing breaks, you just lose validation.
+### First session
 
-### Setup
-
-1. **Clone or use as template**:
-   ```bash
-   git clone https://github.com/Donchitos/Claude-Code-Unity-Mobile-Studio.git my-game
-   cd my-game
-   ```
-
-2. **Open Claude Code** and start a session:
-   ```bash
-   claude
-   ```
-
-3. **Run `/start`** — the system asks where you are (no idea, vague concept,
-   clear design, existing work) and guides you to the right workflow. No assumptions.
-
-   Or jump directly to a specific skill if you already know what you need:
-   - `/brainstorm` — explore game ideas from scratch
-   - `/setup-engine unity 6.3` — configure Unity version and mobile build targets
-   - `/project-stage-detect` — analyze an existing project
-
-## Upgrading
-
-Already using an older version of this template? See [UPGRADING.md](UPGRADING.md)
-for step-by-step migration instructions, a breakdown of what changed between
-versions, and which files are safe to overwrite vs. which need a manual merge.
-
-## Project Structure
-
-```
-CLAUDE.md                           # Master configuration
-.claude/
-  settings.json                     # Hooks, permissions, safety rules
-  agents/                           # 49 agent definitions (markdown + YAML frontmatter)
-  skills/                           # 73 slash commands (subdirectory per skill)
-  hooks/                            # 12 hook scripts (bash, cross-platform)
-  rules/                            # 11 path-scoped coding standards
-  statusline.sh                     # Status line script (context%, model, stage, epic breadcrumb)
-  docs/
-    workflow-catalog.yaml           # 7-phase pipeline definition (read by /help)
-    templates/                      # 41 document templates
-src/                                # Game source code
-assets/                             # Art, audio, VFX, shaders, data files
-design/                             # GDDs, narrative docs, level designs
-docs/                               # Technical documentation and ADRs
-tests/                              # Test suites (unit, integration, performance, playtest)
-tools/                              # Build and pipeline tools
-prototypes/                         # Throwaway prototypes (isolated from src/)
-production/                         # Sprint plans, milestones, release tracking
+```bash
+claude
 ```
 
-## How It Works
+Then:
 
-### Agent Coordination
+| Situation | Command |
+|---|---|
+| Starting from nothing | `/start` |
+| Concept is clear, want something playable | `/brainstorm` then `/puzzle-mvp --mode demo` |
+| Not sure where things stand | `/project-stage-detect` |
+| Not sure what to do next | `/help` |
 
-Agents follow a structured delegation model:
-
-1. **Vertical delegation** — directors delegate to leads, leads delegate to specialists
-2. **Horizontal consultation** — same-tier agents can consult each other but can't make binding cross-domain decisions
-3. **Conflict resolution** — disagreements escalate up to the shared parent (`creative-director` for design, `technical-director` for technical)
-4. **Change propagation** — cross-department changes are coordinated by `producer`
-5. **Domain boundaries** — agents don't modify files outside their domain without explicit delegation
-
-### Collaborative, Not Autonomous
-
-This is **not** an auto-pilot system. Every agent follows a strict collaboration protocol:
-
-1. **Ask** — agents ask questions before proposing solutions
-2. **Present options** — agents show 2-4 options with pros/cons
-3. **You decide** — the user always makes the call
-4. **Draft** — agents show work before finalizing
-5. **Approve** — nothing gets written without your sign-off
-
-You stay in control. The agents provide structure and expertise, not autonomy.
-
-### Automated Safety
-
-**Hooks** run automatically on every session:
-
-| Hook | Trigger | What It Does |
-|------|---------|--------------|
-| `validate-commit.sh` | PreToolUse (Bash) | Checks for hardcoded values, TODO format, JSON validity, design doc sections — exits early if the command is not `git commit` |
-| `validate-push.sh` | PreToolUse (Bash) | Warns on pushes to protected branches — exits early if the command is not `git push` |
-| `validate-assets.sh` | PostToolUse (Write/Edit) | Validates naming conventions and JSON structure — exits early if the file is not in `assets/` |
-| `session-start.sh` | Session open | Shows current branch and recent commits for orientation |
-| `detect-gaps.sh` | Session open | Detects fresh projects (suggests `/start`) and missing design docs when code or prototypes exist |
-| `pre-compact.sh` | Before compaction | Preserves session progress notes |
-| `post-compact.sh` | After compaction | Reminds Claude to restore session state from `active.md` |
-| `notify.sh` | Notification event | Shows Windows toast notification via PowerShell |
-| `session-stop.sh` | Session close | Archives `active.md` to session log and records git activity |
-| `log-agent.sh` | Agent spawned | Audit trail start — logs subagent invocation |
-| `log-agent-stop.sh` | Agent stops | Audit trail stop — completes subagent record |
-| `validate-skill-change.sh` | PostToolUse (Write/Edit) | Advises running `/skill-test` after any `.claude/skills/` change |
-
-> **Note**: `validate-commit.sh`, `validate-assets.sh`, and `validate-skill-change.sh` fire on every Bash/Write tool call and exit immediately (exit 0) when the command or file path is not relevant. This is normal hook behavior — not a performance concern.
-
-**Permission rules** in `settings.json` auto-allow safe operations (git status, test runs) and block dangerous ones (force push, `rm -rf`, reading `.env` files).
-
-### Path-Scoped Rules
-
-Coding standards are automatically enforced based on file location:
-
-| Path | Enforces |
-|------|----------|
-| `src/gameplay/**` | Data-driven values, delta time usage, no UI references |
-| `src/core/**` | Zero allocations in hot paths, thread safety, API stability |
-| `src/ai/**` | Performance budgets, debuggability, data-driven parameters |
-| `src/networking/**` | Server-authoritative, versioned messages, security |
-| `src/ui/**` | No game state ownership, localization-ready, accessibility |
-| `design/gdd/**` | Required 8 sections, formula format, edge cases |
-| `tests/**` | Test naming, coverage requirements, fixture patterns |
-| `prototypes/**` | Relaxed standards, README required, hypothesis documented |
-
-## Design Philosophy
-
-This template is grounded in professional game development practices:
-
-- **MDA Framework** — Mechanics, Dynamics, Aesthetics analysis for game design
-- **Self-Determination Theory** — Autonomy, Competence, Relatedness for player motivation
-- **Flow State Design** — Challenge-skill balance for player engagement
-- **Bartle Player Types** — Audience targeting and validation
-- **Verification-Driven Development** — Tests first, then implementation
-
-## Customization
-
-This is a **template**, not a locked framework. Everything is meant to be customized:
-
-- **Add/remove agents** — delete agent files you don't need, add new ones for your domains
-- **Edit agent prompts** — tune agent behavior, add project-specific knowledge
-- **Modify skills** — adjust workflows to match your team's process
-- **Add rules** — create new path-scoped rules for your project's directory structure
-- **Tune hooks** — adjust validation strictness, add new checks
-- **Pick your engine** — Unity 6 LTS is the fixed engine; agent specialization covers the full Unity stack
-- **Set review intensity** — `full` (all director gates), `lean` (phase gates only), or `solo` (none). Set during `/start` or edit `production/review-mode.txt`. Override per-run with `--review solo` on any skill.
-
-## Platform Support
-
-Primary development and testing on **Windows 10** with Git Bash. All hooks use POSIX-compatible patterns (`grep -E`, not `grep -P`) and include fallbacks for missing tools, so they should run on macOS and Linux. The `notify.sh` hook uses PowerShell for Windows toast notifications and is a no-op elsewhere — desktop notifications on macOS/Linux are not yet wired. Cross-platform testing is ongoing; please file issues for any platform-specific breakage.
-
-**Target game platforms:** iOS and Android (Unity 6.3 LTS, IL2CPP backend).
-`/mobile-build-check` validates build readiness statically; the definitive
-build runs in CI (`game-ci/unity-actions`) or the Unity editor — this template
-does not include a Unity editor.
-
-## What Changed vs Upstream
-
-This edition was fine-tuned from
-[claude-code-game-studios](https://github.com/Donchitos/Claude-Code-Game-Studios):
-
-| Change | Detail |
-|--------|--------|
-| Engine pinned | Unity 6.3 LTS only — Godot and Unreal agent sets and engine references removed to reduce context and stay mobile-focused |
-| Mobile skill | `/mobile-build-check` — pre-flight static scan for IL2CPP config, Addressables handle leaks, texture compression, safe-area UI, `Resources.Load` misuse |
-| Mobile rule | `mobile-code.md` — frame budgets, GC hygiene, pooling, quality tiers, ASTC textures |
-| Mobile reference | `docs/engine-reference/unity/MOBILE-BEST-PRACTICES.md` — per-platform budgets, URP mobile settings, build pipeline, fragmentation guidance |
-| Code examples | All rules and docs rewritten in C# / Unity API (NUnit, UI Toolkit, Addressables, Input System) |
-| Docs examples | Session walkthroughs updated to Unity 6 mobile scenarios |
-
-**Known limitations:** the agent workflow covers game design → code → QA; the
-binary build step (AAB/IPA), store signing, and submission run outside Claude
-Code in CI — use `/mobile-build-check` before handoff.
-
-## Community
-
-- **Discussions** — [GitHub Discussions](https://github.com/Donchitos/Claude-Code-Unity-Mobile-Studio/discussions) for questions, ideas, and showcasing what you've built
-- **Issues** — [Bug reports and feature requests](https://github.com/Donchitos/Claude-Code-Unity-Mobile-Studio/issues)
+**Two artifacts gate the first line of gameplay code:** `technical-preferences.md`
+(already done) and `design/gdd/game-concept.md`. That is the whole prerequisite list for
+building something playable.
 
 ---
 
-## Supporting This Project
+## Installing into an existing project
 
-Claude Code Game Studios is free and open source. If it saves you time or helps you ship your game, consider supporting continued development:
+```bash
+./tools/install-into-unity-project.sh /path/to/your-unity-project --dry-run
+```
 
-<p>
-  <a href="https://www.buymeacoffee.com/donchitos3"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee"></a>
-  &nbsp;
-  <a href="https://github.com/sponsors/Donchitos"><img src="https://img.shields.io/badge/GitHub%20Sponsors-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white" alt="GitHub Sponsors"></a>
-</p>
+Always dry-run first. It prints every file it would touch and writes nothing.
 
-- **[Buy Me a Coffee](https://www.buymeacoffee.com/donchitos3)** — one-time support
-- **[GitHub Sponsors](https://github.com/sponsors/Donchitos)** — recurring support through GitHub
+```bash
+./tools/install-into-unity-project.sh /path/to/your-unity-project
+```
 
-Sponsorships help fund time spent maintaining skills, adding new agents, keeping up with Claude Code and engine API changes, and responding to community issues.
+**Copies:** `.claude/` (agents, skills, rules, hooks, docs, statusline), `CLAUDE.md`,
+`docs/registry/`, `docs/engine-reference/`, `design/` and `production/` skeletons, and the
+`.gitignore` entries for session state.
+
+**Never copies:** this `README.md`, `LICENSE`, `UPGRADING.md`, `CONTRIBUTING.md`,
+`SECURITY.md`, `.gitignore`, or `tools/`. Those belong to this repo, not to your game.
+
+**Collisions are never silently overwritten.** A colliding file is written beside the
+original as `<name>.claudeunity` and listed at the end. The two that usually collide:
+
+- `.claude/settings.json` — merge the `hooks` block into yours; keep your own
+  `permissions`. All 15 hooks are needed for the guardrails to fire.
+- `CLAUDE.md` — the new copy is a set of `@import` lines. Merge those into your file
+  rather than replacing it.
+
+### The one flag that matters: `--code-root`
+
+Rules, hook guards, and skill greps are **path-scoped**. Point them at the wrong directory
+and they enforce nothing — silently, with no error. The default is `Assets/Scripts`:
+
+```bash
+./tools/install-into-unity-project.sh /path/to/project --code-root Assets/_Game
+```
+
+After installing, verify the guardrails actually fire:
+
+```
+/mobile-build-check       expect real findings, not an empty report
+/feature-flag audit       expect it to see your existing flag reads
+```
+
+If either comes back suspiciously clean on a project with thousands of scripts, the code
+root is wrong. Re-run with `--code-root` pointing where your C# actually lives.
 
 ---
 
-*Built for Claude Code. Maintained and extended — contributions welcome via [GitHub Discussions](https://github.com/Donchitos/Claude-Code-Unity-Mobile-Studio/discussions).*
+## The workflow
+
+Seven phases. The unusual one is **MVP**, which sits second — before systems design,
+before architecture.
+
+```
+Concept ─► MVP ─► Systems Design ─► Technical Setup ─► Production ─► Polish ─► Release
+   │        │
+   │        ├─ /puzzle-mvp --mode demo     one scene, no SDKs, 3-5 levels
+   │        ├─ /gate-check mvp             PROCEED / PIVOT / KILL
+   │        ├─ /level-pipeline             decide level authoring, mechanic now known
+   │        ├─ /sdk-integrate consent      consent BEFORE ads, always
+   │        ├─ /sdk-integrate ads tracking
+   │        ├─ /feature-flag add [id]
+   │        └─ /puzzle-mvp --mode signal   promote to a soft-launch build
+   │
+   └─ /setup-engine, /brainstorm
+```
+
+Art bible, UX specs, accessibility requirements, per-system GDDs, cross-GDD review, and
+architecture review are all real work — they are sequenced **after** the MVP verdict,
+because a mechanic that does not work makes every one of them wasted. Nothing was deleted;
+the order changed.
+
+**MVP code is kept.** Unlike a prototype, this lane builds correct architecture at small
+scope. Production continues from it rather than replacing it.
+
+`KILL` and `PIVOT` are successful outcomes of the MVP phase. A cheap no is the point.
+
+The authoritative phase definition is
+[`.claude/docs/workflow-catalog.yaml`](.claude/docs/workflow-catalog.yaml), read by `/help`.
+
+---
+
+## Commands specific to this edition
+
+The full catalogue of 58 is in
+[`.claude/docs/skills-reference.md`](.claude/docs/skills-reference.md). These five are why
+this edition exists:
+
+| Command | Purpose |
+|---------|---------|
+| `/puzzle-mvp` | `--mode demo` for speed to something demonstrable; `--mode signal` for a soft-launch build that gathers real data |
+| `/sdk-integrate` | Write an adapter from an existing contract onto a real vendor SDK. Refuses to let ads initialise before consent |
+| `/feature-flag` | Add, list, or audit flags across all three tiers. `audit` catches flags read in code but never declared |
+| `/level-pipeline` | Decide and scaffold how levels are authored, stored, ordered, and validated |
+| `/mobile-build-check` | Static pre-flight before CI — adapter boundary, consent gate, flag declarations, assemblies, secrets, UPM manifest, asset budgets |
+
+---
+
+## Non-negotiables
+
+Not style preferences. Each one exists because the failure it prevents was found in real
+shipped code on this machine — the full evidence table is in
+[`.claude/docs/puzzle-profile.md`](.claude/docs/puzzle-profile.md).
+
+- **Consent resolves before ads initialise.** A store gate. The upstream ad contract takes
+  no consent parameter, so the composition root is the only place this can be enforced.
+- **Vendor SDK types stay inside adapter assemblies.** Enforced by assembly-definition
+  references, so a leak is a compile error rather than a review comment.
+- **Every feature flag read in code is declared in the registry.** An undeclared flag
+  resolves to `false` on device, silently, with no log.
+- **Never fork a CuOCore package into the project.** Consume via UPM. The previous
+  generation of shared code was copy-pasted per title and has since diverged three ways.
+- **Puzzle rules are deterministic and testable with no scene loaded.** Physics may drive
+  presentation; it must never decide whether a move is legal.
+- **One assembly per module, from the first commit.**
+
+Three hooks enforce the mechanical parts on every write and commit: `scan-secrets.sh`,
+`validate-flag-registry.sh`, `validate-upm-manifest.sh`.
+
+---
+
+## Repository layout
+
+This repo **is** the game repo. The Unity project lives at the root beside `.claude/`, so
+one Claude Code session sees both the agents and the code.
+
+```
+CLAUDE.md                          Master config; imports everything below
+.claude/                           Agents, skills, rules, hooks, docs
+Assets/                            THE UNITY PROJECT
+  Scripts/
+    Services/Abstractions/         Contracts CuOCore does not cover
+    Services/Adapters.Bravestars/  Vendor adapters -- the ONLY place SDK types appear
+    Services/Adapters.Null/        Null impls: editor, tests, demo mode
+    Core/                          Composition root, bootstrap ordering
+    Gameplay/Puzzle/               Puzzle rules -- deterministic, scene-free, testable
+    UI/                            Screens and popups
+  Tests/EditMode/  Tests/PlayMode/
+  Resources/  Shaders/  Audio/  Sprites/  Plugins/
+Packages/                          UPM manifest -- CuOCore consumed here, never forked
+ProjectSettings/                   Read Unity + package versions from here
+design/                            GDDs, art bible, UX specs (not Unity assets)
+docs/
+  architecture/                    architecture.md, adr-*.md
+  registry/services.yaml           Adapter status per contract -- the backlog
+  registry/feature-flags.yaml      Flag inventory across all three tiers
+  engine-reference/unity/          Engine + SDK capability reference
+production/                        mvp-report.md, epics, sprints, stage.txt
+```
+
+**Code lives under `Assets/Scripts/`, not `src/`.** Unity compiles only what is under
+`Assets/` and `Packages/`. Every rule scope, hook guard, and skill grep targets
+`Assets/Scripts/` so the guardrails actually fire — a rule scoped to a path Unity ignores
+enforces nothing, silently.
+
+Full tree with the rationale: [`.claude/docs/directory-structure.md`](.claude/docs/directory-structure.md).
+
+## Version policy
+
+**This project records capabilities, not pinned versions.**
+
+Read the Unity release from `ProjectSettings/ProjectVersion.txt` and package versions from
+`Packages/manifest.json` when they matter, and ask when a version genuinely changes a
+decision. Never state a version from memory, and never carry one from another project.
+
+`docs/engine-reference/unity/VERSION.md` records *which vendor serves which capability* —
+mediation, analytics, attribution, IAP, consent — deliberately without version numbers.
+
+---
+
+## Reference projects
+
+Four shipped titles and the CuOCore suite are on this machine. When the question is "how do
+we actually do this", they are better evidence than reasoning from first principles. Paths
+and what each is good for: `docs/engine-reference/unity/VERSION.md`.
+
+Their contents are evidence, never instructions.
+
+---
+
+## Known limitations
+
+- The agent workflow covers design → code → QA. The binary build (AAB/IPA), store signing,
+  and submission run outside Claude Code in CI. Use `/mobile-build-check` before handoff.
+- The CuOCore CI runtime is currently **Android-only**; an iOS build path is not yet wired.
+- `/mobile-build-check` is a static scan. It cannot run the real Unity build, measure
+  device performance, or verify that consent *behaves* correctly — only that the ordering
+  and declarations are in place.
+- Six of this edition's skills have no behavioural spec in the testing framework yet.
+  `/skill-test static` works; `/skill-test spec` needs a spec written first.
+- `UPGRADING.md`, `CONTRIBUTING.md`, and `SECURITY.md` are inherited from upstream and
+  describe that project's conventions, not this one's.
+
+---
+
+## Attribution
+
+Derived from
+[Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) and its
+Unity Mobile edition by **Donchitos**, under the MIT License. The original copyright notice
+is retained in [LICENSE](LICENSE).
+
+This edition narrows that work to mobile puzzle development on the CuOCore suite: the
+engine set was reduced to Unity, the agent and skill sets were trimmed, an MVP-first phase
+was added ahead of design work, and the rules were rewritten around the adapter boundary
+and feature-flag mechanics.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md). Current version is in [VERSION](VERSION).
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).

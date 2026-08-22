@@ -2,7 +2,7 @@
 
 ## Trigger
 
-Runs before any commit that modifies files in `src/`.
+Runs before any commit that modifies files in `Assets/Scripts/`.
 
 ## Purpose
 
@@ -24,7 +24,7 @@ EXIT_CODE=0
 if [ -n "$CODE_FILES" ]; then
     for file in $CODE_FILES; do
         # Check for hardcoded magic numbers in gameplay code
-        if [[ "$file" == src/gameplay/* ]]; then
+        if [[ "$file" == Assets/Scripts/Gameplay/* ]]; then
             # Look for numeric literals that are likely balance values
             # Adjust the pattern for your language
             if grep -nE '(damage|health|speed|rate|chance|cost|duration)[[:space:]]*[:=][[:space:]]*[0-9]+' "$file"; then
@@ -44,7 +44,7 @@ if [ -n "$CODE_FILES" ]; then
 
     # Run unit tests for modified systems
     # Uncomment and adapt for your test framework
-    # python -m pytest tests/unit/ -x --quiet || EXIT_CODE=1
+    # python -m pytest Assets/Tests/EditMode/ -x --quiet || EXIT_CODE=1
 fi
 
 exit $EXIT_CODE

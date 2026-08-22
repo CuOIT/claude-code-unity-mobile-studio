@@ -54,12 +54,12 @@ The producer agent should:
 Trend: [Improving / Stable / Declining]
 
 ## What Went Well
-- [Automatically detected: tasks completed ahead of estimate]
+- [Automatically detected: tasks completed ahead of producer estimate]
 - [Facilitator adds team observations]
 
 ## What Went Poorly
 - [Automatically detected: tasks that were carried over or cut]
-- [Automatically detected: areas with significant estimate overruns]
+- [Automatically detected: areas with significant producer estimate overruns]
 - [Facilitator adds team observations]
 
 ## Blockers
