@@ -1,0 +1,76 @@
+# Line endings
+#
+# core.autocrlf=true on Windows rewrites LF to CRLF on checkout. For shell
+# scripts that is fatal: bash reads the trailing \r as part of the command and
+# every hook dies with `$'\r': command not found`. All 15 hooks would silently
+# stop firing on a fresh clone.
+#
+# Files listed as `text eol=lf` keep LF in the working tree regardless of
+# platform or autocrlf setting.
+
+*.sh            text eol=lf
+*.bash          text eol=lf
+
+# Config and data read by tooling — keep byte-identical across platforms
+*.yaml          text eol=lf
+*.yml           text eol=lf
+*.json          text eol=lf
+
+# Docs: normalise in the repo, let the platform decide on checkout
+*.md            text
+*.txt           text
+
+# Windows-only scripts stay CRLF
+*.ps1           text eol=crlf
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+
+# ── Unity ───────────────────────────────────────────────────────────────────
+# Unity's YAML assets need its own merge tool. Configure it once per machine:
+#   git config merge.unityyamlmerge.name "Unity SmartMerge"
+#   git config merge.unityyamlmerge.driver \
+#     '"<UnityPath>/Editor/Data/Tools/UnityYAMLMerge.exe" merge -p %O %B %A %A'
+
+*.unity         text eol=lf merge=unityyamlmerge diff
+*.prefab        text eol=lf merge=unityyamlmerge diff
+*.asset         text eol=lf merge=unityyamlmerge diff
+*.mat           text eol=lf merge=unityyamlmerge diff
+*.anim          text eol=lf merge=unityyamlmerge diff
+*.controller    text eol=lf merge=unityyamlmerge diff
+*.physicsMaterial2D text eol=lf merge=unityyamlmerge diff
+*.meta          text eol=lf
+*.asmdef        text eol=lf
+*.inputactions  text eol=lf
+*.shader        text eol=lf
+*.hlsl          text eol=lf
+*.cginc         text eol=lf
+*.cs            text diff=csharp
+
+# Binary — never diff, never convert. Add `filter=lfs` if Git LFS is enabled.
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.psd           binary
+*.tga           binary
+*.exr           binary
+*.tif           binary
+*.gif           binary
+*.wav           binary
+*.mp3           binary
+*.ogg           binary
+*.fbx           binary
+*.obj           binary
+*.blend         binary
+*.ttf           binary
+*.otf           binary
+*.dll           binary
+*.so            binary
+*.a             binary
+*.aar           binary
+*.jar           binary
+*.unitypackage  binary
+*.apk           binary
+*.aab           binary
+*.xlsx          binary
+*.7z            binary
+*.zip           binary
